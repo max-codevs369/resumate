@@ -82,105 +82,145 @@
 </style>
 @endpush
 
-@section('content')
-<header class="page-header">
-    <div class="templates-container">
-        <div style="display: inline-block; background: var(--bg-card); padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; color: var(--primary-color); margin-bottom: 16px; border: 1px solid var(--border-color);">
-            <i class="fas fa-th-large" style="margin-right: 6px;"></i> Katalog Template
+    @section('content')
+    <header class="page-header">
+        <div class="templates-container">
+            <div style="display: inline-block; background: var(--bg-card); padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; color: var(--primary-color); margin-bottom: 16px; border: 1px solid var(--border-color);">
+                <i class="fas fa-th-large" style="margin-right: 6px;"></i> Katalog Template
+            </div>
+            <h1>Pilih Template <span>Terbaik Anda</span></h1>
+            <p>Semua template kami dirancang agar ramah terhadap sistem ATS (Applicant Tracking System) dan mudah dibaca oleh rekruter.</p>
         </div>
-        <h1>Pilih Template <span>Terbaik Anda</span></h1>
-        <p>Semua template kami dirancang agar ramah terhadap sistem ATS (Applicant Tracking System) dan mudah dibaca oleh rekruter.</p>
+    </header>
+
+    <div class="filter-section">
+        <div class="filter-container">
+            <button class="filter-btn active" data-filter="all">Semua Desain</button>
+            <button class="filter-btn" data-filter="Professional">Professional</button>
+            <button class="filter-btn" data-filter="Creative">Creative</button>
+            <button class="filter-btn" data-filter="Simple">Simple</button>
+            <button class="filter-btn" data-filter="Akademik">Akademik</button>
+        </div>
     </div>
-</header>
 
-<div class="filter-section">
-    <div class="filter-container">
-        <button class="filter-btn active" data-filter="all">Semua Desain</button>
-        <button class="filter-btn" data-filter="professional">Professional</button>
-        <button class="filter-btn" data-filter="creative">Creative</button>
-        <button class="filter-btn" data-filter="simple">Simple</button>
-        <button class="filter-btn" data-filter="akademik">Akademik</button>
-    </div>
-</div>
-
-<section class="templates-section">
-    <div class="templates-container">
-        <div class="templates-grid" id="templatesGrid">
-            
-            @forelse($templates as $item)
-                @php
-                    // Logic: Ambil nama kategori untuk badge (string)
-                    $catName = is_array($item->category) ? ($item->category[0] ?? 'General') : $item->category;
-                    
-                    // Logic: Gabung kategori untuk filter data attribute
-                    $catString = is_array($item->category) ? implode(' ', $item->category) : $item->category;
-                @endphp
-
-                <div class="template-card" data-category="{{ strtolower($catString) }}">
-                    
-                    <div class="badge-category">
-                        {{ $catName }}
-                    </div>
-
-                    <div class="badges-right">
+    <section class="templates-section">
+        <div class="templates-container">
+            <div class="templates-grid" id="templatesGrid">
+                
+                @forelse($templates as $item)
+                    @php
+                        // Logic: Ambil nama kategori untuk badge (string)
+                        $catName = is_array($item->category) ? ($item->category[0] ?? 'General') : $item->category;
                         
-                        @if($item->is_new)
-                            <div class="t-badge new">Terbaru</div>
-                        @endif
+                        // Logic: Gabung kategori untuk filter data attribute
+                        $catString = is_array($item->category) ? implode(' ', $item->category) : $item->category;
 
-                        @if($item->type == 'pro')
-                            <div class="t-badge premium"><i class="fas fa-crown"></i> Premium</div>
-                        @else
-                            <div class="t-badge free">Gratis</div>
-                        @endif
-                    </div>
-
-                    <div class="template-preview">
-                        @if($item->thumbnail)
-                            <img src="{{ Storage::url($item->thumbnail) }}" alt="{{ $item->name }}">
-                        @else
-                            <div class="template-preview-placeholder">
-                                <i class="fas fa-image" style="font-size: 48px; margin-bottom: 10px;"></i>
-                                <span class="template-preview-text">Preview {{ $item->name }}</span>
-                            </div>
-                        @endif
-                    </div>
-
-                    <div class="template-info">
-                        <h3>{{ $item->name }}</h3>
-                        <p>{{ $item->description }}</p>
+                        // LOGIKA PINTAR UNTUK REDIRECT URL
+                        // Terkunci JIKA: Template ini PRO, DAN (User belum login ATAU User login tapi paketnya bukan premium)
+                        $isLocked = $item->type == 'pro' && (!auth()->check() || !auth()->user()->is_premium);
                         
-                        <div class="template-meta">
-                            <div class="template-stats">
-                                <span title="Total Download"><i class="fas fa-arrow-down"></i> {{ number_format($item->total_downloads) }}</span>
-                                <span title="Rating"><i class="fas fa-star" style="color:#f59e0b;"></i> {{ $item->rating }}</span>
-                            </div>
+                        // Tentukan URL tujuan berdasarkan status terkunci atau tidak
+                        $targetUrl = $isLocked ? route('pricing') : route('template-detail', $item->slug);
+                    @endphp
+
+                    <!-- Terapkan URL dinamis di onclick -->
+                    <div class="template-card" data-category="{{ strtolower($catString) }}" onclick="window.location.href='{{ $targetUrl }}'" style="cursor: pointer;">
+                        
+                        <div class="badge-category">
+                            {{ $catName }}
+                        </div>
+
+                        <div class="badges-right">
                             
-                            <a href="{{ route('template-detail', $item->slug) }}" class="template-action">
-                                Gunakan <i class="fas fa-arrow-right"></i>
-                            </a>
+                            @if($item->is_new)
+                                <div class="t-badge new">Terbaru</div>
+                            @endif
+
+                            @if($item->type == 'pro')
+                                <div class="t-badge premium"><i class="fas fa-crown"></i> Premium</div>
+                            @else
+                                <div class="t-badge free">Gratis</div>
+                            @endif
+                        </div>
+
+                        <div class="template-preview">
+                            @if($item->thumbnail)
+                                <img src="{{ Storage::url($item->thumbnail) }}" alt="{{ $item->name }}">
+                            @else
+                                <div class="template-preview-placeholder">
+                                    <i class="fas fa-image" style="font-size: 48px; margin-bottom: 10px;"></i>
+                                    <span class="template-preview-text">Preview {{ $item->name }}</span>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="template-info">
+                            <h3>{{ $item->name }}</h3>
+                            <p>{{ Str::limit($item->description, 60) }}</p>
+                            
+                            <div class="template-meta">
+                                <div class="template-stats">
+                                    <span title="Total Download">
+                                        <i class="fas fa-arrow-down"></i> 
+                                        @php
+                                            $n = $item->total_downloads ?? 0;
+                                            if ($n >= 1000000000) {
+                                                $formatted = round($n / 1000000000, 1) . 'B';
+                                            } elseif ($n >= 1000000) {
+                                                $formatted = round($n / 1000000, 1) . 'M';
+                                            } elseif ($n >= 1000) {
+                                                $formatted = round($n / 1000, 1) . 'k';
+                                            } else {
+                                                $formatted = $n;
+                                            }
+                                        @endphp
+                                        {{ $formatted }}
+                                    </span>
+                                    
+                                    <span title="Rating">
+                                        <i class="fas fa-star" style="color:#f59e0b;"></i> 
+                                        @if($item->average_rating > 0)
+                                            {{ number_format($item->average_rating, 1) }} 
+                                            <span style="color: var(--text-muted); font-size: 11px;">({{ $item->rating_count }})</span>
+                                        @else
+                                            Baru
+                                        @endif
+                                    </span>
+                                </div>
+                                
+                                <!-- Terapkan URL dan gaya visual dinamis di tombol aksi -->
+                                @if($isLocked)
+                                    <a href="{{ $targetUrl }}" class="template-action" style="color: #F59E0B; font-weight: 600;">
+                                        Buka PRO <i class="fas fa-crown"></i>
+                                    </a>
+                                @else
+                                    <a href="{{ $targetUrl }}" class="template-action">
+                                        Gunakan <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                @endif
+
+                            </div>
                         </div>
                     </div>
-                </div>
-            @empty
-                <div style="grid-column: 1/-1; text-align: center; padding: 80px 20px; color: var(--text-secondary);">
-                    <div style="background: var(--bg-card); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                        <i class="fas fa-box-open" style="font-size: 32px; opacity: 0.5;"></i>
+                @empty
+                    <div style="grid-column: 1/-1; text-align: center; padding: 80px 20px; color: var(--text-secondary);">
+                        <div style="background: var(--bg-card); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                            <i class="fas fa-box-open" style="font-size: 32px; opacity: 0.5;"></i>
+                        </div>
+                        <h3 style="margin-bottom: 8px; color: var(--text-main);">Belum ada template</h3>
+                        <p>Silakan cek kembali nanti untuk koleksi terbaru kami.</p>
                     </div>
-                    <h3 style="margin-bottom: 8px; color: var(--text-main);">Belum ada template</h3>
-                    <p>Silakan cek kembali nanti untuk koleksi terbaru kami.</p>
-                </div>
-            @endforelse
+                @endforelse
 
-        </div>
+            </div>
 
-        <div id="emptyState" style="display: none; text-align: center; padding: 80px 20px;">
-            <i class="fas fa-search" style="font-size: 40px; color: #ccc; margin-bottom: 16px;"></i>
-            <p style="color: var(--text-secondary); font-size: 16px;">Tidak ada template yang cocok dengan filter ini.</p>
+            <div id="emptyState" style="display: none; text-align: center; padding: 80px 20px;">
+                <i class="fas fa-search" style="font-size: 40px; color: #ccc; margin-bottom: 16px;"></i>
+                <p style="color: var(--text-secondary); font-size: 16px;">Tidak ada template yang cocok dengan filter ini.</p>
+            </div>
         </div>
-    </div>
-</section>
-@endsection
+    </section>
+    @endsection
 
 @push('scripts')
 <script>
@@ -191,17 +231,23 @@
 
         filterBtns.forEach(btn => {
             btn.addEventListener('click', function() {
+                // 1. Hapus state active dari semua tombol, berikan ke tombol yang diklik
                 filterBtns.forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
 
-                const filter = this.getAttribute('data-filter');
+                // 2. Ambil nilai filter dan ubah jadi HURUF KECIL (toLowerCase)
+                const filter = this.getAttribute('data-filter').toLowerCase();
                 let found = 0;
 
+                // 3. Looping semua kartu
                 cards.forEach(card => {
-                    const categories = card.getAttribute('data-category');
+                    const categories = card.getAttribute('data-category'); // ini sudah huruf kecil dari Blade
+                    
+                    // Reset animasi
                     card.style.animation = 'none';
                     card.offsetHeight; 
                     
+                    // 4. Pencocokan (keduanya sekarang sudah sama-sama huruf kecil)
                     if (filter === 'all' || categories.includes(filter)) {
                         card.style.display = 'flex';
                         card.style.animation = 'fadeIn 0.5s ease forwards';
@@ -211,6 +257,7 @@
                     }
                 });
 
+                // 5. Tampilkan Empty State jika tidak ada yang cocok
                 if (found === 0) {
                     emptyState.style.display = 'block';
                 } else {

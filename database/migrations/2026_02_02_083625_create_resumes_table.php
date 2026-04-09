@@ -6,31 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('resumes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignId('cv_template_id')->constrained('cv_templates')->cascadeOnDelete();
             
-            $table->string('title')->nullable();
+            $table->string('title')->nullable(); 
             
-            $table->json('content')->nullable();
+            $table->json('layout_schema')->nullable(); 
+            $table->json('global_settings')->nullable(); 
             
-            $table->string('photo')->nullable();
-            
+            $table->string('photo')->nullable(); 
+
             $table->enum('status', ['draft', 'completed'])->default('draft');
+            $table->integer('downloads')->default(0);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('resumes');

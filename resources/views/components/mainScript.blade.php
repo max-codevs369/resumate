@@ -14,38 +14,12 @@
             }
         });
 
-        // --- Dark/Light Theme Logic ---
-        const themeToggle = document.getElementById('themeToggle');
-        const icon = themeToggle.querySelector('i');
-        const htmlElement = document.documentElement;
-
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            htmlElement.setAttribute('data-theme', savedTheme);
-            updateIcon(savedTheme);
-        }
-
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = htmlElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            htmlElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateIcon(newTheme);
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            const menu = document.getElementById('navMenu');
+            menu.classList.toggle('active');
+            this.classList.toggle('open'); 
         });
-
-        function updateIcon(theme) {
-            if (theme === 'dark') {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun'); 
-                icon.style.color = '#FFD700'; 
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon'); 
-                icon.style.color = '#333';
-            }
-        }
-
+        
         // --- Back to Top Logic ---
         const backToTopBtn = document.getElementById('backToTop');
 
@@ -85,5 +59,6 @@
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') profile.classList.remove('open');
         });
-    })();
+
+        })();
     </script>

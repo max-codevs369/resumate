@@ -11,7 +11,8 @@ class Resume extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'content' => 'array', 
+        'layout_schema'   => 'array', 
+        'global_settings' => 'array', 
     ];
 
     public function user(): BelongsTo
@@ -22,10 +23,5 @@ class Resume extends Model
     public function template(): BelongsTo
     {
         return $this->belongsTo(CvTemplate::class, 'cv_template_id');
-    }
-
-    public function transactions(): HasMany
-    {
-        return $this->hasMany(Transaction::class);
     }
 }

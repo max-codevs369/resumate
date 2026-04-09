@@ -1,752 +1,645 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile — ResuMate</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #4CAF50;
-            --primary-hover: #45a049;
-            --bg-body: #F7F7F7;
-            --bg-card: #FFFFFF;
-            --bg-nav: #FFFFFF;
-            --text-main: #333333;
-            --text-secondary: #666666;
-            --border-color: #E5E5E5;
-            --shadow-color: rgba(0, 0, 0, 0.05);
-            --green: #4CAF50;
-            --green-dark: #2E7D32;
-            --green-pale: #f0f7f0;
-            --green-mid: #C8E6C9;
-            --ink: #1c1c1c;
-            --ink-mid: #555;
-            --ink-faint: #999;
-            --bg: #f5f4f1;
-            --white: #fff;
-            --rule: #e2e2de;
-            --red-soft: #fff0f0;
-            --red: #e53935;
-            --danger-color: #EF4444;
-            --secondary-color: #2196F3;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', 'Outfit', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            min-height: 100vh;
-        }
-
-        /* ============================================
-           NAVIGATION BAR
-        ============================================ */
-        nav {
-            background: var(--bg-nav);
-            padding: 16px 0;
-            box-shadow: 0 2px 8px var(--shadow-color);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--text-main);
-            text-decoration: none;
-        }
-
-        .logo-icon { width: 36px; height: 36px; flex-shrink: 0; }
-
-        .nav-right { display: flex; align-items: center; gap: 20px; }
-
-        .nav-menu { display: flex; list-style: none; gap: 32px; align-items: center; }
-
-        .nav-menu li a {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 15px;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-
-        .nav-menu li a:hover { color: var(--primary-color); }
-        .nav-menu li a.active { color: var(--primary-color); font-weight: 600; }
-
-        .theme-toggle-btn {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .nav-avatar-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            color: white;
-            border: 2px solid transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        /* ============================================
-           PAGE WRAPPER
-        ============================================ */
-        .page {
-            max-width: 1040px;
-            margin: 0 auto;
-            padding: 48px 24px 80px;
-        }
-
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--ink-faint);
-            margin-bottom: 24px;
-        }
-
-        .breadcrumb a { color: var(--ink-mid); text-decoration: none; transition: color .2s; }
-        .breadcrumb a:hover { color: var(--green-dark); }
-        .breadcrumb .sep { color: var(--rule); }
-
-        .page-header { margin-bottom: 40px; }
-
-        .page-header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 34px;
-            letter-spacing: -0.9px;
-            color: var(--ink);
-            margin-bottom: 6px;
-        }
-
-        .page-header p { font-size: 14px; color: var(--ink-mid); line-height: 1.6; }
-
-        /* ============================================
-           FORM LAYOUT
-        ============================================ */
-        .form-wrapper {
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 32px;
-            align-items: start;
-        }
-
-        /* ============================================
-           SIDEBAR TABS
-        ============================================ */
-        .form-nav {
-            position: sticky;
-            top: 90px;
-            background: var(--white);
-            border: 1.5px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px;
-            box-shadow: 0 2px 8px var(--shadow-color);
-        }
-
-        .form-nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--ink-mid);
-            cursor: pointer;
-            transition: all .2s ease;
-            border: none;
-            background: transparent;
-            width: 100%;
-            text-align: left;
-            margin-bottom: 4px;
-        }
-
-        .form-nav-item:last-child { margin-bottom: 0; }
-
-        .form-nav-item i {
-            font-size: 14px;
-            width: 20px;
-            color: var(--ink-faint);
-            transition: color .2s;
-        }
-
-        .form-nav-item:hover { background: var(--green-pale); color: var(--green-dark); }
-        .form-nav-item:hover i { color: var(--green-dark); }
-
-        .form-nav-item.active {
-            background: var(--green);
-            color: white;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
-        }
-
-        .form-nav-item.active i { color: white; }
-
-        /* ============================================
-           FORM CONTENT
-        ============================================ */
-        .form-content {
-            background: var(--white);
-            border: 1.5px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px var(--shadow-color);
-        }
-
-        .form-section { display: none; }
-
-        .form-section.active {
-            display: block;
-            animation: fadeIn .3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .section-header {
-            padding: 28px 32px;
-            border-bottom: 1.5px solid var(--border-color);
-            background: linear-gradient(to bottom, var(--white) 0%, var(--bg-body) 100%);
-        }
-
-        .section-header h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 24px;
-            letter-spacing: -0.6px;
-            color: var(--ink);
-            margin-bottom: 4px;
-        }
-
-        .section-header p { font-size: 13px; color: var(--ink-faint); }
-
-        .section-body { padding: 32px; }
-
-        /* ============================================
-           AVATAR UPLOAD
-        ============================================ */
-        .avatar-upload {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            padding: 24px;
-            background: var(--green-pale);
-            border: 1px solid var(--green-mid);
-            border-radius: 10px;
-            margin-bottom: 32px;
-        }
-
-        .avatar-preview { position: relative; flex-shrink: 0; }
-
-        .avatar-preview-img {
-            width: 88px;
-            height: 88px;
-            border-radius: 50%;
-            background: var(--green-mid);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Playfair Display', serif;
-            font-size: 32px;
-            color: var(--green-dark);
-            border: 3px solid var(--white);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
-            overflow: hidden;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .avatar-badge {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 28px;
-            height: 28px;
-            background: var(--white);
-            border: 1.5px solid var(--green);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 11px;
-            color: var(--green-dark);
-            transition: all .2s;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
-        }
-
-        .avatar-badge:hover { background: var(--green); color: white; }
-        .avatar-badge input { display: none; }
-
-        .avatar-info { flex: 1; }
-        .avatar-info h3 { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
-
-        .avatar-info p {
-            font-size: 12px;
-            color: var(--ink-faint);
-            line-height: 1.5;
-            margin-bottom: 12px;
-        }
-
-        .avatar-info .btn-group { display: flex; gap: 8px; }
-
-        /* ============================================
-           FORM FIELDS
-        ============================================ */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-
-        .form-grid.single { grid-template-columns: 1fr; }
-        .form-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
-
-        .form-field { display: flex; flex-direction: column; }
-
-        .field-label {
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--ink-mid);
-            margin-bottom: 9px;
-        }
-
-        .field-label .req { color: var(--red); margin-left: 2px; }
-
-        .field-label .opt {
-            color: var(--ink-faint);
-            font-weight: 400;
-            text-transform: none;
-            letter-spacing: 0;
-            font-size: 11px;
-            margin-left: 4px;
-        }
-
-        .field-input,
-        .field-textarea,
-        .field-select {
-            padding: 12px 14px;
-            border: 1.5px solid var(--border-color);
-            border-radius: 8px;
-            background: var(--white);
-            font-family: 'Outfit', sans-serif;
-            font-size: 14px;
-            color: var(--ink);
-            transition: all .2s;
-            outline: none;
-        }
-
-        .field-input:focus,
-        .field-textarea:focus,
-        .field-select:focus {
-            border-color: var(--green);
-            box-shadow: 0 0 0 3px var(--green-pale);
-        }
-
-        .field-textarea {
-            resize: vertical;
-            min-height: 100px;
-            line-height: 1.6;
-        }
-
-        .field-hint {
-            font-size: 12px;
-            color: var(--ink-faint);
-            margin-top: 6px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .field-hint i { font-size: 10px; }
-
-        /* ============================================
-           DYNAMIC ITEMS (Education / Experience)
-        ============================================ */
-        .dynamic-item {
-            background: var(--bg-body);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 16px;
-            border: 1.5px solid var(--border-color);
-        }
-
-        .dynamic-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .dynamic-item-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--ink);
-        }
-
-        .btn-remove-item {
-            background: var(--danger-color);
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .btn-remove-item:hover { background: #DC2626; }
-
-        .btn-add-more {
-            width: 100%;
-            padding: 13px;
-            background: transparent;
-            border: 2px dashed var(--primary-color);
-            color: var(--primary-color);
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 4px;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .btn-add-more:hover { background: rgba(76, 175, 80, 0.08); }
-
-        /* ============================================
-           CHECKBOX
-        ============================================ */
-        .checkbox-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 16px;
-            margin-top: -4px;
-        }
-
-        .checkbox-wrapper input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-            accent-color: var(--primary-color);
-        }
-
-        .checkbox-wrapper label {
-            font-size: 13px;
-            color: var(--ink-mid);
-            cursor: pointer;
-        }
-
-        /* ============================================
-           TAGS INPUT
-        ============================================ */
-        .tags-input {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 10px;
-            border: 1.5px solid var(--border-color);
-            border-radius: 8px;
-            background: var(--white);
-            min-height: 48px;
-            cursor: text;
-            transition: all .2s;
-        }
-
-        .tags-input:focus-within {
-            border-color: var(--green);
-            box-shadow: 0 0 0 3px var(--green-pale);
-        }
-
-        .tag-item {
-            background: var(--green);
-            color: white;
-            padding: 5px 11px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .tag-remove { cursor: pointer; font-size: 10px; opacity: .8; transition: opacity .2s; }
-        .tag-remove:hover { opacity: 1; }
-
-        .tag-input-field {
-            border: none;
-            background: transparent;
-            padding: 5px;
-            font-size: 14px;
-            flex: 1;
-            min-width: 120px;
-            outline: none;
-            color: var(--ink);
-            font-family: 'Outfit', sans-serif;
-        }
-
-        /* ============================================
-           TOGGLE SWITCH
-        ============================================ */
-        .toggle-field {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px;
-            background: var(--bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-
-        .toggle-label-wrap { flex: 1; }
-        .toggle-title { font-size: 14px; font-weight: 500; color: var(--ink); }
-        .toggle-desc { font-size: 12px; color: var(--ink-faint); margin-top: 2px; }
-
-        .toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
-        .toggle input { opacity: 0; width: 0; height: 0; }
-
-        .toggle-slider {
-            position: absolute;
-            inset: 0;
-            background: var(--rule);
-            border-radius: 24px;
-            cursor: pointer;
-            transition: background .2s;
-        }
-
-        .toggle-slider::before {
-            content: '';
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: white;
-            left: 3px;
-            top: 3px;
-            transition: transform .2s;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
-        }
-
-        .toggle input:checked + .toggle-slider { background: var(--green); }
-        .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
-
-        /* ============================================
-           DIVIDER
-        ============================================ */
-        .divider { height: 1px; background: var(--border-color); margin: 28px 0; }
-
-        /* ============================================
-           ACTION BUTTONS
-        ============================================ */
-        .form-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            padding: 24px 32px;
-            border-top: 1.5px solid var(--border-color);
-            background: var(--bg-body);
-        }
-
-        .btn {
-            padding: 11px 24px;
-            border-radius: 8px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all .2s;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border: 1.5px solid var(--border-color);
-            color: var(--ink-mid);
-        }
-
-        .btn-secondary:hover { border-color: var(--green); color: var(--green-dark); }
-
-        .btn-primary {
-            background: var(--green);
-            color: white;
-            border: 1.5px solid var(--green);
-        }
-
-        .btn-primary:hover {
-            background: var(--green-dark);
-            border-color: var(--green-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(76, 175, 80, .25);
-        }
-
-        .btn-small { padding: 7px 14px; font-size: 12px; }
-
-        /* ============================================
-           TOAST NOTIFICATION
-        ============================================ */
-        .toast {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            background: var(--white);
-            border: 1.5px solid var(--green);
-            border-radius: 10px;
-            padding: 16px 20px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
-            display: none;
-            align-items: center;
-            gap: 14px;
-            z-index: 1000;
-            min-width: 320px;
-            animation: slideIn .3s ease;
-        }
-
-        .toast.show { display: flex; }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(100px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .toast-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--green-pale);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--green-dark);
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-
-        .toast-content { flex: 1; }
-        .toast-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
-        .toast-text { font-size: 12px; color: var(--ink-faint); }
-
-        .toast-close {
-            background: transparent;
-            border: none;
-            color: var(--ink-faint);
-            cursor: pointer;
-            font-size: 14px;
-            padding: 4px;
-            transition: color .2s;
-        }
-
-        .toast-close:hover { color: var(--ink); }
-
-        /* ============================================
-           RESPONSIVE
-        ============================================ */
-        @media (max-width: 900px) {
-            .form-wrapper { grid-template-columns: 1fr; gap: 24px; }
-            .form-nav { position: relative; top: 0; display: flex; overflow-x: auto; padding: 8px; gap: 8px; }
-            .form-nav-item { white-space: nowrap; flex-shrink: 0; margin-bottom: 0; }
-            .form-grid { grid-template-columns: 1fr; }
-            .form-grid.triple { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 600px) {
-            .nav-container { padding: 0 20px; }
-            .nav-menu { display: none; }
-            .page { padding: 32px 16px 60px; }
-            .section-body { padding: 24px; }
-            .form-actions { flex-direction: column-reverse; padding: 20px; }
-            .btn { width: 100%; justify-content: center; }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- NAVIGATION BAR -->
-    <nav>
-        <div class="nav-container">
-            <a href="#" class="logo">
-                <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6 6C6 3.79086 7.79086 2 10 2H20L28 10V28C28 30.2091 26.2091 32 24 32H10C7.79086 32 6 30.2091 6 28V6Z" fill="var(--primary-color)"/>
-                    <path d="M20 2V8C20 9.10457 20.8954 10 22 10H28L20 2Z" fill="var(--primary-hover)"/>
-                    <rect x="10" y="14" width="12" height="2" rx="1" fill="white" fill-opacity="0.9"/>
-                    <rect x="10" y="19" width="12" height="2" rx="1" fill="white" fill-opacity="0.9"/>
-                    <rect x="10" y="24" width="8" height="2" rx="1" fill="white" fill-opacity="0.9"/>
-                </svg>
-                <span>ResuMate</span>
-            </a>
-
-            <div class="nav-right">
-                <ul class="nav-menu">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Features</a></li>
-                    <li><a href="#">Templates</a></li>
-                    <li><a href="#">Pricing</a></li>
-                </ul>
-
-                <button class="theme-toggle-btn" title="Toggle Theme">
-                    <i class="fas fa-moon"></i>
-                </button>
-
-                <div class="nav-profile">
-                    <button class="nav-avatar-btn" title="Andi Pratama">AP</button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- PAGE -->
+@extends('layouts.app')
+
+@section('title', 'Edit Profile — ResuMate')
+
+@push('styles')
+<style>
+    :root {
+        --primary-color: #4CAF50;
+        --primary-hover: #45a049;
+        --bg-body: #F7F7F7;
+        --bg-card: #FFFFFF;
+        --text-main: #333333;
+        --text-secondary: #666666;
+        --border-color: #E5E5E5;
+        --shadow-color: rgba(0, 0, 0, 0.05);
+        --green: #4CAF50;
+        --green-dark: #2E7D32;
+        --green-pale: #f0f7f0;
+        --green-mid: #C8E6C9;
+        --ink: #1c1c1c;
+        --ink-mid: #555;
+        --ink-faint: #999;
+        --bg: #f5f4f1;
+        --white: #fff;
+        --rule: #e2e2de;
+        --red-soft: #fff0f0;
+        --red: #e53935;
+        --danger-color: #EF4444;
+        --secondary-color: #2196F3;
+    }
+
+    /* --- Dark Mode Variables (Opsional, disesuaikan dengan layout Anda) --- */
+    html.dark, [data-theme="dark"] {
+        --bg-body: #0F0F0F;
+        --bg-card: #1A1A1A;
+        --text-main: #F5F5F5;
+        --text-secondary: #9CA3AF;
+        --border-color: #2D2D2D;
+        --ink: #F5F5F5;
+        --ink-mid: #bbb;
+        --ink-faint: #888;
+        --bg: #1A1A1A;
+        --white: #1A1A1A;
+        --rule: #333;
+        --shadow-color: rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+        font-family: 'Inter', 'Outfit', sans-serif;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+    }
+
+    /* ============================================
+        PAGE WRAPPER
+    ============================================ */
+    .page {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 48px 24px 80px;
+    }
+
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--ink-faint);
+        margin-bottom: 24px;
+    }
+
+    .breadcrumb a { color: var(--ink-mid); text-decoration: none; transition: color .2s; }
+    .breadcrumb a:hover { color: var(--green-dark); }
+    .breadcrumb .sep { color: var(--rule); }
+
+    .page-header { margin-bottom: 40px; }
+
+    .page-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 34px;
+        letter-spacing: -0.9px;
+        color: var(--ink);
+        margin-bottom: 6px;
+    }
+
+    .page-header p { font-size: 14px; color: var(--ink-mid); line-height: 1.6; }
+
+    /* ============================================
+        FORM LAYOUT
+    ============================================ */
+    .form-wrapper {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 32px;
+        align-items: start;
+    }
+
+    /* ============================================
+        SIDEBAR TABS
+    ============================================ */
+    .form-nav {
+        position: sticky;
+        top: 90px;
+        background: var(--white);
+        border: 1.5px solid var(--border-color);
+        border-radius: 12px;
+        padding: 12px;
+        box-shadow: 0 2px 8px var(--shadow-color);
+    }
+
+    .form-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--ink-mid);
+        cursor: pointer;
+        transition: all .2s ease;
+        border: none;
+        background: transparent;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 4px;
+    }
+
+    .form-nav-item:last-child { margin-bottom: 0; }
+
+    .form-nav-item i {
+        font-size: 14px;
+        width: 20px;
+        color: var(--ink-faint);
+        transition: color .2s;
+    }
+
+    .form-nav-item:hover { background: var(--green-pale); color: var(--green-dark); }
+    .form-nav-item:hover i { color: var(--green-dark); }
+
+    .form-nav-item.active {
+        background: var(--green);
+        color: #fff;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+    }
+
+    .form-nav-item.active i { color: #fff; }
+
+    /* ============================================
+        FORM CONTENT
+    ============================================ */
+    .form-content {
+        background: var(--white);
+        border: 1.5px solid var(--border-color);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px var(--shadow-color);
+    }
+
+    .form-section { display: none; }
+
+    .form-section.active {
+        display: block;
+        animation: fadeIn .3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+        padding: 28px 32px;
+        border-bottom: 1.5px solid var(--border-color);
+        background: linear-gradient(to bottom, var(--white) 0%, var(--bg-body) 100%);
+    }
+
+    .section-header h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 24px;
+        letter-spacing: -0.6px;
+        color: var(--ink);
+        margin-bottom: 4px;
+    }
+
+    .section-header p { font-size: 13px; color: var(--ink-faint); }
+
+    .section-body { padding: 32px; }
+
+    /* ============================================
+        AVATAR UPLOAD
+    ============================================ */
+    .avatar-upload {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 24px;
+        background: var(--green-pale);
+        border: 1px solid var(--green-mid);
+        border-radius: 10px;
+        margin-bottom: 32px;
+    }
+
+    .avatar-preview { position: relative; flex-shrink: 0; }
+
+    .avatar-preview-img {
+        width: 88px;
+        height: 88px;
+        border-radius: 50%;
+        background: var(--green-mid);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Playfair Display', serif;
+        font-size: 32px;
+        color: var(--green-dark);
+        border: 3px solid var(--white);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+        overflow: hidden;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .avatar-badge {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 28px;
+        height: 28px;
+        background: var(--white);
+        border: 1.5px solid var(--green);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 11px;
+        color: var(--green-dark);
+        transition: all .2s;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
+    }
+
+    .avatar-badge:hover { background: var(--green); color: white; }
+    .avatar-badge input { display: none; }
+
+    .avatar-info { flex: 1; }
+    .avatar-info h3 { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+
+    .avatar-info p {
+        font-size: 12px;
+        color: var(--ink-faint);
+        line-height: 1.5;
+        margin-bottom: 12px;
+    }
+
+    .avatar-info .btn-group { display: flex; gap: 8px; }
+
+    /* ============================================
+        FORM FIELDS
+    ============================================ */
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    .form-grid.single { grid-template-columns: 1fr; }
+    .form-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
+
+    .form-field { display: flex; flex-direction: column; }
+
+    .field-label {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--ink-mid);
+        margin-bottom: 9px;
+    }
+
+    .field-label .req { color: var(--red); margin-left: 2px; }
+
+    .field-label .opt {
+        color: var(--ink-faint);
+        font-weight: 400;
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: 11px;
+        margin-left: 4px;
+    }
+
+    .field-input,
+    .field-textarea,
+    .field-select {
+        padding: 12px 14px;
+        border: 1.5px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-body); /* Supaya beda dengan background card */
+        font-family: 'Outfit', sans-serif;
+        font-size: 14px;
+        color: var(--ink);
+        transition: all .2s;
+        outline: none;
+    }
+
+    .field-input:focus,
+    .field-textarea:focus,
+    .field-select:focus {
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px var(--green-pale);
+        background: var(--white);
+    }
+
+    .field-textarea {
+        resize: vertical;
+        min-height: 100px;
+        line-height: 1.6;
+    }
+
+    .field-hint {
+        font-size: 12px;
+        color: var(--ink-faint);
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .field-hint i { font-size: 10px; }
+
+    /* ============================================
+        DYNAMIC ITEMS (Education / Experience)
+    ============================================ */
+    .dynamic-item {
+        background: var(--bg-body);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 16px;
+        border: 1.5px solid var(--border-color);
+    }
+
+    .dynamic-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .dynamic-item-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--ink);
+    }
+
+    .btn-remove-item {
+        background: var(--danger-color);
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .btn-remove-item:hover { background: #DC2626; }
+
+    .btn-add-more {
+        width: 100%;
+        padding: 13px;
+        background: transparent;
+        border: 2px dashed var(--primary-color);
+        color: var(--primary-color);
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 4px;
+        font-family: 'Outfit', sans-serif;
+    }
+
+    .btn-add-more:hover { background: rgba(76, 175, 80, 0.08); }
+
+    /* ============================================
+        CHECKBOX
+    ============================================ */
+    .checkbox-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+        margin-top: -4px;
+    }
+
+    .checkbox-wrapper input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        accent-color: var(--primary-color);
+    }
+
+    .checkbox-wrapper label {
+        font-size: 13px;
+        color: var(--ink-mid);
+        cursor: pointer;
+    }
+
+    /* ============================================
+        TAGS INPUT
+    ============================================ */
+    .tags-input {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px;
+        border: 1.5px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-body);
+        min-height: 48px;
+        cursor: text;
+        transition: all .2s;
+    }
+
+    .tags-input:focus-within {
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px var(--green-pale);
+        background: var(--white);
+    }
+
+    .tag-item {
+        background: var(--green);
+        color: white;
+        padding: 5px 11px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .tag-remove { cursor: pointer; font-size: 10px; opacity: .8; transition: opacity .2s; }
+    .tag-remove:hover { opacity: 1; }
+
+    .tag-input-field {
+        border: none;
+        background: transparent;
+        padding: 5px;
+        font-size: 14px;
+        flex: 1;
+        min-width: 120px;
+        outline: none;
+        color: var(--ink);
+        font-family: 'Outfit', sans-serif;
+    }
+
+    /* ============================================
+        TOGGLE SWITCH
+    ============================================ */
+    .toggle-field {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        background: var(--bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 12px;
+    }
+
+    .toggle-label-wrap { flex: 1; }
+    .toggle-title { font-size: 14px; font-weight: 500; color: var(--ink); }
+    .toggle-desc { font-size: 12px; color: var(--ink-faint); margin-top: 2px; }
+
+    .toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+
+    .toggle-slider {
+        position: absolute;
+        inset: 0;
+        background: var(--rule);
+        border-radius: 24px;
+        cursor: pointer;
+        transition: background .2s;
+    }
+
+    .toggle-slider::before {
+        content: '';
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: white;
+        left: 3px;
+        top: 3px;
+        transition: transform .2s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
+    }
+
+    .toggle input:checked + .toggle-slider { background: var(--green); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+    /* ============================================
+        DIVIDER & ACTION BUTTONS
+    ============================================ */
+    .divider { height: 1px; background: var(--border-color); margin: 28px 0; }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        padding: 24px 32px;
+        border-top: 1.5px solid var(--border-color);
+        background: var(--white);
+    }
+
+    .btn {
+        padding: 11px 24px;
+        border-radius: 8px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .2s;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-secondary {
+        background: transparent;
+        border: 1.5px solid var(--border-color);
+        color: var(--ink-mid);
+    }
+
+    .btn-secondary:hover { border-color: var(--green); color: var(--green-dark); }
+
+    .btn-primary {
+        background: var(--green);
+        color: white;
+        border: 1.5px solid var(--green);
+    }
+
+    .btn-primary:hover {
+        background: var(--green-dark);
+        border-color: var(--green-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(76, 175, 80, .25);
+    }
+
+    .btn-small { padding: 7px 14px; font-size: 12px; }
+
+    /* ============================================
+        TOAST NOTIFICATION
+    ============================================ */
+    .toast {
+        position: fixed;
+        bottom: 32px;
+        right: 32px;
+        background: var(--white);
+        border: 1.5px solid var(--green);
+        border-radius: 10px;
+        padding: 16px 20px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+        display: none;
+        align-items: center;
+        gap: 14px;
+        z-index: 1000;
+        min-width: 320px;
+        animation: slideIn .3s ease;
+    }
+
+    .toast.show { display: flex; }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateX(100px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    .toast-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--green-pale);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--green-dark);
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .toast-content { flex: 1; }
+    .toast-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+    .toast-text { font-size: 12px; color: var(--ink-faint); }
+
+    .toast-close {
+        background: transparent;
+        border: none;
+        color: var(--ink-faint);
+        cursor: pointer;
+        font-size: 14px;
+        padding: 4px;
+        transition: color .2s;
+    }
+
+    .toast-close:hover { color: var(--ink); }
+
+    /* ============================================
+        RESPONSIVE
+    ============================================ */
+    @media (max-width: 900px) {
+        .form-wrapper { grid-template-columns: 1fr; gap: 24px; }
+        .form-nav { position: relative; top: 0; display: flex; overflow-x: auto; padding: 8px; gap: 8px; }
+        .form-nav-item { white-space: nowrap; flex-shrink: 0; margin-bottom: 0; }
+        .form-grid { grid-template-columns: 1fr; }
+        .form-grid.triple { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+        .page { padding: 32px 16px 60px; }
+        .section-body { padding: 24px; }
+        .form-actions { flex-direction: column-reverse; padding: 20px; }
+        .btn { width: 100%; justify-content: center; }
+    }
+</style>
+@endpush
+
+@section('content')
     <div class="page">
         <div class="breadcrumb">
             <a href="#">Profile</a>
@@ -760,8 +653,6 @@
         </div>
 
         <div class="form-wrapper">
-
-            <!-- Sidebar Tabs -->
             <nav class="form-nav">
                 <button class="form-nav-item active" data-section="personal" onclick="switchSection('personal')">
                     <i class="fas fa-user"></i>
@@ -793,10 +684,8 @@
                 </button>
             </nav>
 
-            <!-- Form Content -->
             <form class="form-content" id="profileForm" onsubmit="handleSubmit(event)">
 
-                <!-- ==================== SECTION: DATA PRIBADI ==================== -->
                 <div class="form-section active" data-section="personal">
                     <div class="section-header">
                         <h2>Data Pribadi</h2>
@@ -804,7 +693,6 @@
                     </div>
 
                     <div class="section-body">
-                        <!-- Avatar Upload -->
                         <div class="avatar-upload">
                             <div class="avatar-preview">
                                 <div class="avatar-preview-img" id="avatarPreview">A</div>
@@ -827,7 +715,6 @@
                             </div>
                         </div>
 
-                        <!-- Nama & Email -->
                         <div class="form-grid">
                             <div class="form-field">
                                 <label class="field-label">Nama Lengkap <span class="req">*</span></label>
@@ -839,7 +726,6 @@
                             </div>
                         </div>
 
-                        <!-- Telepon & Tanggal Lahir -->
                         <div class="form-grid">
                             <div class="form-field">
                                 <label class="field-label">Nomor Telepon <span class="req">*</span></label>
@@ -851,7 +737,6 @@
                             </div>
                         </div>
 
-                        <!-- Kota & Gender -->
                         <div class="form-grid">
                             <div class="form-field">
                                 <label class="field-label">Kota <span class="req">*</span></label>
@@ -868,7 +753,6 @@
                             </div>
                         </div>
 
-                        <!-- Alamat -->
                         <div class="form-grid single">
                             <div class="form-field">
                                 <label class="field-label">Alamat Lengkap <span class="req">*</span></label>
@@ -876,7 +760,6 @@
                             </div>
                         </div>
 
-                        <!-- Username -->
                         <div class="form-grid single">
                             <div class="form-field">
                                 <label class="field-label">Username</label>
@@ -888,7 +771,6 @@
                             </div>
                         </div>
 
-                        <!-- Ringkasan Profil -->
                         <div class="form-grid single">
                             <div class="form-field">
                                 <label class="field-label">Ringkasan Profil <span class="req">*</span></label>
@@ -911,7 +793,6 @@
                     </div>
                 </div>
 
-                <!-- ==================== SECTION: PENDIDIKAN ==================== -->
                 <div class="form-section" data-section="education">
                     <div class="section-header">
                         <h2>Pendidikan</h2>
@@ -936,7 +817,6 @@
                     </div>
                 </div>
 
-                <!-- ==================== SECTION: PENGALAMAN ==================== -->
                 <div class="form-section" data-section="experience">
                     <div class="section-header">
                         <h2>Pengalaman Kerja</h2>
@@ -961,7 +841,6 @@
                     </div>
                 </div>
 
-                <!-- ==================== SECTION: KETERAMPILAN ==================== -->
                 <div class="form-section" data-section="skills">
                     <div class="section-header">
                         <h2>Keterampilan</h2>
@@ -1014,7 +893,6 @@
                     </div>
                 </div>
 
-                <!-- ==================== SECTION: INFORMASI TAMBAHAN ==================== -->
                 <div class="form-section" data-section="additional">
                     <div class="section-header">
                         <h2>Informasi Tambahan</h2>
@@ -1089,7 +967,6 @@
                     </div>
                 </div>
 
-                <!-- ==================== SECTION: PREFERENSI ==================== -->
                 <div class="form-section" data-section="preferences">
                     <div class="section-header">
                         <h2>Preferensi Akun</h2>
@@ -1164,7 +1041,6 @@
                     </div>
                 </div>
 
-                <!-- ==================== SECTION: KEAMANAN ==================== -->
                 <div class="form-section" data-section="security">
                     <div class="section-header">
                         <h2>Keamanan</h2>
@@ -1218,7 +1094,6 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div class="toast" id="toast">
         <div class="toast-icon"><i class="fas fa-check"></i></div>
         <div class="toast-content">
@@ -1227,7 +1102,9 @@
         </div>
         <button class="toast-close" onclick="hideToast()"><i class="fas fa-times"></i></button>
     </div>
+@endsection
 
+@push('scripts')
     <script>
         // ============================================================
         // SECTION SWITCHING
@@ -1294,7 +1171,7 @@
         }
 
         // ============================================================
-        // EDUCATION
+        // EDUCATION (DENGAN FIX BUG "SEKARANG")
         // ============================================================
         let educationCount = 0;
 
@@ -1326,11 +1203,11 @@
                         </div>
                         <div class="form-field">
                             <label class="field-label">Tahun Selesai</label>
-                            <input type="number" class="field-input" name="education_end[]" placeholder="2017" min="1950" max="2030" id="eduEnd${index}" ${isFirst ? 'value="2017"' : ''}>
+                            <input type="number" class="field-input" name="education_end[]" placeholder="2017" min="1950" max="2030" id="eduEnd${index}">
                         </div>
                     </div>
                     <div class="checkbox-wrapper">
-                        <input type="checkbox" id="currentEdu${index}" onchange="toggleEduEnd(${index})">
+                        <input type="checkbox" id="currentEdu${index}" onchange="toggleEduEnd(${index})" ${isFirst ? 'checked' : ''}>
                         <label for="currentEdu${index}">Saat ini masih berkuliah di sini</label>
                     </div>
                     <div class="form-grid single" style="margin-bottom:0;">
@@ -1342,6 +1219,14 @@
                 </div>`;
 
             container.insertAdjacentHTML('beforeend', html);
+
+            // Terapkan Fix Tipe Input "text" jika diceklis
+            if (isFirst) {
+                const input = document.getElementById(`eduEnd${index}`);
+                input.type = 'text'; 
+                input.value = 'Sekarang';
+                input.disabled = true;
+            }
         }
 
         function removeEducation(index) {
@@ -1351,12 +1236,20 @@
         function toggleEduEnd(index) {
             const cb = document.getElementById(`currentEdu${index}`);
             const input = document.getElementById(`eduEnd${index}`);
-            input.value = cb.checked ? 'Sekarang' : '';
-            input.disabled = cb.checked;
+            
+            if (cb.checked) {
+                input.type = 'text'; // Ubah tipe input ke teks
+                input.value = 'Sekarang';
+                input.disabled = true;
+            } else {
+                input.type = 'number'; // Kembalikan ke angka
+                input.value = '';
+                input.disabled = false;
+            }
         }
 
         // ============================================================
-        // EXPERIENCE
+        // EXPERIENCE (DENGAN FIX BUG "SEKARANG")
         // ============================================================
         let experienceCount = 0;
 
@@ -1406,8 +1299,10 @@
 
             container.insertAdjacentHTML('beforeend', html);
 
+            // Terapkan Fix Tipe Input "text" jika diceklis
             if (isFirst) {
                 const input = document.getElementById(`expEnd${index}`);
+                input.type = 'text'; 
                 input.value = 'Sekarang';
                 input.disabled = true;
             }
@@ -1420,8 +1315,16 @@
         function toggleExpEnd(index) {
             const cb = document.getElementById(`currentWork${index}`);
             const input = document.getElementById(`expEnd${index}`);
-            input.value = cb.checked ? 'Sekarang' : '';
-            input.disabled = cb.checked;
+            
+            if (cb.checked) {
+                input.type = 'text'; // Ubah tipe input ke teks
+                input.value = 'Sekarang';
+                input.disabled = true;
+            } else {
+                input.type = 'month'; // Kembalikan ke format bulan
+                input.value = '';
+                input.disabled = false;
+            }
         }
 
         // ============================================================
@@ -1450,5 +1353,4 @@
             document.getElementById('toast').classList.remove('show');
         }
     </script>
-</body>
-</html>
+@endpush

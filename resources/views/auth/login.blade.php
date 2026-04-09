@@ -8,6 +8,7 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         /* --- 1. DEFINISI VARIABEL TEMA --- */
@@ -230,36 +231,61 @@
                     <p>Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a></p>
                 </div>
 
-                <form action="#" method="POST">
+                <form action="{{ route('login.process') }}" method="POST">
                     @csrf
-                    
+
+                    @if(session('success'))
+                        <div style="background:#d4edda;color:#155724;padding:12px;border-radius:8px;margin-bottom:15px;border:1px solid #c3e6cb;font-size:14px;">
+                            <i class="fas fa-check-circle"></i> {{ session('success') }}
+                        </div>
+                    @endif
+
                     <div class="form-group">
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-input" placeholder="nama@email.com" required>
+                        <input 
+                            type="email" 
+                            name="email"
+                            value="{{ old('email') }}"
+                            class="form-input"
+                            placeholder="nama@email.com"
+                            required
+                        >
+                        @error('email')
+                            <small style="color:#e3342f;">{{ $message }}</small>
+                        @enderror
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Password</label>
-                        <input type="password" name="password" class="form-input" placeholder="Masukkan password Anda" required>
+                        <input 
+                            type="password" 
+                            name="password"
+                            class="form-input"
+                            placeholder="Masukkan password Anda"
+                            required
+                        >
+                        @error('password')
+                            <small style="color:#e3342f;">{{ $message }}</small>
+                        @enderror
                     </div>
 
-                    <div class="form-options">
-                        <label class="remember-me">
-                            <input type="checkbox" name="remember">
-                            <span>Ingat saya</span>
-                        </label>
-                        <a href="{{ route('forgot-password')}}" class="forgot-password">Lupa password?</a>
-                    </div>
-
+                    <div class="form-options"> <label class="remember-me"> <input type="checkbox" name="remember"> <span>Ingat saya</span> </label> <a href="{{ route('password.request')}}" class="forgot-password">Lupa password?</a> </div>
+                    
                     <button type="submit" class="btn-login">Masuk</button>
                 </form>
 
-                <div class="divider"><span>Atau masuk dengan</span></div>
-
-                <div class="social-login">
-                    <button class="btn-social"><i class="fab fa-google"></i> Google</button>
-                    <button class="btn-social"><i class="fab fa-facebook-f"></i> Facebook</button>
+                <div class="divider">
+                    <span>Atau login lebih mudah</span>
                 </div>
+
+                <form id="magic-link-form" action="{{ route('login.magic') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="email" id="magic-email">
+                    
+                    <button type="button" onclick="submitMagicLink()" class="btn-social" style="width: 100%; border-color: var(--primary-color); color: var(--primary-color);">
+                        <i class="fas fa-magic"></i> Masuk tanpa password
+                    </button>
+                </form>
 
                 <div style="text-align: center; margin-top: 30px; font-size: 14px; color: var(--text-secondary);">
                     Masalah saat login? <a href="#" style="color: var(--primary-color); font-weight: 600; text-decoration: none;">Hubungi Support</a>
@@ -268,6 +294,37 @@
 
         </div>
     </div>
+    <script>
+        function submitMagicLink() {
+            const emailInput = document.querySelector('input[name="email"]');
+            const mainEmail = emailInput.value;
+            const magicEmailInput = document.getElementById('magic-email');
+            
+            if (!mainEmail) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Email Kosong',
+                    text: 'Silakan masukkan alamat email Anda terlebih dahulu sebelum meminta link login.',
+                    confirmButtonColor: '#4CAF50', // Sesuai --primary-color
+                    background: document.documentElement.getAttribute('data-theme') === 'dark' ? '#1E1E1E' : '#FFFFFF',
+                    color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#E0E0E0' : '#333333',
+                });
+                emailInput.focus();
+                return;
+            }
 
+            Swal.fire({
+                title: 'Mengirim Link...',
+                text: 'Harap tunggu sebentar, kami sedang mengirimkan link ajaib ke email Anda.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            magicEmailInput.value = mainEmail;
+            document.getElementById('magic-link-form').submit();
+        }
+    </script>
 </body>
 </html>

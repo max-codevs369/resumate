@@ -11,21 +11,6 @@
     .header-left { display: flex; align-items: center; gap: 20px; }
     .toggle-sidebar { display: none; font-size: 20px; cursor: pointer; color: var(--text-main); }
 
-    .search-box {
-        position: relative;
-    }
-    .search-box input {
-        background: var(--bg-body);
-        border: 1px solid var(--border-color);
-        padding: 8px 15px 8px 35px;
-        border-radius: 50px;
-        color: var(--text-main);
-        width: 250px;
-        font-size: 13px;
-        outline: none;
-    }
-    .search-box i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; }
-
     .header-right { display: flex; align-items: center; gap: 20px; }
 
     .theme-btn {
@@ -47,30 +32,21 @@
 
     @media (max-width: 768px) {
         .toggle-sidebar { display: block; }
-        .search-box { display: none; } /* Hide search on mobile */
     }
 </style>
 
 <header class="top-header">
     <div class="header-left">
         <i class="fas fa-bars toggle-sidebar" onclick="document.getElementById('sidebar').classList.toggle('open')"></i>
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Cari data transaksi...">
-        </div>
     </div>
 
     <div class="header-right">
-        <button class="theme-btn" onclick="toggleTheme()">
-            <i class="fas fa-moon" id="theme-icon"></i>
-        </button>
-
         <div class="admin-profile">
             <div class="admin-info">
-                <div class="admin-name">Admin</div>
+                <div class="admin-name">{{ Auth::user()->name }}</div>
                 <div class="admin-role">Administrator</div>
             </div>
-            <div class="admin-img">AD</div>
+            <div class="admin-img">{{ collect(explode(' ', auth()->user()->name))->map(fn($word) => strtoupper(substr($word, 0, 1)))->implode('') }}</div>
         </div>
     </div>
 </header>

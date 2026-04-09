@@ -13,13 +13,19 @@ class Transaction extends Model
         'verified_at' => 'datetime',
     ];
 
+    protected static function booted()
+    {
+        static::updated(function ($transaction) {
+            if ($transaction->status === 'approved' && $transaction->wasChanged('status')) {
+                if ($transaction->user) {
+                    $transaction->user->activatePremium();
+                }
+            }
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function resume(): BelongsTo
-    {
-        return $this->belongsTo(Resume::class);
     }
 }

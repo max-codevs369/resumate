@@ -5,718 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Edit CV - ResuMate</title>
-
-    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&family=Merriweather:wght@400;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #fafafa;
-            color: #1f2937;
-            overflow: hidden;
-        }
-
-        .editor-layout {
-            display: flex;
-            height: 100vh;
-            background: #fafafa;
-        }
-
-        .sidebar {
-            width: 380px;
-            background: white;
-            border-right: 1px solid #e5e7eb;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .sidebar-top {
-            padding: 24px 20px 20px;
-            border-bottom: 1px solid #f3f4f6;
-            background: white;
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #6b7280;
-            text-decoration: none;
-            font-size: 14px;
-            margin-bottom: 20px;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        .back-link:hover {
-            color: #1f2937;
-        }
-
-        .template-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            background: #f0fdf4;
-            border: 1px solid #86efac;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #16a34a;
-            margin-bottom: 16px;
-        }
-
-        .sidebar-title {
-            font-family: 'Sora', sans-serif;
-            font-size: 20px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 8px;
-            letter-spacing: -0.02em;
-        }
-
-        .sidebar-subtitle {
-            font-size: 14px;
-            color: #6b7280;
-            margin-bottom: 24px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0;
-            background: #f9fafb;
-            padding: 4px;
-            border-radius: 10px;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 10px 12px;
-            background: transparent;
-            border: none;
-            border-radius: 7px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #6b7280;
-            cursor: pointer;
-            transition: all 0.15s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .tab i {
-            font-size: 16px;
-        }
-
-        .tab.active {
-            background: white;
-            color: #16a34a;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-
-        .sidebar-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 24px 20px;
-        }
-
-        .sidebar-content::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .sidebar-content::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 10px;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        .section-header {
-            margin-bottom: 20px;
-        }
-
-        .section-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #16a34a;
-            margin-bottom: 16px;
-        }
-
-        .field {
-            margin-bottom: 20px;
-        }
-
-        .label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 8px;
-        }
-
-        .required-mark {
-            color: #ef4444;
-        }
-
-        .input,
-        .select,
-        .textarea {
-            width: 100%;
-            padding: 11px 14px;
-            border: 1.5px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: inherit;
-            color: #111827;
-            background: white;
-            transition: all 0.2s;
-        }
-
-        .input:focus,
-        .select:focus,
-        .textarea:focus {
-            outline: none;
-            border-color: #16a34a;
-            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.08);
-        }
-
-        .input::placeholder {
-            color: #9ca3af;
-        }
-
-        .textarea {
-            min-height: 90px;
-            resize: vertical;
-        }
-
-        .field-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .photo-upload {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-            padding: 16px;
-            background: #f9fafb;
-            border: 1.5px dashed #d1d5db;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .photo-circle {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            overflow: hidden;
-            border: 2px solid #e5e7eb;
-        }
-
-        .photo-circle i {
-            font-size: 24px;
-            color: #9ca3af;
-        }
-
-        .photo-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .photo-text {
-            flex: 1;
-        }
-
-        .photo-text h4 {
-            font-size: 14px;
-            font-weight: 600;
-            color: #111827;
-            margin-bottom: 4px;
-        }
-
-        .photo-text p {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        .upload-btn {
-            padding: 8px 16px;
-            background: white;
-            border: 1.5px solid #d1d5db;
-            border-radius: 7px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #374151;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .upload-btn:hover {
-            border-color: #16a34a;
-            color: #16a34a;
-        }
-
-        .card {
-            background: #fafafa;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 16px;
-            transition: all 0.2s;
-        }
-
-        .card:hover {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-
-        .card-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #111827;
-            margin-bottom: 2px;
-        }
-
-        .card-subtitle {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 4px;
-        }
-
-        .icon-btn {
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            color: #6b7280;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .icon-btn:hover {
-            background: #f9fafb;
-            color: #111827;
-        }
-
-        .icon-btn.delete:hover {
-            background: #fef2f2;
-            border-color: #fecaca;
-            color: #dc2626;
-        }
-
-        .add-btn {
-            width: 100%;
-            padding: 10px;
-            background: white;
-            border: 1.5px dashed #d1d5db;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #16a34a;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: all 0.2s;
-            margin-top: 12px;
-        }
-
-        .add-btn:hover {
-            background: #f0fdf4;
-            border-color: #16a34a;
-        }
-
-        .tags-input {
-            padding: 10px;
-            border: 1.5px solid #e5e7eb;
-            border-radius: 8px;
-            background: white;
-            min-height: 44px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            cursor: text;
-        }
-
-        .tags-input:focus-within {
-            border-color: #16a34a;
-            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.08);
-        }
-
-        .tag-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 5px 10px;
-            background: #16a34a;
-            color: white;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .tag-remove {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            opacity: 0.7;
-        }
-
-        .tag-remove:hover {
-            opacity: 1;
-        }
-
-        .tag-field {
-            flex: 1;
-            min-width: 100px;
-            border: none;
-            outline: none;
-            font-size: 14px;
-            font-family: inherit;
-        }
-
-        .preview-area {
-            flex: 1;
-            background: #f3f4f6;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .preview-header {
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .preview-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .action-btn {
-            padding: 9px 18px;
-            border: 1.5px solid #e5e7eb;
-            background: white;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #374151;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-
-        .action-btn:hover {
-            background: #f9fafb;
-            border-color: #d1d5db;
-        }
-
-        .action-btn.primary {
-            background: #16a34a;
-            border-color: #16a34a;
-            color: white;
-        }
-
-        .action-btn.primary:hover {
-            background: #15803d;
-            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.2);
-        }
-
-        .zoom-tools {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 8px;
-            background: #f9fafb;
-            border-radius: 8px;
-        }
-
-        .zoom-btn {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            color: #6b7280;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .zoom-btn:hover {
-            color: #111827;
-            border-color: #d1d5db;
-        }
-
-        .zoom-value {
-            font-size: 13px;
-            font-weight: 600;
-            color: #374151;
-            min-width: 42px;
-            text-align: center;
-        }
-
-        .preview-canvas {
-            flex: 1;
-            overflow: auto;
-            padding: 40px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .preview-canvas::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
-        }
-
-        .preview-canvas::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 10px;
-        }
-
-        .cv-sheet {
-            width: 210mm;
-            min-height: 297mm;
-            background: white;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            border-radius: 2px;
-            transform-origin: top center;
-            transition: transform 0.2s;
-        }
-
-        .cv-top {
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #fafafa; color: #1f2937; overflow: hidden; }
+        .editor-layout { display: flex; height: 100vh; background: #fafafa; }
+        
+        /* SIDEBAR CSS */
+        .sidebar { width: 380px; background: white; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow: hidden; z-index: 10; }
+        .sidebar-top { padding: 24px 20px 20px; border-bottom: 1px solid #f3f4f6; background: white; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: #6b7280; text-decoration: none; font-size: 14px; margin-bottom: 20px; font-weight: 500; transition: color 0.2s; }
+        .back-link:hover { color: #1f2937; }
+        .sidebar-title { font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 700; color: #111827; margin-bottom: 8px; letter-spacing: -0.02em; }
+        .sidebar-subtitle { font-size: 14px; color: #6b7280; margin-bottom: 24px; }
+        
+        .tabs { display: flex; gap: 0; background: #f9fafb; padding: 4px; border-radius: 10px; }
+        .tab { flex: 1; padding: 10px 12px; background: transparent; border: none; border-radius: 7px; font-size: 12px; font-weight: 600; color: #6b7280; cursor: pointer; transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .tab i { font-size: 16px; }
+        .tab.active { background: white; color: #16a34a; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        
+        .sidebar-content { flex: 1; overflow-y: auto; padding: 24px 20px; }
+        .sidebar-content::-webkit-scrollbar { width: 5px; }
+        .sidebar-content::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .section-label { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #16a34a; margin-bottom: 16px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
+        .field { margin-bottom: 16px; }
+        .label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 8px; }
+        .input, .textarea { width: 100%; padding: 10px 14px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-family: inherit; color: #111827; background: white; transition: all 0.2s; }
+        .input:focus, .textarea:focus { outline: none; border-color: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.08); }
+        .textarea { min-height: 80px; resize: vertical; }
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        
+        .card { background: #fdfdfd; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 16px; transition: all 0.2s; position: relative; }
+        .card:hover { border-color: #d1d5db; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .icon-btn.delete { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; background: white; border: 1px solid #e5e7eb; border-radius: 6px; color: #ef4444; cursor: pointer; transition: all 0.2s; display: flex; justify-content: center; align-items: center; }
+        .icon-btn.delete:hover { background: #fef2f2; border-color: #fecaca; }
+        .add-btn { width: 100%; padding: 10px; background: white; border: 1.5px dashed #d1d5db; border-radius: 8px; font-size: 13px; font-weight: 600; color: #16a34a; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; margin-top: 12px; margin-bottom: 24px; }
+        .add-btn:hover { background: #f0fdf4; border-color: #16a34a; }
+        
+        /* PREVIEW AREA CSS */
+        .preview-area { flex: 1; background: #e5e5e5; display: flex; flex-direction: column; overflow: hidden; }
+        .preview-header { background: white; border-bottom: 1px solid #e5e7eb; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; z-index: 5; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .preview-actions { display: flex; gap: 10px; }
+        .action-btn { padding: 9px 18px; border: 1px solid #d1d5db; background: white; border-radius: 8px; font-size: 13px; font-weight: 600; color: #374151; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .action-btn:hover { background: #f9fafb; }
+        .action-btn.primary { background: #16a34a; border-color: #16a34a; color: white; }
+        .action-btn.primary:hover { background: #15803d; box-shadow: 0 2px 8px rgba(22, 163, 74, 0.2); }
+        .zoom-tools { display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb; }
+        .zoom-btn { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid #e5e7eb; border-radius: 6px; color: #4b5563; cursor: pointer; }
+        .zoom-value { font-size: 13px; font-weight: 600; color: #374151; min-width: 44px; text-align: center; }
+        
+        /* CANVAS KERTAS A4 CSS (TELAH DIPERBAIKI) */
+        /* Tambahkan align-items: flex-start agar flexbox tidak menahan tinggi elemen anak */
+        .preview-canvas { flex: 1; overflow: auto; padding: 40px; display: flex; justify-content: center; align-items: flex-start; }
+        .preview-canvas::-webkit-scrollbar { width: 8px; height: 8px; }
+        .preview-canvas::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 4px; }
+        
+        .cv-sheet { 
+            width: 210mm; 
+            min-height: 297mm; 
+            height: max-content; /* <--- Kunci perbaikan 1: Tinggi dipaksa menyesuaikan isi */
+            background: #ffffff; 
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); 
             position: relative;
-            padding: 48px 48px 32px;
+            transform-origin: top center; 
+            transition: transform 0.2s;
+            color: #000000; 
         }
 
-        .cv-name {
-            font-family: 'Sora', sans-serif;
-            font-size: 48px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 48px;
-            letter-spacing: -0.03em;
-            line-height: 1.1;
+        #main-drop {
+            min-height: 297mm; 
+            height: max-content; /* <--- Kunci perbaikan 2: Area konten juga menyesuaikan isi */
+            padding: 20mm; 
+            position: relative;
         }
 
-        .cv-image {
-            position: absolute;
-            top: 48px;
-            right: 48px;
-            width: 140px;
-            height: 180px;
-            border-radius: 4px;
-            overflow: hidden;
-            background: linear-gradient(135deg, #7c2d12, #991b1b);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-        }
+        /* Notifikasi */
+        .notify { position: fixed; bottom: 24px; right: 24px; display: flex; align-items: center; gap: 12px; padding: 14px 20px; background: white; border-left: 4px solid #16a34a; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); transform: translateY(120px); opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1000; }
+        .notify.show { transform: translateY(0); opacity: 1; }
+        .notify i { font-size: 18px; color: #16a34a; }
+        .notify span { font-size: 14px; font-weight: 600; color: #111827; }
 
-        .cv-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .cv-block {
-            padding: 0 48px 5px;
-        }
-
-        .block-head {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .block-icon {
-            width: 36px;
-            height: 36px;
-            background: #111827;
-            border-radius: 50%;
+        .btn-back {
+            width: 35px;
+            height: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 50%;
+            background: #f1f5f9;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
         }
 
-        .block-icon i {
+        .btn-back:hover {
+            background: #10b981; /* Warna hijau Anda */
             color: white;
-            font-size: 15px;
-        }
-
-        .block-title {
-            font-family: 'Sora', sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            color: #111827;
-            letter-spacing: 0.03em;
-        }
-
-        .data-table {
-            width: 100%;
-            font-size: 14px;
-            line-height: 1.9;
-        }
-
-        .data-table td {
-            padding: 2px 0;
-        }
-
-        .data-label {
-            color: #111827;
-            font-weight: 600;
-            width: 180px;
-            padding-right: 20px;
-        }
-
-        .data-value {
-            color: #4b5563;
-        }
-
-        .data-table.split .data-label {
-            width: 280px;
-        }
-
-        .data-table.split .data-value {
-            width: 240px;
-        }
-
-        .data-table.split .data-year {
-            text-align: right;
-            color: #6b7280;
-            font-weight: 500;
-        }
-
-        .skill-list p {
-            font-size: 14px;
-            line-height: 1.9;
-            color: #4b5563;
-            margin-bottom: 4px;
-        }
-
-        .skill-list .lang {
-            margin-top: 16px;
-            font-weight: 600;
-            color: #111827;
-        }
-
-        .notify {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 20px;
-            background: white;
-            border-left: 4px solid #16a34a;
-            border-radius: 10px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-            transform: translateY(120px);
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 1000;
-        }
-
-        .notify.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .notify i {
-            font-size: 18px;
-            color: #16a34a;
-        }
-
-        .notify span {
-            font-size: 14px;
-            font-weight: 600;
-            color: #111827;
-        }
-
-        .hint-text {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 6px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        @media (max-width: 1200px) {
-            .sidebar {
-                width: 340px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .editor-layout {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                height: 50vh;
-            }
-            
-            .preview-area {
-                height: 50vh;
-            }
+            border-color: #10b981;
+            transform: translateX(-3px); /* Efek sedikit bergeser ke kiri */
         }
     </style>
 </head>
@@ -724,621 +118,518 @@
 
 <div class="editor-layout">
     
+    <!-- SIDEBAR FORM -->
     <div class="sidebar">
-        
         <div class="sidebar-top">
-            <a href="{{ url('/templates') }}" class="back-link">
-                <i class="fas fa-arrow-left"></i>
-                Kembali ke Template
-            </a>
-            
-            <div class="template-badge">
-                <i class="fas fa-check-circle"></i>
-                Template Aktif
+            <a href="{{ route('user.dashboard') }}" class="back-link"><i class="fas fa-arrow-left"></i> Keluar</a>
+            <h1 class="sidebar-title">Edit Resume</h1>
+            <p class="sidebar-subtitle">Isi data Anda dengan lengkap</p>
+
+            <div style="margin-bottom: 20px;">
+                <label style="font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">Nama Dokumen</label>
+                <input type="text" id="documentTitle" class="input" style="padding: 8px 12px; font-size: 13px;" value="{{ $resume->title ?? 'Resume Baru' }}" placeholder="Contoh: CV Lamaran Kerja PT ABC">
             </div>
             
-            <h1 class="sidebar-title">Edit CV Anda</h1>
-            <p class="sidebar-subtitle">Isi informasi dengan lengkap dan jujur</p>
-            
             <div class="tabs">
-                <button class="tab active" data-section="personal">
-                    <i class="fas fa-user"></i>
-                    <span>Pribadi</span>
-                </button>
-                <button class="tab" data-section="experience">
-                    <i class="fas fa-briefcase"></i>
-                    <span>Pengalaman</span>
-                </button>
-                <button class="tab" data-section="education">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>Pendidikan</span>
-                </button>
-                <button class="tab" data-section="skills">
-                    <i class="fas fa-star"></i>
-                    <span>Keahlian</span>
-                </button>
+                <button class="tab active" data-section="personal"><i class="fas fa-user"></i> <span>Pribadi</span></button>
+                <button class="tab" data-section="experience"><i class="fas fa-briefcase"></i> <span>Riwayat</span></button>
+                <button class="tab" data-section="education"><i class="fas fa-graduation-cap"></i> <span>Edukasi</span></button>
+                <button class="tab" data-section="skills"><i class="fas fa-star"></i> <span>Keahlian</span></button>
             </div>
         </div>
 
         <div class="sidebar-content">
-            
-            <div class="section active" id="section-personal">
-                
-                <div class="section-header">
-                    <div class="section-label">
-                        <i class="fas fa-user-circle"></i>
-                        Data Pribadi
-                    </div>
-                </div>
-
-                <div class="photo-upload">
-                    <div class="photo-circle">
-                        <i class="fas fa-camera"></i>
-                    </div>
-                    <div class="photo-text">
-                        <h4>Foto Profil</h4>
-                        <p>JPG atau PNG, maks. 2MB</p>
-                    </div>
-                    <button class="upload-btn">Pilih</button>
-                </div>
-
-                <div class="field">
-                    <label class="label">Nama Lengkap <span class="required-mark">*</span></label>
-                    <input type="text" class="input" placeholder="Contoh: Ahmad Rizki Pratama" value="Muhammad Patel">
-                </div>
-
-                <div class="field-row">
-                    <div class="field">
-                        <label class="label">Tempat Lahir</label>
-                        <input type="text" class="input" placeholder="Kota" value="Anywhere">
-                    </div>
-                    <div class="field">
-                        <label class="label">Tanggal Lahir</label>
-                        <input type="date" class="input" value="1998-05-16">
-                    </div>
-                </div>
-
-                <div class="field-row">
-                    <div class="field">
-                        <label class="label">Jenis Kelamin</label>
-                        <select class="select">
-                            <option>Laki-laki</option>
-                            <option>Perempuan</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label class="label">Agama</label>
-                        <select class="select">
-                            <option>Islam</option>
-                            <option>Kristen</option>
-                            <option>Katolik</option>
-                            <option>Hindu</option>
-                            <option>Buddha</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Alamat Lengkap</label>
-                    <input type="text" class="input" placeholder="Jalan, No, RT/RW, Kelurahan, Kecamatan" value="Anywhere 123 St., Any City">
-                </div>
-
-                <div class="field-row">
-                    <div class="field">
-                        <label class="label">No. Telepon</label>
-                        <input type="tel" class="input" placeholder="08xx xxxx xxxx" value="123-456-7890">
-                    </div>
-                    <div class="field">
-                        <label class="label">Email</label>
-                        <input type="email" class="input" placeholder="email@domain.com" value="hello@example.com">
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="section" id="section-experience">
-                
-                <div class="section-header">
-                    <div class="section-label">
-                        <i class="fas fa-building"></i>
-                        Riwayat Pengalaman
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div>
-                            <div class="card-title">Ketua Himpunan Mahasiswa</div>
-                            <div class="card-subtitle">Universitas Negeri Rimbeno</div>
-                        </div>
-                        <div class="card-actions">
-                            <button class="icon-btn">
-                                <i class="fas fa-grip-vertical"></i>
-                            </button>
-                            <button class="icon-btn delete">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Jabatan</label>
-                        <input type="text" class="input" value="Ketua Himpunan Mahasiswa">
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Nama Organisasi</label>
-                        <input type="text" class="input" value="Universitas Negeri Rimbeno">
-                    </div>
-
-                    <div class="field-row">
-                        <div class="field">
-                            <label class="label">Tahun Mulai</label>
-                            <input type="text" class="input" value="2017">
-                        </div>
-                        <div class="field">
-                            <label class="label">Tahun Selesai</label>
-                            <input type="text" class="input" value="2021">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div>
-                            <div class="card-title">Karyawan Magang</div>
-                            <div class="card-subtitle">Perusahaan Liceria</div>
-                        </div>
-                        <div class="card-actions">
-                            <button class="icon-btn">
-                                <i class="fas fa-grip-vertical"></i>
-                            </button>
-                            <button class="icon-btn delete">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Jabatan</label>
-                        <input type="text" class="input" value="Karyawan Magang">
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Nama Perusahaan</label>
-                        <input type="text" class="input" value="Perusahaan Liceria">
-                    </div>
-
-                    <div class="field-row">
-                        <div class="field">
-                            <label class="label">Tahun Mulai</label>
-                            <input type="text" class="input" value="2021">
-                        </div>
-                        <div class="field">
-                            <label class="label">Tahun Selesai</label>
-                            <input type="text" class="input" value="2022">
-                        </div>
-                    </div>
-                </div>
-
-                <button class="add-btn">
-                    <i class="fas fa-plus-circle"></i>
-                    Tambah Pengalaman
-                </button>
-
-            </div>
-
-            <div class="section" id="section-education">
-                
-                <div class="section-header">
-                    <div class="section-label">
-                        <i class="fas fa-school"></i>
-                        Riwayat Pendidikan
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div>
-                            <div class="card-title">Universitas Negeri Rimbeno</div>
-                            <div class="card-subtitle">2017 - 2021</div>
-                        </div>
-                        <div class="card-actions">
-                            <button class="icon-btn">
-                                <i class="fas fa-grip-vertical"></i>
-                            </button>
-                            <button class="icon-btn delete">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Nama Institusi</label>
-                        <input type="text" class="input" value="Universitas Negeri Rimbeno">
-                    </div>
-
-                    <div class="field-row">
-                        <div class="field">
-                            <label class="label">Tahun Mulai</label>
-                            <input type="number" class="input" value="2017">
-                        </div>
-                        <div class="field">
-                            <label class="label">Tahun Lulus</label>
-                            <input type="number" class="input" value="2021">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div>
-                            <div class="card-title">SMA Negeri Liceria</div>
-                            <div class="card-subtitle">2014 - 2017</div>
-                        </div>
-                        <div class="card-actions">
-                            <button class="icon-btn">
-                                <i class="fas fa-grip-vertical"></i>
-                            </button>
-                            <button class="icon-btn delete">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Nama Sekolah</label>
-                        <input type="text" class="input" value="SMA Negeri Liceria">
-                    </div>
-
-                    <div class="field-row">
-                        <div class="field">
-                            <label class="label">Tahun Mulai</label>
-                            <input type="number" class="input" value="2014">
-                        </div>
-                        <div class="field">
-                            <label class="label">Tahun Lulus</label>
-                            <input type="number" class="input" value="2017">
-                        </div>
-                    </div>
-                </div>
-
-                <button class="add-btn">
-                    <i class="fas fa-plus-circle"></i>
-                    Tambah Pendidikan
-                </button>
-
-            </div>
-
-            <div class="section" id="section-skills">
-                
-                <div class="section-header">
-                    <div class="section-label">
-                        <i class="fas fa-lightbulb"></i>
-                        Keahlian & Kemampuan
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Keterampilan Utama</label>
-                    <div class="tags-input">
-                        <div class="tag-item">
-                            Mengoperasikan komputer
-                            <button class="tag-remove"><i class="fas fa-times"></i></button>
-                        </div>
-                        <div class="tag-item">
-                            Komunikasi tim
-                            <button class="tag-remove"><i class="fas fa-times"></i></button>
-                        </div>
-                        <div class="tag-item">
-                            Problem solving
-                            <button class="tag-remove"><i class="fas fa-times"></i></button>
-                        </div>
-                        <input type="text" class="tag-field" placeholder="Ketik & tekan Enter...">
-                    </div>
-                    <div class="hint-text">
-                        <i class="fas fa-info-circle"></i>
-                        Tekan Enter untuk menambah keterampilan
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Bahasa yang Dikuasai</label>
-                    <div class="tags-input">
-                        <div class="tag-item">
-                            Indonesia (Native)
-                            <button class="tag-remove"><i class="fas fa-times"></i></button>
-                        </div>
-                        <div class="tag-item">
-                            Inggris (Pasif)
-                            <button class="tag-remove"><i class="fas fa-times"></i></button>
-                        </div>
-                        <input type="text" class="tag-field" placeholder="Ketik & tekan Enter...">
-                    </div>
-                </div>
-
-            </div>
-
+            <div class="section active" id="section-personal"></div>
+            <div class="section" id="section-experience"></div>
+            <div class="section" id="section-education"></div>
+            <div class="section" id="section-skills"></div>
         </div>
     </div>
 
+    <!-- PREVIEW AREA -->
     <div class="preview-area">
-        
         <div class="preview-header">
-            <div class="preview-actions">
-                <button class="action-btn">
-                    <i class="fas fa-file-pdf"></i>
-                    Unduh PDF
-                </button>
-                <button class="action-btn">
-                    <i class="fas fa-save"></i>
-                    Simpan Draft
-                </button>
-                <button class="action-btn primary">
-                    <i class="fas fa-check-circle"></i>
-                    Selesai
-                </button>
-            </div>
-
             <div class="zoom-tools">
-                <button class="zoom-btn">
-                    <i class="fas fa-minus"></i>
-                </button>
-                <span class="zoom-value">100%</span>
-                <button class="zoom-btn">
-                    <i class="fas fa-plus"></i>
-                </button>
+                <button class="zoom-btn" onclick="zoomOut()"><i class="fas fa-minus"></i></button>
+                <span id="zoomVal" class="zoom-value">100%</span>
+                <button class="zoom-btn" onclick="zoomIn()"><i class="fas fa-plus"></i></button>
             </div>
+                <div class="preview-actions">
+                    <button class="action-btn" onclick="downloadPDF()"><i class="fas fa-file-pdf" style="color: #dc2626;"></i> Unduh PDF</button>
+                    @auth
+                        <button class="action-btn" onclick="saveData('draft')" id="btnDraft"><i class="fas fa-save"></i> Simpan Draft</button>
+                        <button class="action-btn primary" onclick="saveData('completed')" id="btnDone"><i class="fas fa-check-circle"></i> Selesai</button>
+                    @endauth    
+                </div>
         </div>
 
         <div class="preview-canvas">
-            <div class="cv-sheet">
-                
-                <div class="cv-top">
-                    <h1 class="cv-name">RIWAYAT HIDUP</h1>
-                    <div class="cv-image"></div>
-                </div>
-
-                <div class="cv-block">
-                    <div class="block-head">
-                        <div class="block-icon">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <h2 class="block-title">DATA PRIBADI</h2>
-                    </div>
-
-                    <table class="data-table">
-                        <tr>
-                            <td class="data-label">Nama</td>
-                            <td class="data-value">: Muhammad Patel</td>
-                        </tr>
-                        <tr>
-                            <td class="data-label">Tempat, Tanggal Lahir</td>
-                            <td class="data-value">: Anywhere, 16 Mei 1998</td>
-                        </tr>
-                        <tr>
-                            <td class="data-label">Jenis Kelamin</td>
-                            <td class="data-value">: Laki-laki</td>
-                        </tr>
-                        <tr>
-                            <td class="data-label">Agama</td>
-                            <td class="data-value">: Islam</td>
-                        </tr>
-                        <tr>
-                            <td class="data-label">Alamat</td>
-                            <td class="data-value">: Anywhere 123 St., Any City</td>
-                        </tr>
-                        <tr>
-                            <td class="data-label">Nomor Telepon</td>
-                            <td class="data-value">: 123-456-7890</td>
-                        </tr>
-                        <tr>
-                            <td class="data-label">Email</td>
-                            <td class="data-value">: hello@example.com</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="cv-block">
-                    <div class="block-head">
-                        <div class="block-icon">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <h2 class="block-title">RIWAYAT PENDIDIKAN</h2>
-                    </div>
-
-                    <table class="data-table">
-                        <tr>
-                            <td class="data-label">Universitas Negeri Rimbeno</td>
-                            <td class="data-year">2017-2021</td>
-                        </tr>
-                        <tr>
-                            <td class="data-label">SMA Negeri Liceria</td>
-                            <td class="data-year">2014-2017</td>
-                        </tr>
-                        <tr>
-                            <td class="data-label">SMP Negeri Fauget</td>
-                            <td class="data-year">2011-2014</td>
-                        </tr>
-                        <tr>
-                            <td class="data-label">SD Negeri Borcelle</td>
-                            <td class="data-year">2005-2011</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="cv-block">
-                    <div class="block-head">
-                        <div class="block-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <h2 class="block-title">PENGALAMAN ORGANISASI</h2>
-                    </div>
-
-                    <table class="data-table split">
-                        <tr>
-                            <td class="data-label">Ketua Himpunan Mahasiswa</td>
-                            <td class="data-value">Universitas Negeri Rimbeno</td>
-                            <td class="data-year">2017-2021</td>
-                        </tr>
-                        <tr>
-                            <td class="data-label">Ketua Osis</td>
-                            <td class="data-value">SMA Negeri Liceria</td>
-                            <td class="data-year">2014-2017</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="cv-block">
-                    <div class="block-head">
-                        <div class="block-icon">
-                            <i class="fas fa-briefcase"></i>
-                        </div>
-                        <h2 class="block-title">PENGALAMAN KERJA</h2>
-                    </div>
-
-                    <table class="data-table split">
-                        <tr>
-                            <td class="data-label">Karyawan Magang</td>
-                            <td class="data-value">Perusahaan Liceria</td>
-                            <td class="data-year">2021-2022</td>
-                        </tr>
-                        <tr>
-                            <td class="data-label">Pekerja Lepas</td>
-                            <td class="data-value">Wardiere Inc.</td>
-                            <td class="data-year">2020-2021</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="cv-block">
-                    <div class="block-head">
-                        <div class="block-icon">
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <h2 class="block-title">KEMAMPUAN</h2>
-                    </div>
-
-                    <div class="skill-list">
-                        <p>Mampu mengoperasikan perangkat lunak</p>
-                        <p>Mampu berkomunikasi dengan baik</p>
-                        <p>Mampu bekerja sama dengan tim</p>
-                        <p class="lang"><strong>Bahasa:</strong> Indonesia, Inggris Pasif</p>
-                    </div>
-                </div>
-
+            <div class="cv-sheet" id="cv-paper">
+                <div id="main-drop"></div>
             </div>
         </div>
     </div>
-
 </div>
 
-<div class="notify">
+<div class="notify" id="notifyBox">
     <i class="fas fa-check-circle"></i>
-    <span>Perubahan tersimpan!</span>
+    <span id="notifyMsg">Tersimpan!</span>
 </div>
 
 <script>
-const tabs = document.querySelectorAll('.tab');
-const sections = document.querySelectorAll('.section');
+    // =========================================================
+    // 1. DATA PARSING (Super Aman)
+    // =========================================================
+    let rawSchema = {!! json_encode($resume->layout_schema ?? $resume->template->layout_schema ?? []) !!};
+    let rawGlobal = {!! json_encode($resume->global_settings ?? $resume->template->global_settings ?? []) !!};
+    const cvTemplateId = "{{ $resume->cv_template_id ?? $resume->template->id }}";
+    let resumeId = "{{ $resume->id ?? '' }}";
 
-tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        sections.forEach(s => s.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById('section-' + tab.dataset.section).classList.add('active');
-    });
-});
+    let schema = [];
+    try { schema = typeof rawSchema === 'string' ? JSON.parse(rawSchema) : rawSchema; } catch(e) {}
+    if (!Array.isArray(schema)) schema = typeof schema === 'object' && schema !== null ? Object.values(schema) : [];
 
-const uploadBtn = document.querySelector('.upload-btn');
-const photoCircle = document.querySelector('.photo-circle');
-const cvImage = document.querySelector('.cv-image');
+    let globalSettings = { fontFamily: "'DM Sans', sans-serif" };
+    try { globalSettings = typeof rawGlobal === 'string' ? JSON.parse(rawGlobal) : rawGlobal; } catch(e) {}
+    if (globalSettings && globalSettings.fontFamily) {
+        document.getElementById('cv-paper').style.fontFamily = globalSettings.fontFamily;
+    }
 
-uploadBtn.addEventListener('click', () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                photoCircle.innerHTML = `<img src="${e.target.result}">`;
-                cvImage.innerHTML = `<img src="${e.target.result}">`;
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-    input.click();
-});
+    // =========================================================
+    // 2. HELPER FUNCTIONS
+    // =========================================================
+    function esc(str) { return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function safeText(val) { return String(val || '').replace(/\n/g, '<br>'); }
+    function parseItems(itemsData) {
+        let items = [];
+        try { items = typeof itemsData === 'string' ? JSON.parse(itemsData) : itemsData; } catch(e) {}
+        return Array.isArray(items) ? items : [];
+    }
+    function findBlock(id, arr) {
+        for (const b of arr) { 
+            if (b.id === id) return b; 
+            if (b.isLayout) { 
+                if (b.layoutType === 'col1') { const f = findBlock(id, b.children||[]); if(f) return f; } 
+                else { for (const col of b.columns||[]) { const f = findBlock(id, col); if(f) return f; } } 
+            } 
+        } 
+        return null;
+    }
 
-document.querySelectorAll('.tags-input').forEach(container => {
-    const input = container.querySelector('.tag-field');
-    input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && input.value.trim()) {
-            e.preventDefault();
-            const tag = document.createElement('div');
-            tag.className = 'tag-item';
-            tag.innerHTML = `${input.value.trim()}<button class="tag-remove"><i class="fas fa-times"></i></button>`;
-            container.insertBefore(tag, input);
-            input.value = '';
-            tag.querySelector('.tag-remove').addEventListener('click', () => tag.remove());
-        }
-    });
-});
+    // =========================================================
+    // 3. CANVAS RENDERER (100% Identik dengan Editor Admin)
+    // =========================================================
+    function renderCanvas() {
+        const container = document.getElementById('main-drop');
+        container.innerHTML = '';
+        schema.forEach(block => container.appendChild(renderLayoutNode(block)));
+    }
 
-document.querySelectorAll('.tag-remove').forEach(btn => {
-    btn.addEventListener('click', () => btn.closest('.tag-item').remove());
-});
-
-const addBtns = document.querySelectorAll('.add-btn');
-addBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        const notify = document.querySelector('.notify');
-        notify.classList.add('show');
-        setTimeout(() => notify.classList.remove('show'), 2000);
-    });
-});
-
-const zoomBtns = document.querySelectorAll('.zoom-btn');
-const zoomValue = document.querySelector('.zoom-value');
-const cvSheet = document.querySelector('.cv-sheet');
-let zoom = 100;
-
-zoomBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        if (btn.querySelector('.fa-plus') && zoom < 150) {
-            zoom += 10;
-        } else if (btn.querySelector('.fa-minus') && zoom > 50) {
-            zoom -= 10;
-        }
-        zoomValue.textContent = zoom + '%';
-        cvSheet.style.transform = `scale(${zoom / 100})`;
-    });
-});
-
-const actionBtns = document.querySelectorAll('.action-btn');
-actionBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        const notify = document.querySelector('.notify');
-        const span = notify.querySelector('span');
+    function renderLayoutNode(block) {
+        const wrapper = document.createElement('div');
+        const p = block.props;
         
-        if (btn.textContent.includes('PDF')) {
-            span.textContent = 'PDF berhasil diunduh!';
-        } else if (btn.textContent.includes('Draft')) {
-            span.textContent = 'Draft tersimpan!';
+        if (block.isLayout) {
+            wrapper.style.cssText = `margin-top:${p.marginTop||0}px; margin-bottom:${p.marginBottom||0}px;`;
+            if (block.layoutType === 'col1') {
+                if (block.children && block.children.length) block.children.forEach(child => wrapper.appendChild(renderLayoutNode(child)));
+            } else {
+                const [l, r] = (p.ratio || '50_50').split('_').map(Number);
+                const grid = document.createElement('div'); 
+                grid.style.cssText = `display:grid; grid-template-columns:${l}fr ${r}fr; gap:${p.gap||16}px;`;
+                block.columns.forEach(col => {
+                    const colDiv = document.createElement('div');
+                    if (col.length) col.forEach(child => colDiv.appendChild(renderLayoutNode(child)));
+                    grid.appendChild(colDiv);
+                });
+                wrapper.appendChild(grid);
+            }
         } else {
-            span.textContent = 'CV selesai dibuat!';
+            wrapper.innerHTML = renderElementHTML(block);
         }
-        
-        notify.classList.add('show');
-        setTimeout(() => notify.classList.remove('show'), 2500);
+        return wrapper;
+    }
+
+    function renderElementHTML(block) {
+        const p = block.props; 
+        const wrap = (inner) => `<div style="margin-top:${p.marginTop||0}px;margin-bottom:${p.marginBottom||0}px;">${inner}</div>`;
+        const heading = (t, sz, c, sl, lc, lt='1.5', al='left') => `<div style="margin-bottom:6px; padding-bottom:3px; ${(sl===true||sl==='true')?`border-bottom:${lt}px solid ${lc||'#0d0d0d'};`:''}"><span style="font-size:${sz||12}px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:${c||'#0d0d0d'}; text-align:${al}; display:block;">${esc(t)}</span></div>`;
+
+        switch(block.type) {
+            case 'header': {
+                const fw = (p.nameBold===true||p.nameBold==='true') ? '700' : '400';
+                const textHtml = `<div style="text-align:${p.align||'left'}; flex:1;">
+                    <div style="font-size:${p.nameSize||28}px; font-weight:${fw}; color:${p.nameColor||'#0d0d0d'}; line-height:1.1; letter-spacing:-0.5px;">${esc(p.name)}</div>
+                    <div style="font-size:${p.titleSize||14}px; color:${p.titleColor||'#555'}; margin-top:4px;">${esc(p.title)}</div>
+                    </div>`;
+                if(p.showPhoto === true || p.showPhoto === 'true') {
+                    const br = p.photoShape==='circle' ? '50%' : '8px'; const s = (p.photoSize||80)+'px';
+                    const borderStyle = (p.border===true||p.border==='true') ? `border:2px solid ${p.borderColor||'#000'};` : '';
+                    let photoHtml = p.imageUrl && p.imageUrl.trim() !== '' ? 
+                        `<div style="width:${s}; height:${s}; border-radius:${br}; background: url('${p.imageUrl}') center/cover no-repeat; flex-shrink:0; box-sizing: border-box; ${borderStyle}"></div>` : 
+                        `<div style="width:${s}; height:${s}; border-radius:${br}; background:#e2e8f0; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#94a3b8; box-sizing: border-box; ${borderStyle} overflow:hidden;"><i class="fas fa-camera" style="font-size:${Math.round(parseInt(s)*0.4)}px;"></i></div>`;
+                    const alignRule = p.photoPos === 'left' ? 'flex-direction:row;' : 'flex-direction:row-reverse;';
+                    return wrap(`<div style="display:flex; justify-content:space-between; align-items:center; gap:20px; ${alignRule}">${textHtml}${photoHtml}</div>`);
+                }
+                return wrap(textHtml);
+            }
+            case 'photo': {
+                const br = p.shape==='circle' ? '50%' : (p.shape==='rounded' ? '10px' : '0');
+                const border = (p.border===true||p.border==='true') ? `border:2px solid ${p.borderColor||'#e4e4e4'};` : '';
+                const s = (p.size||100)+'px';
+                let photoHtml = p.imageUrl && p.imageUrl.trim() !== '' ? 
+                    `<div style="display:inline-block; width:${s}; height:${s}; border-radius:${br}; background: url('${p.imageUrl}') center/cover no-repeat; box-sizing: border-box; ${border}"></div>` : 
+                    `<div style="display:inline-block; width:${s}; height:${s}; border-radius:${br}; background:#d1d5db; ${border} box-sizing: border-box; display:inline-flex; align-items:center; justify-content:center; color:#9ca3af;"><i class="fas fa-user" style="font-size:${Math.round(parseInt(s)*0.4)}px;"></i></div>`;
+                return wrap(`<div style="text-align:${p.align||'center'};">${photoHtml}</div>`);
+            }
+            case 'contact': {
+                const fs = (p.fontSize||11)+'px'; const ic = p.iconColor||'#000000'; const items = [];
+                if (p.phone) items.push(`<i class="fas fa-phone" style="color:${ic}; width:14px;"></i> ${esc(p.phone)}`);
+                if (p.email) items.push(`<i class="fas fa-envelope" style="color:${ic}; width:14px;"></i> ${esc(p.email)}`);
+                if (p.address) items.push(`<i class="fas fa-map-marker-alt" style="color:${ic}; width:14px;"></i> ${esc(p.address)}`);
+                if (p.website) items.push(`<i class="fas fa-globe" style="color:${ic}; width:14px;"></i> ${esc(p.website)}`);
+                if (p.layout === 'horizontal') return wrap(`<div style="display:flex; flex-wrap:wrap; gap:14px; font-size:${fs}; color:#000000; justify-content:${p.align==='center'?'center':(p.align==='right'?'flex-end':'flex-start')};">${items.map(i=>`<span>${i}</span>`).join('')}</div>`);
+                return wrap(`<div style="font-size:${fs}; line-height:2; color:#000000; text-align:${p.align};">${items.map(i=>`<div>${i}</div>`).join('')}</div>`);
+            }
+            case 'summary':
+                return wrap(`${heading(p.heading,p.headingSize,p.headingColor,p.showLine,p.lineColor,p.lineThickness)}<p style="font-size:${p.textSize||11}px; line-height:1.6; color:#000000; text-align:${p.textAlign||'justify'}; margin:0;">${safeText(p.text)}</p>`);
+            
+            case 'experience': case 'volunteer': case 'organization': {
+                const items = parseItems(p.items);
+                const rows = items.map(it => `<div style="margin-bottom:10px;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-size:${p.fontSize||11}px; font-weight:700; color:#0d0d0d;">${esc(it.title||it.role)}</div><div style="font-size:${p.fontSize||11}px; color:#333;">${esc(it.company||it.org)}${it.location?' · '+esc(it.location):''}</div></div><div style="font-size:${(parseInt(p.fontSize||11)-1)}px; color:#555; white-space:nowrap; margin-left:8px;">${esc(it.period)}</div></div>${it.desc ? `<div style="font-size:${p.fontSize||11}px; color:#222; margin-top:3px; line-height:1.5;">${safeText(it.desc)}</div>` : ''}</div>`).join('');
+                return wrap(`${heading(p.heading,p.headingSize,p.headingColor,p.showLine,p.lineColor,p.lineThickness)}${rows}`);
+            }
+            case 'education': {
+                const items = parseItems(p.items);
+                const rows = items.map(it => `<div style="margin-bottom:8px;"><div style="display:flex; justify-content:space-between; align-items:flex-start;"><div><div style="font-size:${p.fontSize||11}px; font-weight:700; color:#0d0d0d;">${esc(it.degree)}</div><div style="font-size:${p.fontSize||11}px; color:#333;">${esc(it.school)}${it.gpa?' · '+esc(it.gpa):''}</div></div><div style="font-size:${(parseInt(p.fontSize||11)-1)}px; color:#555; white-space:nowrap; margin-left:8px;">${esc(it.period)}</div></div>${it.desc ? `<div style="font-size:${p.fontSize||11}px; color:#222; margin-top:2px; line-height:1.5;">${safeText(it.desc)}</div>` : ''}</div>`).join('');
+                return wrap(`${heading(p.heading,p.headingSize,p.headingColor,p.showLine,p.lineColor,p.lineThickness)}${rows}`);
+            }
+            case 'project': {
+                const items = parseItems(p.items);
+                const rows = items.map(it => `<div style="margin-bottom:8px;"><div style="display:flex; justify-content:space-between;"><div style="font-size:${p.fontSize||11}px; font-weight:700; color:#0d0d0d;">${esc(it.name)} ${it.link?`<span style="color:#16a34a; font-weight:400; font-size:10px;">${esc(it.link)}</span>`:''}</div><div style="font-size:${(parseInt(p.fontSize||11)-1)}px; color:#555;">${esc(it.period)}</div></div><div style="font-size:${p.fontSize||11}px; color:#333;">${esc(it.tech)}</div>${it.desc ? `<div style="font-size:${p.fontSize||11}px; color:#222; margin-top:2px; line-height:1.5;">${safeText(it.desc)}</div>` : ''}</div>`).join('');
+                return wrap(`${heading(p.heading,p.headingSize,p.headingColor,p.showLine,p.lineColor,p.lineThickness)}${rows}`);
+            }
+            case 'certification': case 'award': {
+                const items = parseItems(p.items);
+                const rows = items.map(it => `<div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:${p.fontSize||11}px; color:#000;"><div><strong>${esc(it.name)}</strong> — ${esc(it.issuer||it.org)}${it.desc?' · '+esc(it.desc):''}${it.link?` <span style="color:#16a34a; font-size:10px;">(${esc(it.link)})</span>`:''}</div><div style="color:#555;">${esc(it.year)}</div></div>`).join('');
+                return wrap(`${heading(p.heading,p.headingSize,p.headingColor,p.showLine,p.lineColor,p.lineThickness)}${rows}`);
+            }
+            case 'publication': {
+                const items = parseItems(p.items);
+                const rows = items.map(it => `<div style="margin-bottom:6px; font-size:${p.fontSize||11}px; color:#000;"><strong>${esc(it.title)}</strong> — <span style="font-style:italic; color:#333;">${esc(it.publisher)}</span> (${esc(it.year)})${it.link ? `<br><span style="color:#16a34a; font-size:10px;">${esc(it.link)}</span>` : ''}</div>`).join('');
+                return wrap(`${heading(p.heading,p.headingSize,p.headingColor,p.showLine,p.lineColor,p.lineThickness)}${rows}`);
+            }
+            case 'portfolio': case 'references': {
+                const items = parseItems(p.items);
+                const rows = items.map(it=>`<div style="margin-bottom:8px; font-size:${p.fontSize||11}px; color:#000;"><div style="font-weight:700;">${esc(it.name||it.title)} <span style="color:#16a34a; font-weight:400; font-size:10px;">${esc(it.url||'')}</span></div><div style="color:#333;">${esc(it.title||it.desc||'')}</div>${it.phone?`<div style="color:#333;">${esc(it.phone)} · ${esc(it.email)}</div>`:''}</div>`).join('');
+                return wrap(`${heading(p.heading,p.headingSize,p.headingColor,p.showLine,p.lineColor,p.lineThickness)}${rows}`);
+            }
+            case 'skills': {
+                const items = parseItems(p.items);
+                let body = p.style === 'grouped' ? items.map(it => `<div style="margin-bottom:4px; font-size:${p.fontSize||11}px; color:#000;"><strong>${esc(it.category)}:</strong> ${esc(it.list)}</div>`).join('') : `<div style="font-size:${p.fontSize||11}px; color:#000000;">${items.map(it=>esc(it.list)).join(', ')}</div>`;
+                return wrap(`${heading(p.heading,p.headingSize,p.headingColor,p.showLine,p.lineColor,p.lineThickness)}${body}`);
+            }
+            case 'languages': {
+                const items = parseItems(p.items);
+                const rows = items.map(it=>`<div style="display:flex; justify-content:space-between; font-size:${p.fontSize||11}px; margin-bottom:3px; color:#000;"><span>${esc(it.lang)}</span><span style="color:#333;">${esc(it.level)}</span></div>`).join('');
+                return wrap(`${heading(p.heading,p.headingSize,p.headingColor,p.showLine,p.lineColor,p.lineThickness)}${rows}`);
+            }
+            case 'interests': {
+                const tags = (p.list||'').split(',').map(s=>s.trim()).filter(Boolean);
+                const body = `<div style="display:flex; flex-wrap:wrap; gap:6px;">${tags.map(t=>`<span style="font-size:${p.fontSize||11}px; background:#f1f5f9; padding:2px 10px; border-radius:20px; color:#000000; border:1px solid #ccc;">${esc(t)}</span>`).join('')}</div>`;
+                return wrap(`${heading(p.heading,p.headingSize,p.headingColor,p.showLine,p.lineColor,p.lineThickness)}${body}`);
+            }
+            case 'social': {
+                const items = [];
+                if (p.linkedin) items.push(`<div><i class="fab fa-linkedin" style="color:#000; width:14px;"></i> ${esc(p.linkedin)}</div>`);
+                if (p.github) items.push(`<div><i class="fab fa-github" style="color:#000; width:14px;"></i> ${esc(p.github)}</div>`);
+                if (p.twitter) items.push(`<div><i class="fab fa-twitter" style="color:#000; width:14px;"></i> ${esc(p.twitter)}</div>`);
+                if (p.instagram) items.push(`<div><i class="fab fa-instagram" style="color:#000; width:14px;"></i> ${esc(p.instagram)}</div>`);
+                return wrap(`${heading(p.heading,p.headingSize,p.headingColor,p.showLine,p.lineColor,p.lineThickness)}<div style="font-size:${p.fontSize||11}px; line-height:2; color:#000000;">${items.join('')}</div>`);
+            }
+            case 'divider': return wrap(`<hr style="border:none; border-top:${p.thickness||1}px solid ${p.color||'#000000'}; margin:0;">`);
+            case 'spacer': return wrap(`<div style="height:${p.height||20}px;"></div>`);
+            case 'text_block': {
+                const fw = (p.bold===true||p.bold==='true') ? 'bold' : 'normal';
+                const fi = (p.italic===true||p.italic==='true') ? 'italic' : 'normal';
+                return wrap(`<div style="font-size:${p.fontSize||11}px; color:${p.color||'#000000'}; text-align:${p.align||'left'}; font-weight:${fw}; font-style:${fi}; line-height:1.6;">${safeText(p.text)}</div>`);
+            }
+            case 'section_title': {
+                const border = (p.showLine===true||p.showLine==='true') ? `border-bottom:${p.lineThickness||'1.5'}px solid ${p.lineColor||'#0d0d0d'};` : '';
+                return wrap(`<div style="padding-bottom:3px; margin-bottom:4px; ${border}"><span style="font-size:${p.fontSize||12}px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:${p.color||'#0d0d0d'}; text-align:${p.align||'left'}; display:block;">${esc(p.text)}</span></div>`);
+            }
+            default: return '';
+        }
+    }
+
+    // =========================================================
+    // 4. SIDEBAR DYNAMIC FORMS 
+    // =========================================================
+    window.updateProp = function(blockId, key, value) {
+        const block = findBlock(blockId, schema);
+        if(block) { block.props[key] = value; renderCanvas(); }
+    }
+    
+    window.updateItemProp = function(blockId, idx, key, value) {
+        const block = findBlock(blockId, schema);
+        if(block) {
+            let items = parseItems(block.props.items);
+            if(items[idx]) { items[idx][key] = value; block.props.items = JSON.stringify(items); renderCanvas(); }
+        }
+    }
+
+    window.uploadUserPhoto = function(id, input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) { updateProp(id, 'imageUrl', e.target.result); };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    window.addUserItem = function(blockId, type) {
+        const block = findBlock(blockId, schema); if (!block) return;
+        let items = parseItems(block.props.items);
+        const newItems = {
+            experience: { title:'Posisi', company:'Perusahaan', location:'', period:'2024', desc:'' },
+            volunteer: { role:'Peran', org:'Organisasi', period:'2024', desc:'' },
+            education: { degree:'Gelar', school:'Instansi', gpa:'', period:'2024', desc:'' },
+            organization: { role:'Peran', org:'Organisasi', period:'2024', desc:'' },
+            project: { name:'Proyek Baru', link:'', tech:'Alat', period:'2024', desc:'' },
+            certification: { name:'Sertifikat', issuer:'Penerbit', year:'2024', link:'' },
+            award: { name:'Penghargaan', org:'Penyelenggara', year:'2024', desc:'' },
+            publication: { title:'Judul', publisher:'Penerbit', year:'2024', link:'' },
+            portfolio: { title:'Judul', url:'', desc:'' },
+            references: { name:'Nama', title:'Jabatan', phone:'', email:'' },
+            skills: { category:'Kategori', list:'Skill 1, Skill 2' },
+            languages: { lang:'Bahasa', level:'Menengah' }
+        };
+        items.push(newItems[type] || {}); 
+        block.props.items = JSON.stringify(items);
+        renderCanvas(); buildSidebarForms(); 
+    }
+
+    window.removeUserItem = function(blockId, idx) {
+        const block = findBlock(blockId, schema); if (!block) return;
+        let items = parseItems(block.props.items);
+        items.splice(idx, 1); block.props.items = JSON.stringify(items);
+        renderCanvas(); buildSidebarForms(); 
+    }
+
+    const tabMapping = {
+        'header': 'personal', 'photo': 'personal', 'contact': 'personal', 'summary': 'personal', 'text_block': 'personal',
+        'experience': 'experience', 'volunteer': 'experience', 'organization': 'experience', 'project': 'experience',
+        'education': 'education', 'certification': 'education', 'award': 'education', 'publication': 'education',
+        'skills': 'skills', 'languages': 'skills', 'interests': 'skills', 'social': 'skills', 'portfolio': 'skills', 'references': 'skills'
+    };
+
+    function buildSidebarForms() {
+        document.getElementById('section-personal').innerHTML = '';
+        document.getElementById('section-experience').innerHTML = '';
+        document.getElementById('section-education').innerHTML = '';
+        document.getElementById('section-skills').innerHTML = '';
+        traverseForForms(schema);
+    }
+
+    function traverseForForms(arr) {
+        arr.forEach(block => {
+            if(block.isLayout) {
+                if(block.layoutType === 'col1') traverseForForms(block.children || []);
+                else (block.columns || []).forEach(col => traverseForForms(col));
+            } else {
+                createFormHTML(block);
+            }
+        });
+    }
+
+    function createFormHTML(block) {
+        const targetTab = tabMapping[block.type] || 'personal';
+        const section = document.getElementById('section-' + targetTab);
+        if(!section) return;
+
+        let html = ''; const p = block.props; const id = block.id;
+
+        const input = (label, key, val, type='text') => `<div class="field"><label class="label">${label}</label><input type="${type}" class="input" value="${esc(val)}" oninput="updateProp('${id}', '${key}', this.value)"></div>`;
+        const textarea = (label, key, val) => `<div class="field"><label class="label">${label}</label><textarea class="textarea" oninput="updateProp('${id}', '${key}', this.value)">${esc(val)}</textarea></div>`;
+        const itemInput = (idx, label, key, val) => `<div class="field"><label class="label">${label}</label><input type="text" class="input" value="${esc(val)}" oninput="updateItemProp('${id}', ${idx}, '${key}', this.value)"></div>`;
+        const itemTextarea = (idx, label, key, val) => `<div class="field"><label class="label">${label}</label><textarea class="textarea" oninput="updateItemProp('${id}', ${idx}, '${key}', this.value)">${esc(val)}</textarea></div>`;
+
+        // Abaikan spacer/divider agar tidak menuh-menuhin sidebar user
+        if(block.type === 'spacer' || block.type === 'divider' || block.type === 'section_title') return;
+
+        html += `<div class="section-label">${p.heading || block.type.toUpperCase()}</div>`;
+
+        if(block.type === 'header') {
+            html += input('Nama Lengkap', 'name', p.name) + input('Posisi / Profesi', 'title', p.title);
+            if(p.showPhoto === true || p.showPhoto === 'true') html += `<div class="field"><label class="label">Upload Foto</label><input type="file" class="input" accept="image/*" onchange="uploadUserPhoto('${id}', this)"></div>`;
+        } 
+        else if(block.type === 'photo') {
+            html += `<div class="field"><label class="label">Upload Foto</label><input type="file" class="input" accept="image/*" onchange="uploadUserPhoto('${id}', this)"></div>`;
+        }
+        else if(block.type === 'contact') {
+            html += input('Nomor Telepon', 'phone', p.phone) + input('Email', 'email', p.email) + input('Alamat', 'address', p.address) + input('Website / LinkedIn', 'website', p.website);
+        }
+        else if(block.type === 'summary') { html += textarea('Profil Diri', 'text', p.text); }
+        else if(block.type === 'text_block') { html += textarea('Teks', 'text', p.text); }
+        else if(block.type === 'interests') { html += textarea('Daftar Minat (Pisah Koma)', 'list', p.list); }
+        else if(block.type === 'social') {
+            html += input('LinkedIn', 'linkedin', p.linkedin) + input('GitHub', 'github', p.github) + input('Twitter', 'twitter', p.twitter) + input('Instagram', 'instagram', p.instagram);
+        }
+        else {
+            // Semua Elemen Bertipe Array (Experience, Education, dll)
+            const labelMap = { experience: 'Pengalaman', volunteer: 'Sukarelawan', project: 'Proyek', education: 'Pendidikan', certification: 'Sertifikasi', award: 'Penghargaan', publication: 'Publikasi', portfolio: 'Portfolio', organization: 'Organisasi', references: 'Referensi', skills: 'Keahlian', languages: 'Bahasa' };
+            if(!labelMap[block.type]) return;
+
+            let items = parseItems(p.items);
+            items.forEach((it, idx) => {
+                html += `<div class="card"><button class="icon-btn delete" onclick="removeUserItem('${id}', ${idx})"><i class="fas fa-trash-alt"></i></button><div style="margin-bottom: 12px; font-weight: 600;">Item #${idx+1}</div>`;
+                switch(block.type) {
+                    case 'experience': html += itemInput(idx, 'Jabatan', 'title', it.title) + itemInput(idx, 'Perusahaan', 'company', it.company) + itemInput(idx, 'Lokasi', 'location', it.location) + itemInput(idx, 'Periode', 'period', it.period) + itemTextarea(idx, 'Deskripsi', 'desc', it.desc); break;
+                    case 'volunteer': html += itemInput(idx, 'Peran', 'role', it.role) + itemInput(idx, 'Organisasi', 'org', it.org) + itemInput(idx, 'Periode', 'period', it.period) + itemTextarea(idx, 'Deskripsi', 'desc', it.desc); break;
+                    case 'education': html += itemInput(idx, 'Gelar', 'degree', it.degree) + itemInput(idx, 'Institusi', 'school', it.school) + itemInput(idx, 'Periode', 'period', it.period) + itemInput(idx, 'IPK/Nilai', 'gpa', it.gpa) + itemTextarea(idx, 'Catatan Tambahan', 'desc', it.desc); break;
+                    case 'certification': html += itemInput(idx, 'Sertifikat', 'name', it.name) + itemInput(idx, 'Penerbit', 'issuer', it.issuer) + itemInput(idx, 'Tahun', 'year', it.year) + itemInput(idx, 'Link URL', 'link', it.link); break;
+                    case 'project': html += itemInput(idx, 'Nama Proyek', 'name', it.name) + itemInput(idx, 'Link URL', 'link', it.link) + itemInput(idx, 'Teknologi', 'tech', it.tech) + itemInput(idx, 'Periode', 'period', it.period) + itemTextarea(idx, 'Deskripsi', 'desc', it.desc); break;
+                    case 'award': html += itemInput(idx, 'Penghargaan', 'name', it.name) + itemInput(idx, 'Penyelenggara', 'org', it.org) + itemInput(idx, 'Tahun', 'year', it.year) + itemTextarea(idx, 'Deskripsi', 'desc', it.desc); break;
+                    case 'publication': html += itemInput(idx, 'Judul', 'title', it.title) + itemInput(idx, 'Penerbit', 'publisher', it.publisher) + itemInput(idx, 'Tahun', 'year', it.year) + itemInput(idx, 'Link URL', 'link', it.link); break;
+                    case 'organization': html += itemInput(idx, 'Peran', 'role', it.role) + itemInput(idx, 'Organisasi', 'org', it.org) + itemInput(idx, 'Periode', 'period', it.period) + itemTextarea(idx, 'Deskripsi', 'desc', it.desc); break;
+                    case 'portfolio': html += itemInput(idx, 'Judul', 'title', it.title) + itemInput(idx, 'Link URL', 'url', it.url) + itemTextarea(idx, 'Deskripsi', 'desc', it.desc); break;
+                    case 'references': html += itemInput(idx, 'Nama', 'name', it.name) + itemInput(idx, 'Jabatan', 'title', it.title) + itemInput(idx, 'Telepon', 'phone', it.phone) + itemInput(idx, 'Email', 'email', it.email); break;
+                    case 'skills': html += itemInput(idx, 'Kategori', 'category', it.category) + itemInput(idx, 'Keahlian (Pisah Koma)', 'list', it.list); break;
+                    case 'languages': html += itemInput(idx, 'Bahasa', 'lang', it.lang) + itemInput(idx, 'Tingkat', 'level', it.level); break;
+                }
+                html += `</div>`;
+            });
+            html += `<button class="add-btn" onclick="addUserItem('${id}', '${block.type}')"><i class="fas fa-plus"></i> Tambah ${labelMap[block.type]}</button>`;
+        }
+
+        section.innerHTML += html;
+    }
+
+    // =========================================================
+    // 5. INTERACTIVITY & AJAX
+    // =========================================================
+    
+    // Tab System
+    const tabs = document.querySelectorAll('.tab');
+    const sections = document.querySelectorAll('.section');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            sections.forEach(s => s.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById('section-' + tab.dataset.section).classList.add('active');
+        });
     });
-});
 
-console.log('Editor ready');
+    // Zoom System
+    let zoomLevel = 100;
+    window.zoomIn = () => { if(zoomLevel < 150) { zoomLevel += 10; applyZoom(); } }
+    window.zoomOut = () => { if(zoomLevel > 50) { zoomLevel -= 10; applyZoom(); } }
+    function applyZoom() {
+        document.getElementById('zoomVal').innerText = zoomLevel + '%';
+        document.getElementById('cv-paper').style.transform = `scale(${zoomLevel/100})`;
+    }
+
+    // AJAX Save Function
+    window.saveData = function(statusType) {
+        const btnId = statusType === 'completed' ? 'btnDone' : 'btnDraft';
+        const btn = document.getElementById(btnId);
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+        btn.disabled = true;
+
+        const docTitle = document.getElementById('documentTitle').value || 'Untitled Resume';
+
+        const payload = { cv_template_id: cvTemplateId, resume_id: resumeId, title: docTitle, layout_schema: schema, global_settings: globalSettings, status: statusType };
+
+        fetch('{{ route("resume.save") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', 'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify(payload)
+        }).then(res => res.json())
+        .then(data => {
+            btn.innerHTML = originalText; btn.disabled = false;
+            if(data.success) {
+                const notify = document.getElementById('notifyBox');
+                document.getElementById('notifyMsg').innerText = statusType === 'completed' ? 'CV Berhasil Diselesaikan!' : 'Draft Tersimpan!';
+                notify.classList.add('show'); setTimeout(() => notify.classList.remove('show'), 3000);
+                if(!resumeId && data.resume_id) resumeId = data.resume_id;
+            } else { alert('Gagal menyimpan: ' + (data.message || 'Error tidak diketahui')); }
+        }).catch(err => {
+            btn.innerHTML = originalText; btn.disabled = false;
+            console.error('Error:', err); alert('Terjadi kesalahan jaringan.');
+        });
+    }
+
+    // =========================================================
+    // 6. FITUR DOWNLOAD PDF (html2pdf.js)
+    // =========================================================
+    window.downloadPDF = function() {
+        // 1. Ambil elemen kertas yang ingin dijadikan PDF
+        const element = document.getElementById('cv-paper');
+        
+        // 2. Ambil nama file dari input (jika kosong, pakai 'My_Resume.pdf')
+        const titleInput = document.getElementById('documentTitle');
+        const fileName = (titleInput && titleInput.value.trim() !== '') ? titleInput.value.trim() : 'My_Resume';
+        
+        // PENTING: Jika user sedang melakukan Zoom Out/In, kita harus reset skalanya
+        // agar hasil jepretan PDF tidak terpotong atau mengecil.
+        const originalTransform = element.style.transform;
+        element.style.transform = 'scale(1)';
+
+        // 3. Konfigurasi html2pdf
+        const opt = {
+            margin:       0, // Margin diset 0 karena padding sudah diatur dari dalam CSS #main-drop
+            filename:     `${fileName}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 }, // Kualitas gambar maksimal
+            html2canvas:  { 
+                scale: 2, // Scale 2 agar teks dan gambar tajam (tidak pecah/blur)
+                useCORS: true, // Mengizinkan load gambar/foto profil dari storage URL
+                allowTaint: true
+            },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        // 4. Ubah status tombol agar user tahu sistem sedang memproses
+        const btn = document.querySelector('button[onclick="downloadPDF()"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: #dc2626;"></i> Memproses...';
+        btn.disabled = true;
+
+        // 5. Eksekusi pembuatan PDF
+        html2pdf().set(opt).from(element).save().then(() => {
+            // Kembalikan UI ke semula
+            element.style.transform = originalTransform; 
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+
+            // --- LOGIKA UPDATE DATABASE ---
+            if(resumeId) {
+                fetch(`/resume/${resumeId}/increment-download`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => console.log("Statistik berhasil diupdate:", data))
+                .catch(err => console.error("Gagal update statistik:", err));
+            }
+
+            showNotify('PDF berhasil diunduh!');
+        });
+    }
+
+    // Init Call
+    document.addEventListener('DOMContentLoaded', () => {
+        renderCanvas();
+        buildSidebarForms();
+    });
+
 </script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </body>
 </html>

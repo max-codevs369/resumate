@@ -1,117 +1,134 @@
-    <?php
+<?php
 
-    use Illuminate\Support\Facades\Route;
-    use App\Http\Controllers\Admin\CvTemplateController;
-    use App\Http\Controllers\User\TemplateController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{HomeController, CheckoutController, ProfileController};
+use App\Http\Controllers\Admin\{DashboardController, CvTemplateController, UserController, TransactionController, SettingController};
+use App\Http\Controllers\User\{TemplateController, DashboardUserController};
+use App\Http\Controllers\Auth\{RegisterController, LoginController, LoginAdminController, LogoutController, ForgotPasswordController, MagicLoginController};
 
-    Route::get('/', function () {
-        return view('pages.home');
+Route::controller(HomeController::class)->group(function() {
+    Route::get('/', 'home')->name('home');
+});
+
+Route::get('logout', function() {
+    return back();
+});
+
+Route::controller(TemplateController::class)->group(function() {
+    Route::get('templates', 'index')->name('templates');
+    Route::get('templates-{slug}', 'detail')->name('template-detail');
+    Route::get('template-editor-{slug}', 'editor')->name('template-editor');
+    Route::post('resume/save', 'save')->name('resume.save');
+
+    Route::get('resume-editor-{id}', 'editResume')->name('resume.edit');
+    Route::post('resume/{id}/increment-download', 'incrementDownload')->name('resume.increment-download');
+    Route::get('resume/{id}/render', 'renderView')->name('resume.render');
+    Route::post('/resume/{id}/rating', 'submitRating')->name('resume.rating');
+});
+
+Route::get('pricing', [CheckoutController::class, 'showPricing'])->name('pricing');
+
+Route::controller(MagicLoginController::class)->group(function() {
+    Route::prefix('login')->name('login.')->group(function() {
+        Route::get('verify/{token}', 'verifyLogin')->name('verify');
+    });
+});
+
+Route::controller(ForgotPasswordController::class)->group(function() {
+    Route::get('/reset-password/{token}', 'showResetForm')->name('password.reset');
+    Route::post('/reset-password', 'resetPassword')->name('password.update');
+});
+
+Route::middleware('guest')->group(function () {
+
+    Route::controller(RegisterController::class)->group(function() {
+        Route::get('register', 'show')->name('register');
+        Route::post('register', 'store')->name('register.store');
+    });
+    
+    Route::controller(LoginController::class)->group(function() {
+        Route::get('login', 'show')->name('login');
+        Route::post('login', 'login')->name('login.process');
     });
 
-    Route::prefix('admin')->name('admin.')->group(function() {
-        // Dashboard
-        Route::prefix('dashboard')->name('dashboard.')->group(function () {
-            Route::get('/', function() {
-                return view('admin.dashboard');
-            })->name('index');
+    Route::controller(MagicLoginController::class)->group(function() {
+        Route::prefix('login')->name('login.')->group(function() {
+            Route::post('magic', 'sendLoginLink')->name('magic');
+        });
+    });
+
+    Route::get('admin/login', function () { return abort(404); });
+
+    Route::controller(LoginAdminController::class)->group(function() {
+        Route::get('admin/login/$2y$12$Lv1Iu3KAhelYAxCHivrY3e7FiyTD0L.qEomatiC89E8picvbaWOlG', 'show')->name('admin.login');
+        Route::post('admin/login', 'loginAdmin')->name('admin.login.process');
+    });
+
+    Route::controller(ForgotPasswordController::class)->group(function() {
+        Route::get('/forgot-password', 'showForgotForm')->name('password.request');
+        Route::post('/forgot-password', 'sendResetLink')->name('password.send-reset-link');
+    });
+});
+
+Route::middleware('auth')->group(function() {
+    
+    Route::post('logout', [LogoutController::class, 'logout'])->name('logout');
+
+   
+    Route::middleware('role:user')->prefix('user')->name('user.')->group(function() {
+
+        Route::controller(DashboardUserController::class)->group(function() {
+            Route::get('dashboard', 'index')->name('dashboard');
+            Route::get('my-resumes', 'myResumes')->name('resumes');
+            Route::prefix('profile')->name('profile.')->group(function() {
+                Route::get('{id}', 'showProfile')->name('show');
+                Route::get('{id}/edit', 'editProfile')->name('edit');
+            });
         });
 
-        // Transaksi 
-        Route::prefix('transaksi')->name('transaksi.')->group(function () {
-            Route::get('/', function() {
-                return view('admin.transactions.index');
-            })->name('index');
-
-            Route::get('/show', function() {
-                return view('admin.transactions.show');
-            })->name('show');
+        Route::controller(ProfileController::class)->prefix('profile')->group(function() {
+            Route::get('/', 'index')->name('profile');
+            Route::put('update', 'update')->name('profile.update');
+            Route::put('cancel-premium', 'cancelPremium')->name('profile.cancel-premium');
         });
 
-        // Users
-        Route::prefix('users')->name('users.')->group(function () {
-            Route::get('/', function() {
-                return view('admin.users.index');
-            })->name('index');
+        Route::controller(CheckoutController::class)->group(function() {
+            Route::get('checkout', 'checkout')->name('checkout');
+            Route::post('checkout', 'process')->name('checkout.process');
         });
+        Route::get('/isi-data-template', function () { return view('pages.dashboard.form-template'); })->name('form-template');
+    });
+
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function() {
         
-        // Templates
-        Route::prefix('templates')->controller(CvTemplateController::class)->name('templates.')->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+        
+        Route::prefix('transaksi')->controller(TransactionController::class)->name('transactions.')->group(function () {
             Route::get('/', 'index')->name('index');
-            Route::get('create', 'create')->name('create');
-            Route::get('edit/{id}', 'edit')->name('edit' );
-            Route::put('update/{id}', 'update')->name('update');
-            Route::post('store', 'store')->name('store');
-            Route::delete('destroy/{id}', 'destroy')->name('destroy');
+            Route::get('{transaction}', 'show')->name('show');
+            Route::patch('{transaction}/approve', 'approve')->name('approve');
+            Route::patch('{transaction}/reject', 'reject')->name('reject');
+            Route::delete('{transaction}', 'destroy')->name('destroy');
         });
+
+        Route::prefix('users')->controller(UserController::class)->name('users.')->group(function () {
+            Route::get('{user}/reset-password', 'resetPasswordForm')->name('reset-password.form');
+            Route::patch('{user}/reset-password', 'resetPassword')->name('reset-password');
+            Route::patch('{user}/toggle-active', 'toggleActive')->name('toggle-active');
+            Route::patch('{user}/toggle-premium', 'togglePremium')->name('toggle-premium');
+        });
+        Route::resource('users', UserController::class); 
         
+        Route::resource('templates', CvTemplateController::class)->except(['show']);
+
+        Route::controller(SettingController::class)->prefix('settings')->name('settings.')->group(function() {
+            Route::get('/', 'index')->name('index');
+            Route::put('/', 'update')->name('update');
+        });
     });
+});
 
-    Route::get('/', function () {
-        return view('pages.home');
-    });
 
-    Route::controller(TemplateController::class)->group(function() {
-        Route::get('templates', 'index')->name('templates');
-        Route::get('templates-{slug}', 'detail')->name('template-detail');
-        Route::get('test-editor-{slug}', 'editor')->name('test-editor');
-    });
-
-    Route::get('/features', function() {
-        return view('pages.features');
-    })->name('features');
-
-    Route::get('/pricing', function () {
-        return view('pages.pricing');
-    })->name('pricing');
-
-    Route::get('/checkout', function() {
-        return view('pages.pricing.checkout');
-    })->name('checkout');
-
-    Route::get('/login', function() {
-        return view('auth.login');
-    })->name('login');
-
-    Route::get('/register', function() {
-        return view('auth.register');
-    })->name('register');
-
-    Route::get('/forgot-password', function () {
-        return view('auth.forgot-password');
-    })->name('forgot-password');
-
-    Route::get('/kode-otp', function() {
-        return view('auth.otp');
-    })->name('otp');
-
-    Route::get('/reset-password', function() {
-        return view('auth.reset-password');
-    })->name('reset-password');
-
-    Route::get('/email-otp', function() {
-        return view('auth.emailotp');
-    })->name('emailotp');
-
-    Route::get('/modal-test', function() {
-        return view('auth.success');
-    })->name('modal-test');       
-
-    Route::get('/edit-user', function () {
-        return view('admin.users.edit');
-    })->name('edit-user');
-
-    Route::get('/tambah-user', function () {
-        return view('admin.users.create');
-    })->name('tambah-user');
-
-    Route::get('/reset-password', function () {
-        return view('admin.users.reset-password');
-    })->name('reset-password');
-
-    Route::get('/isi-data-tempalate', function () {
-        return view('pages.dashboard.form-template');
-    })->name('form-tempalte');
-
-    Route::get('/profile', function () {
-        return view('pages.dashboard.profile');
-    });
+Route::get('/kode-otp', function() { return view('auth.otp'); })->name('otp');
+Route::get('/email-otp', function() { return view('auth.emailotp'); })->name('emailotp');
+Route::get('/modal-test', function() { return view('auth.success'); })->name('modal-test');

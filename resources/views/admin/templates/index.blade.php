@@ -28,6 +28,7 @@
         --badge-free-bg: #ffffff;
         --badge-free-text: #0f172a;
         --img-placeholder: #e2e8f0;
+        --danger: #ef4444;
     }
 
     /* --- Dark Mode Overrides --- */
@@ -96,6 +97,22 @@
         box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
     }
     .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(76, 175, 80, 0.35); }
+
+    .btn-danger {
+        background: var(--danger); color: white; border: none;
+        padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600;
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
+        transition: 0.2s;
+    }
+    .btn-danger:hover { filter: brightness(0.9); }
+
+    .btn-secondary {
+        background: transparent; color: var(--text-main); border: 1px solid var(--border-color);
+        padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600;
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
+        transition: 0.2s;
+    }
+    .btn-secondary:hover { background: var(--border-color); }
 
     /* --- Stats Overview --- */
     .stats-grid { 
@@ -209,7 +226,7 @@
     .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
     .status-dot.active { background: #22c55e; }
     .status-dot.draft { background: #94a3b8; }
-    .status-text { font-size: 11px; font-weight: 600; display: flex; align-items: center; }
+    .status-text { font-size: 11px; font-weight: 600; display: flex; align-items: center; color: var(--text-main); }
 
     .stats-row { 
         display: flex; gap: 12px; font-size: 12px; color: var(--text-muted); 
@@ -219,7 +236,7 @@
 
     /* Footer Buttons */
     .card-footer { 
-        padding: 12px 16px; background: var(--bg-card); /* Adaptive */
+        padding: 12px 16px; background: var(--bg-card); 
         border-top: 1px solid var(--border-color); 
         display: flex; justify-content: flex-end; gap: 8px; 
     }
@@ -230,7 +247,22 @@
         cursor: pointer; transition: 0.2s; text-decoration: none; 
     }
     .btn-icon:hover { border-color: var(--primary-color); color: var(--primary-color); background: var(--primary-hover-bg); }
-    .btn-icon.danger:hover { border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+    .btn-icon.danger:hover { border-color: var(--danger); color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+
+    /* --- Modal Custom --- */
+    .custom-modal-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999;
+        display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px);
+        opacity: 0; visibility: hidden; transition: 0.3s;
+    }
+    .custom-modal-overlay.active { opacity: 1; visibility: visible; }
+    .custom-modal-content {
+        background: var(--bg-card); color: var(--text-main); border-radius: 16px; padding: 30px 24px;
+        width: 90%; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        transform: translateY(20px); transition: 0.3s; border: 1px solid var(--border-color);
+    }
+    .custom-modal-overlay.active .custom-modal-content { transform: translateY(0); }
+    .modal-icon { font-size: 50px; margin-bottom: 16px; }
 
     /* --- RESPONSIVE MEDIA QUERIES --- */
     @media (max-width: 1024px) {
@@ -250,12 +282,6 @@
 @endpush
 
 @section('content')
-
-@if(session('success'))
-<div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); color: #166534; padding: 14px; border-radius: 8px; margin-bottom: 24px; font-size: 13px; display: flex; align-items: center; gap: 8px;" class="dark:text-green-400 dark:border-green-800">
-    <i class="fas fa-check-circle"></i> {{ session('success') }}
-</div>
-@endif
 
 <div class="page-header">
     <div class="header-title">
@@ -294,10 +320,10 @@
     
     <select class="form-select" id="categoryFilter">
         <option value="all">Semua Kategori</option>
-        <option value="professional">Professional</option>
-        <option value="creative">Creative</option>
-        <option value="simple">Simple</option>
-        <option value="akademik">Akademik</option>
+        <option value="Professional">Professional</option>
+        <option value="Creative">Creative</option>
+        <option value="Simple">Simple</option>
+        <option value="Akademik">Akademik</option>
     </select>
     
     <select class="form-select" id="statusFilter">
@@ -361,7 +387,7 @@
                 <i class="fas fa-pen"></i>
             </a>
             
-            <form action="{{ route('admin.templates.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus template ini?');" style="margin:0;">
+            <form action="{{ route('admin.templates.destroy', $item->id) }}" method="POST" onsubmit="confirmDelete(event, this);" style="margin:0;">
                 @csrf @method('DELETE')
                 <button type="submit" class="btn-icon danger" title="Hapus">
                     <i class="fas fa-trash"></i>
@@ -384,11 +410,70 @@
     <p>Template tidak ditemukan.</p>
 </div>
 
+<div id="successModal" class="custom-modal-overlay">
+    <div class="custom-modal-content">
+        <i class="fas fa-check-circle modal-icon" style="color: var(--primary-color);"></i>
+        <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Berhasil!</h2>
+        <p id="successMessageText" style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;"></p>
+        <button onclick="closeSuccessModal()" class="btn-primary" style="width: 100%; justify-content: center; padding: 12px;">Tutup</button>
+    </div>
+</div>
+
+<div id="deleteModal" class="custom-modal-overlay">
+    <div class="custom-modal-content">
+        <i class="fas fa-exclamation-triangle modal-icon" style="color: var(--danger);"></i>
+        <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Konfirmasi Hapus</h2>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Apakah Anda yakin ingin menghapus template ini? Data yang terhapus tidak dapat dikembalikan.</p>
+        <div style="display: flex; gap: 12px;">
+            <button onclick="closeDeleteModal()" class="btn-secondary" style="flex: 1;">Batal</button>
+            <button id="confirmDeleteBtn" class="btn-danger" style="flex: 1;">Ya, Hapus</button>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
 <script>
-    // JS Logic tetap sama seperti sebelumnya
+    // ============================================================
+    // LOGIKA MODAL (SUCCESS & DELETE)
+    // ============================================================
+    
+    // Tampilkan Modal Sukses Jika Ada Session
+    @if(session('success'))
+        document.getElementById('successMessageText').innerText = "{{ session('success') }}";
+        document.getElementById('successModal').classList.add('active');
+    @endif
+
+    function closeSuccessModal() {
+        document.getElementById('successModal').classList.remove('active');
+    }
+
+    // Logika Konfirmasi Hapus Custom
+    let formToDelete = null;
+    
+    function confirmDelete(event, formElement) {
+        event.preventDefault(); // Hentikan submit langsung
+        formToDelete = formElement; // Simpan form yang menekan tombol hapus
+        document.getElementById('deleteModal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('active');
+        formToDelete = null; // Reset form jika dibatalkan
+    }
+
+    // Jika pengguna klik "Ya, Hapus" di modal
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+        if(formToDelete) {
+            formToDelete.submit(); // Lanjutkan proses submit form
+        }
+    });
+
+
+    // ============================================================
+    // LOGIKA PENCARIAN & FILTER
+    // ============================================================
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('searchInput');
         const catFilter = document.getElementById('categoryFilter');

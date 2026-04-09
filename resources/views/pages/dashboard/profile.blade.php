@@ -1,24 +1,48 @@
 @extends('layouts.app')
 
-@section('title', 'My Profile - ' . config('app.name'))
+@section('title', 'Profil Saya - ' . config('app.name'))
 
 @section('content')
 <style>
+    /* Variabel Warna & UI Modern */
+    :root {
+        --primary-color: #10b981;
+        --primary-hover: #059669;
+        --primary-pale: #ecfdf5;
+        --text-main: #111827;
+        --text-muted: #6b7280;
+        --border-color: #e5e7eb;
+        --bg-card: #ffffff;
+        --bg-body: #f9fafb;
+        --danger: #ef4444;
+        --danger-hover: #dc2626;
+        --danger-pale: #fef2f2;
+        --warning: #f59e0b;
+        --warning-text: #d97706;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
     /* Additional Profile Page Styles */
     .page {
-        max-width: 900px;
+        max-width: 960px;
         margin: 0 auto;
-        padding: 48px 24px 80px;
+        padding: 40px 24px 80px;
+        font-family: 'Inter', 'Outfit', sans-serif;
     }
 
     /* Profile Header */
     .profile-header {
         display: flex;
-        align-items: flex-end;
-        gap: 28px;
+        align-items: center;
+        gap: 32px;
         margin-bottom: 40px;
-        padding-bottom: 36px;
-        border-bottom: 1px solid var(--rule);
+        padding: 32px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        box-shadow: var(--shadow-sm);
     }
 
     .avatar-wrap {
@@ -27,41 +51,44 @@
     }
 
     .avatar-big {
-        width: 88px;
-        height: 88px;
+        width: 100px;
+        height: 100px;
         border-radius: 50%;
-        background: var(--green-mid);
+        background: var(--primary-pale);
         display: flex;
         align-items: center;
         justify-content: center;
         font-family: 'Playfair Display', serif;
-        font-size: 32px;
-        color: var(--green-dark);
-        border: 3px solid var(--white);
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        font-size: 36px;
+        font-weight: bold;
+        color: var(--primary-hover);
+        border: 4px solid var(--bg-card);
+        box-shadow: var(--shadow-md);
     }
 
     .avatar-edit {
         position: absolute;
-        bottom: 2px;
-        right: 2px;
-        width: 24px;
-        height: 24px;
-        background: var(--white);
-        border: 1.5px solid var(--rule);
+        bottom: 0px;
+        right: 0px;
+        width: 32px;
+        height: 32px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        font-size: 10px;
-        color: var(--ink-mid);
-        transition: border-color .2s, color .2s;
+        font-size: 13px;
+        color: var(--text-muted);
+        box-shadow: var(--shadow-sm);
+        transition: all 0.2s ease;
     }
 
     .avatar-edit:hover {
-        border-color: var(--green);
-        color: var(--green-dark);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        transform: scale(1.05);
     }
 
     .profile-info {
@@ -70,16 +97,21 @@
 
     .profile-info h1 {
         font-family: 'Playfair Display', serif;
-        font-size: 30px;
-        letter-spacing: -0.8px;
-        color: var(--ink);
-        margin-bottom: 4px;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: var(--text-main);
+        margin-bottom: 6px;
+        margin-top: 0;
     }
 
     .profile-info .email {
-        font-size: 14px;
-        color: var(--ink-faint);
-        margin-bottom: 12px;
+        font-size: 15px;
+        color: var(--text-muted);
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
     }
 
     .profile-badges {
@@ -89,358 +121,105 @@
     }
 
     .badge {
-        padding: 3px 10px;
+        padding: 6px 14px;
         border-radius: 20px;
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 600;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.02em;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
 
     .badge-plan {
-        background: var(--green-pale);
-        color: var(--green-dark);
-        border: 1px solid var(--green-mid);
+        background: var(--primary-color);
+        color: white;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
     }
 
     .badge-member {
-        background: #f5f5f3;
-        color: var(--ink-mid);
-        border: 1px solid var(--rule);
-    }
-
-    .profile-header-actions {
-        flex-shrink: 0;
-    }
-
-    .btn-edit-profile {
-        padding: 9px 18px;
-        background: transparent;
-        border: 1.5px solid var(--rule);
-        border-radius: 8px;
-        font-family: 'Outfit', sans-serif;
-        font-size: 13px;
-        font-weight: 500;
-        color: var(--ink-mid);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        transition: border-color .2s, color .2s;
-    }
-
-    .btn-edit-profile:hover {
-        border-color: var(--green);
-        color: var(--green-dark);
+        background: var(--bg-body);
+        color: var(--text-muted);
+        border: 1px solid var(--border-color);
     }
 
     /* Content Grid */
     .content-grid {
         display: grid;
-        grid-template-columns: 1fr 280px;
+        grid-template-columns: 1fr 300px;
         gap: 32px;
         align-items: start;
     }
 
     /* Section Label */
     .section-label {
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.12em;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--ink-faint);
-        margin-bottom: 16px;
-    }
-
-    /* CV List */
-    .cv-list {
+        color: var(--text-muted);
+        margin-bottom: 20px;
         display: flex;
-        flex-direction: column;
+        align-items: center;
         gap: 12px;
     }
 
-    .cv-card {
-        background: var(--white);
-        border: 1.5px solid var(--rule);
-        border-radius: 10px;
-        padding: 18px 20px;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        transition: border-color .2s, box-shadow .2s;
-        cursor: pointer;
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .cv-card:hover {
-        border-color: var(--green);
-        box-shadow: 0 4px 16px rgba(76, 175, 80, .1);
-    }
-
-    .cv-thumb-mini {
-        width: 44px;
-        height: 56px;
-        border-radius: 4px;
-        background: var(--green-pale);
-        border: 1px solid var(--green-mid);
-        flex-shrink: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-        padding: 6px 5px;
-        overflow: hidden;
-    }
-
-    .mini-bar {
-        height: 3px;
-        background: var(--green-mid);
-        border-radius: 2px;
-    }
-
-    .mini-bar.accent {
-        background: var(--green);
-        width: 50%;
-    }
-
-    .mini-bar.short {
-        width: 65%;
-    }
-
-    .cv-info {
+    .section-label::after {
+        content: '';
         flex: 1;
-        min-width: 0;
+        height: 1px;
+        background: var(--border-color);
     }
 
-    .cv-name {
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--ink);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-bottom: 3px;
-    }
-
-    .cv-meta {
-        font-size: 12px;
-        color: var(--ink-faint);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .cv-meta .dot {
-        width: 3px;
-        height: 3px;
-        background: var(--rule);
-        border-radius: 50%;
-    }
-
-    .cv-status {
-        padding: 3px 9px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 600;
-        flex-shrink: 0;
-    }
-
-    .cv-status.done {
-        background: var(--green-pale);
-        color: var(--green-dark);
-    }
-
-    .cv-status.draft {
-        background: #fffbf0;
-        color: #b45309;
-        border: 1px solid #fde68a;
-    }
-
-    .cv-actions {
-        display: flex;
-        gap: 4px;
-        flex-shrink: 0;
-    }
-
-    .cv-action-btn {
-        width: 30px;
-        height: 30px;
-        border: 1px solid var(--rule);
-        border-radius: 6px;
-        background: transparent;
-        color: var(--ink-faint);
-        font-size: 11px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all .2s;
-    }
-
-    .cv-action-btn:hover {
-        border-color: var(--green);
-        color: var(--green-dark);
-    }
-
-    .cv-action-btn.del:hover {
-        border-color: var(--red);
-        color: var(--red);
-    }
-
-    /* Sidebar */
-    .sidebar {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .side-card {
-        background: var(--white);
-        border: 1.5px solid var(--rule);
-        border-radius: 10px;
-        padding: 20px;
-    }
-
-    .side-card-title {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--ink);
-        margin-bottom: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .info-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid var(--rule);
-        font-size: 13px;
-    }
-
-    .info-row:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-
-    .info-row .key {
-        color: var(--ink-faint);
-    }
-
-    .info-row .val {
-        color: var(--ink);
+    /* Alerts (Notifikasi Sukses & Error) */
+    .alert {
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        font-size: 14px;
         font-weight: 500;
-        text-align: right;
-    }
-
-    .info-row .val.green {
-        color: var(--green-dark);
-    }
-
-    .upgrade-box {
-        background: var(--green-pale);
-        border: 1px solid var(--green-mid);
-        border-radius: 8px;
-        padding: 16px;
-        text-align: center;
-    }
-
-    .upgrade-box p {
-        font-size: 13px;
-        color: var(--green-dark);
-        line-height: 1.5;
-        margin-bottom: 12px;
-    }
-
-    .btn-upgrade {
-        width: 100%;
-        padding: 9px;
-        background: var(--green);
-        color: #fff;
-        border: none;
-        border-radius: 7px;
-        font-family: 'Outfit', sans-serif;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background .2s;
-    }
-
-    .btn-upgrade:hover {
-        background: var(--green-dark);
-    }
-
-    .activity-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-    }
-
-    .activity-item {
-        display: flex;
-        gap: 12px;
-        align-items: flex-start;
-        padding: 10px 0;
-        border-bottom: 1px solid var(--rule);
-        font-size: 13px;
-    }
-
-    .activity-item:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-
-    .activity-icon {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        background: var(--green-pale);
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-size: 11px;
-        color: var(--green-dark);
-        flex-shrink: 0;
-        margin-top: 1px;
+        gap: 12px;
+        box-shadow: var(--shadow-sm);
+        animation: slideIn 0.4s ease-out;
     }
 
-    .activity-text {
-        flex: 1;
-        line-height: 1.5;
-        color: var(--ink-mid);
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
-    .activity-text strong {
-        color: var(--ink);
-        font-weight: 600;
+    .alert-success {
+        background: var(--primary-pale);
+        color: var(--primary-hover);
+        border: 1px solid #a7f3d0;
+        border-left: 4px solid var(--primary-color);
     }
 
-    .activity-time {
-        font-size: 11px;
-        color: var(--ink-faint);
-        white-space: nowrap;
+    .alert-danger {
+        background: var(--danger-pale);
+        color: var(--danger-hover);
+        border: 1px solid #fecaca;
+        border-left: 4px solid var(--danger);
     }
 
     /* Account Settings */
-    .settings-section {
-        margin-top: 36px;
-    }
-
     .settings-block {
-        background: var(--white);
-        border: 1.5px solid var(--rule);
-        border-radius: 10px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
         overflow: hidden;
-        margin-bottom: 12px;
+        margin-bottom: 20px;
+        box-shadow: var(--shadow-sm);
     }
 
     .settings-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 16px 20px;
-        border-bottom: 1px solid var(--rule);
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border-color);
         gap: 16px;
     }
 
@@ -454,357 +233,421 @@
 
     .settings-row-left .s-title {
         font-size: 14px;
-        font-weight: 500;
-        color: var(--ink);
+        font-weight: 600;
+        color: var(--text-main);
+        display: block;
+        margin-bottom: 8px;
     }
 
     .settings-row-left .s-desc {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 4px;
+    }
+
+    /* Modern Input Form */
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 14px;
+        color: var(--text-main);
+        background-color: var(--bg-body);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+
+    .form-control:focus {
+        background-color: var(--bg-card);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+    }
+
+    .form-control::placeholder {
+        color: #9ca3af;
+    }
+
+    /* Password Strength Indicator */
+    .pw-strength-container {
+        display: none;
+        margin-top: 12px;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .pw-bars {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 6px;
+    }
+
+    .pw-bar {
+        height: 5px;
+        flex: 1;
+        background-color: var(--border-color);
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    .pw-text {
         font-size: 12px;
-        color: var(--ink-faint);
-        margin-top: 2px;
+        font-weight: 600;
+        color: var(--text-muted);
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* Level Weak */
+    .strength-weak #bar-1 { background-color: var(--danger); }
+    .strength-weak .pw-label { color: var(--danger); }
+
+    /* Level Medium */
+    .strength-medium #bar-1, .strength-medium #bar-2 { background-color: var(--warning); }
+    .strength-medium .pw-label { color: var(--warning-text); }
+
+    /* Level Strong */
+    .strength-strong #bar-1, .strength-strong #bar-2, .strength-strong #bar-3 { background-color: var(--primary-color); }
+    .strength-strong .pw-label { color: var(--primary-hover); }
+
+    /* Buttons */
+    .btn-primary {
+        padding: 10px 24px;
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-hover);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        transform: translateY(-1px);
     }
 
     .btn-setting {
-        padding: 7px 14px;
-        border: 1.5px solid var(--rule);
-        border-radius: 7px;
-        background: transparent;
-        font-family: 'Outfit', sans-serif;
-        font-size: 12px;
-        font-weight: 500;
-        color: var(--ink-mid);
+        padding: 10px 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--bg-card);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-muted);
         cursor: pointer;
         white-space: nowrap;
-        transition: all .2s;
-        flex-shrink: 0;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
     }
 
     .btn-setting:hover {
-        border-color: var(--green);
-        color: var(--green-dark);
+        background: var(--bg-body);
+        color: var(--text-main);
     }
 
     .btn-setting.danger {
-        color: var(--red);
-        border-color: #ffc9c9;
+        color: var(--danger);
+        border-color: var(--danger-pale);
+        background: var(--danger-pale);
     }
 
     .btn-setting.danger:hover {
-        background: var(--red-soft);
-        border-color: var(--red);
+        background: var(--danger);
+        color: white;
+        border-color: var(--danger);
     }
 
-    /* Toggle Switch */
-    .toggle {
-        position: relative;
-        width: 40px;
-        height: 22px;
-        flex-shrink: 0;
+    /* Sidebar */
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
 
-    .toggle input {
-        opacity: 0;
-        width: 0;
-        height: 0;
+    .side-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: var(--shadow-sm);
     }
 
-    .toggle-slider {
-        position: absolute;
-        inset: 0;
-        background: var(--rule);
-        border-radius: 22px;
-        cursor: pointer;
-        transition: background .2s;
+    .side-card-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
-    .toggle-slider::before {
-        content: '';
-        position: absolute;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: white;
-        left: 3px;
-        top: 3px;
-        transition: transform .2s;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, .15);
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 0;
+        border-bottom: 1px dashed var(--border-color);
+        font-size: 14px;
     }
 
-    .toggle input:checked + .toggle-slider {
-        background: var(--green);
+    .info-row:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
     }
 
-    .toggle input:checked + .toggle-slider::before {
-        transform: translateX(18px);
+    .info-row .key {
+        color: var(--text-muted);
+    }
+
+    .info-row .val {
+        color: var(--text-main);
+        font-weight: 600;
+    }
+
+    .info-row .val.green {
+        color: var(--primary-color);
+    }
+
+    .upgrade-box {
+        background: linear-gradient(145deg, var(--primary-pale), #ffffff);
+        border: 1px solid #a7f3d0;
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+    }
+
+    .upgrade-box p {
+        font-size: 14px;
+        color: var(--primary-hover);
+        line-height: 1.6;
+        margin-bottom: 16px;
+    }
+
+    /* Placeholder Data CV (Untuk mempercantik tampilan list kosong) */
+    .empty-cv-state {
+        text-align: center;
+        padding: 40px 20px;
+        background: var(--bg-card);
+        border: 1px dashed var(--border-color);
+        border-radius: 12px;
+        color: var(--text-muted);
+    }
+
+    .empty-cv-state i {
+        font-size: 32px;
+        color: var(--border-color);
+        margin-bottom: 12px;
     }
 
     /* Responsive */
-    @media (max-width: 720px) {
-        .page {
-            padding: 32px 16px 60px;
-        }
-
-        .profile-header {
-            flex-wrap: wrap;
-        }
-
-        .profile-header-actions {
-            width: 100%;
-        }
-
-        .content-grid {
-            grid-template-columns: 1fr;
-        }
+    @media (max-width: 768px) {
+        .page { padding: 24px 16px 60px; }
+        .profile-header { flex-direction: column; text-align: center; }
+        .profile-info .email { justify-content: center; }
+        .profile-badges { justify-content: center; }
+        .content-grid { grid-template-columns: 1fr; }
+        .settings-row { flex-direction: column; align-items: flex-start; }
+        .settings-row-left { width: 100%; }
+        .settings-row-left input { width: 100%; }
     }
 </style>
 
 <div class="page">
+    @php
+        $user = auth()->user();
+    @endphp
+
     <!-- Profile Header -->
     <div class="profile-header">
         <div class="avatar-wrap">
-            <div class="avatar-big">
-                {{-- @if(auth()->user()->avatar) --}}
-                    {{-- <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"> --}}
-                {{-- @else --}}
-                    {{-- {{ strtoupper(substr(auth()->user()->name, 0, 1)) }} --}}
-                {{-- @endif --}}
+            <div class="avatar-big" style="overflow: hidden;">
+                @if($user->avatar)
+                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                @else
+                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                @endif
             </div>
-            <div class="avatar-edit"><i class="fas fa-pen"></i></div>
+            <!-- Ikon pen untuk memicu klik pada input file di form bawah -->
+            <div class="avatar-edit" onclick="document.getElementById('avatarInput').click()" title="Ubah Foto Profil">
+                <i class="fas fa-camera"></i>
+            </div>
         </div>
 
         <div class="profile-info">
-            <h1>{{ auth()->user()->name ?? 'Andi Pratama' }}</h1>
-            <p class="email">{{ auth()->user()->email ?? 'andi.pratama@email.com' }}</p>
+            <h1>{{ $user->name }}</h1>
+            <p class="email"><i class="far fa-envelope"></i> {{ $user->email }}</p>
             <div class="profile-badges">
-                <span class="badge badge-plan">Free Plan</span>
-                <span class="badge badge-member">Member since Jan 2024</span>
+                @if($user->is_premium)
+                    <span class="badge badge-plan"><i class="fas fa-crown"></i> Paket Pro</span>
+                @else
+                    <span class="badge badge-member">Paket Gratis</span>
+                @endif
+                <span class="badge badge-member"><i class="far fa-calendar-alt"></i> Anggota sejak {{ $user->created_at->format('M Y') }}</span>
             </div>
-        </div>
-
-        <div class="profile-header-actions">
-            <button class="btn-edit-profile">
-                <i class="fas fa-pen"></i> Edit Profile
-            </button>
         </div>
     </div>
 
     <!-- Main Grid -->
     <div class="content-grid">
-        <!-- Left: CV List + Settings -->
+        <!-- Kiri: Daftar CV + Pengaturan -->
         <div>
-            <div class="section-label">My CVs</div>
-
-            <div class="cv-list">
-                <!-- CV item 1 -->
-                <div class="cv-card">
-                    <div class="cv-thumb-mini">
-                        <div class="mini-bar accent"></div>
-                        <div class="mini-bar"></div>
-                        <div class="mini-bar short"></div>
-                        <div class="mini-bar"></div>
-                        <div class="mini-bar short"></div>
-                    </div>
-                    <div class="cv-info">
-                        <div class="cv-name">CV Frontend Developer Application</div>
-                        <div class="cv-meta">
-                            <span>Modern Template</span>
-                            <span class="dot"></span>
-                            <span>Updated 2 days ago</span>
-                        </div>
-                    </div>
-                    <span class="cv-status done">Complete</span>
-                    <div class="cv-actions">
-                        <button class="cv-action-btn" title="Download"><i class="fas fa-download"></i></button>
-                        <button class="cv-action-btn" title="Edit"><i class="fas fa-pen"></i></button>
-                        <button class="cv-action-btn del" title="Delete"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-
-                <!-- CV item 2 -->
-                <div class="cv-card">
-                    <div class="cv-thumb-mini">
-                        <div class="mini-bar"></div>
-                        <div class="mini-bar accent"></div>
-                        <div class="mini-bar short"></div>
-                        <div class="mini-bar"></div>
-                    </div>
-                    <div class="cv-info">
-                        <div class="cv-name">CV UI/UX Designer — Startup</div>
-                        <div class="cv-meta">
-                            <span>Minimal Template</span>
-                            <span class="dot"></span>
-                            <span>Updated 1 week ago</span>
-                        </div>
-                    </div>
-                    <span class="cv-status done">Complete</span>
-                    <div class="cv-actions">
-                        <button class="cv-action-btn" title="Download"><i class="fas fa-download"></i></button>
-                        <button class="cv-action-btn" title="Edit"><i class="fas fa-pen"></i></button>
-                        <button class="cv-action-btn del" title="Delete"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-
-                <!-- CV item 3 — draft -->
-                <div class="cv-card">
-                    <div class="cv-thumb-mini">
-                        <div class="mini-bar short"></div>
-                        <div class="mini-bar"></div>
-                        <div class="mini-bar accent short"></div>
-                    </div>
-                    <div class="cv-info">
-                        <div class="cv-name">CV Internship — Incomplete</div>
-                        <div class="cv-meta">
-                            <span>Classic Template</span>
-                            <span class="dot"></span>
-                            <span>Updated 3 weeks ago</span>
-                        </div>
-                    </div>
-                    <span class="cv-status draft">Draft</span>
-                    <div class="cv-actions">
-                        <button class="cv-action-btn" title="Edit"><i class="fas fa-pen"></i></button>
-                        <button class="cv-action-btn del" title="Delete"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Account Settings -->
+            <!-- Pengaturan Akun -->
             <div class="settings-section">
-                <div class="section-label">Account Settings</div>
+                <div class="section-label"><i class="fas fa-cog"></i> Pengaturan Akun</div>
 
-                <div class="settings-block">
-                    <div class="settings-row">
-                        <div class="settings-row-left">
-                            <div class="s-title">Full Name</div>
-                            <div class="s-desc">{{ auth()->user()->name ?? 'Andi Pratama' }}</div>
-                        </div>
-                        <button class="btn-setting">Change</button>
+                <!-- Pesan Sukses -->
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle fa-lg"></i>
+                        <div>{{ session('success') }}</div>
                     </div>
-                    <div class="settings-row">
-                        <div class="settings-row-left">
-                            <div class="s-title">Email</div>
-                            <div class="s-desc">{{ auth()->user()->email ?? 'andi.pratama@email.com' }}</div>
-                        </div>
-                        <button class="btn-setting">Change</button>
-                    </div>
-                    <div class="settings-row">
-                        <div class="settings-row-left">
-                            <div class="s-title">Password</div>
-                            <div class="s-desc">Last changed 3 months ago</div>
-                        </div>
-                        <button class="btn-setting">Change</button>
-                    </div>
-                </div>
+                @endif
 
-                <div class="settings-block">
-                    <div class="settings-row">
-                        <div class="settings-row-left">
-                            <div class="s-title">Email Notifications</div>
-                            <div class="s-desc">Career tips and new templates</div>
-                        </div>
-                        <label class="toggle">
-                            <input type="checkbox" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
+                <!-- Pesan Error -->
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle fa-lg"></i>
+                        <div>Pastikan form terisi dengan benar. Mohon periksa kembali.</div>
                     </div>
-                    <div class="settings-row">
-                        <div class="settings-row-left">
-                            <div class="s-title">Dark Mode</div>
-                            <div class="s-desc">Use dark theme</div>
-                        </div>
-                        <label class="toggle">
-                            <input type="checkbox" id="darkModeToggle">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                </div>
+                @endif
 
-                <div class="settings-block">
+                <!-- Form Profil Dihubungkan ke Route update -->
+                <form action="{{ route('user.profile.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div class="settings-block">
+                        <!-- Input file tersembunyi yang dihubungkan dengan ikon di avatar -->
+                        <input type="file" name="avatar" id="avatarInput" accept="image/*" style="display: none;">
+
+                        <div class="settings-row">
+                            <div class="settings-row-left">
+                                <label class="s-title">Nama Lengkap</label>
+                                <input type="text" name="name" value="{{ old('name', $user->name) }}" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-row">
+                            <div class="settings-row-left">
+                                <label class="s-title">Alamat Email</label>
+                                <input type="email" name="email" value="{{ old('email', $user->email) }}" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-row">
+                            <div class="settings-row-left">
+                                <label class="s-title">Kata Sandi Baru</label>
+                                <input type="password" id="newPassword" name="password" placeholder="Biarkan kosong jika tidak ingin mengubah kata sandi" class="form-control">
+                                
+                                <!-- Container Level Kekuatan Password -->
+                                <div class="pw-strength-container" id="pwStrengthContainer">
+                                    <div class="pw-bars">
+                                        <div class="pw-bar" id="bar-1"></div>
+                                        <div class="pw-bar" id="bar-2"></div>
+                                        <div class="pw-bar" id="bar-3"></div>
+                                    </div>
+                                    <div class="pw-text">
+                                        <span>Kekuatan Kata Sandi</span>
+                                        <span class="pw-label" id="pwLabel">Lemah</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        
+                        <div class="settings-row" style="justify-content: flex-end; background: var(--bg-body);">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i> Simpan Perubahan
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Zona Berbahaya / Logout -->
+                <div class="settings-block" style="margin-top: 24px; border-color: var(--danger-pale);">
                     <div class="settings-row">
                         <div class="settings-row-left">
-                            <div class="s-title">Logout from Account</div>
-                            <div class="s-desc">Active session on this device</div>
+                            <div class="s-title" style="color: var(--danger);">Keluar dari Akun</div>
+                            <div class="s-desc">Akhiri sesi aktif Anda pada perangkat ini.</div>
                         </div>
-                        <form method="POST" action="#" style="margin: 0;">
+                        <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                             @csrf
-                            <button type="submit" class="btn-setting danger">Logout</button>
+                            <button type="submit" class="btn-setting danger">
+                                <i class="fas fa-sign-out-alt"></i> Keluar
+                            </button>
                         </form>
-                    </div>
-                    <div class="settings-row">
-                        <div class="settings-row-left">
-                            <div class="s-title">Delete Account</div>
-                            <div class="s-desc">All data will be permanently deleted</div>
-                        </div>
-                        <button class="btn-setting danger">Delete</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Right: Sidebar -->
+        <!-- Kanan: Sidebar -->
         <div class="sidebar">
-            <!-- Account Info -->
+            <!-- Info Akun -->
             <div class="side-card">
-                <div class="side-card-title">Account Info</div>
+                <div class="side-card-title"><i class="fas fa-info-circle" style="color: var(--primary-color);"></i> Informasi Akun</div>
+                
                 <div class="info-row">
-                    <span class="key">Plan</span>
-                    <span class="val green">Free</span>
+                    <span class="key">Paket Saat Ini</span>
+                    <span class="val {{ $user->is_premium ? 'green' : '' }}">
+                        {{ $user->is_premium ? 'Paket Pro' : 'Paket Gratis' }}
+                    </span>
                 </div>
+                
                 <div class="info-row">
-                    <span class="key">CVs Created</span>
-                    <span class="val">3 / 5</span>
+                    <span class="key">Bergabung Pada</span>
+                    <span class="val">{{ $user->created_at->format('M Y') }}</span>
                 </div>
-                <div class="info-row">
-                    <span class="key">Downloads</span>
-                    <span class="val">2 times</span>
-                </div>
-                <div class="info-row">
-                    <span class="key">Joined</span>
-                    <span class="val">Jan 2024</span>
-                </div>
+
+                @if($user->is_premium)
+                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--border-color); text-align: center;">
+                        <form action="{{ route('user.profile.cancel-premium') }}" method="POST" id="formCancelPremium" style="margin: 0;">
+                            @csrf
+                            @method('PUT')
+                            <button type="button" onclick="confirmCancellation()" class="btn-setting danger" style="width: 100%; justify-content: center;">
+                                <i class="fas fa-times-circle" style="margin-right: 8px;"></i> Batalkan Langganan Pro
+                            </button>
+                        </form>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px; line-height: 1.5;">
+                            Tindakan ini akan menghentikan akses ke fitur eksklusif setelah periode aktif berakhir.
+                        </p>
+                    </div>
+                @endif
             </div>
 
-            <!-- Upgrade -->
-            <div class="side-card">
-                <div class="upgrade-box">
-                    <p>Access 500+ premium templates & unlimited downloads with <strong>Pro Plan.</strong></p>
-                    <button class="btn-upgrade">Upgrade to Pro</button>
-                </div>
-            </div>
-
-            <!-- Activity -->
-            <div class="side-card">
-                <div class="side-card-title">Activity</div>
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="activity-icon"><i class="fas fa-download"></i></div>
-                        <div>
-                            <div class="activity-text"><strong>CV Frontend</strong> downloaded</div>
-                            <div class="activity-time">2 days ago</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon"><i class="fas fa-pen"></i></div>
-                        <div>
-                            <div class="activity-text"><strong>CV UI/UX</strong> edited</div>
-                            <div class="activity-time">1 week ago</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon"><i class="fas fa-file-circle-plus"></i></div>
-                        <div>
-                            <div class="activity-text">New CV created</div>
-                            <div class="activity-time">3 weeks ago</div>
-                        </div>
+            <!-- Ajakan Berlangganan (Hanya tampil jika user bukan premium) -->
+            @if(!$user->is_premium)
+                <div class="side-card" style="padding: 0; border: none; background: transparent; box-shadow: none;">
+                    <div class="upgrade-box">
+                        <i class="fas fa-rocket fa-2x" style="color: var(--primary-color); margin-bottom: 12px;"></i>
+                        <p>Akses template premium & unduhan tanpa batas dengan <strong>Paket Pro.</strong></p>
+                        <a href="{{ route('pricing') ?? '#' }}" class="btn-primary" style="display: flex; justify-content: center; text-decoration: none; width: 100%;">
+                            Tingkatkan ke Pro
+                        </a>
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 </div>
 
 @push('scripts')
 <script>
-    // Dark mode toggle in settings
+    // Fitur Dark Mode Toggle bawaan sistem Anda
     const darkModeToggle = document.getElementById('darkModeToggle');
     if (darkModeToggle) {
         const currentTheme = localStorage.getItem('theme') || 'light';
@@ -825,6 +668,89 @@
                     themeIcon.classList.remove('fa-sun');
                     themeIcon.classList.add('fa-moon');
                 }
+            }
+        });
+    }
+
+    // Tampilkan preview gambar ketika foto profil baru dipilih
+    document.getElementById('avatarInput').addEventListener('change', function(event) {
+        if(event.target.files && event.target.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('.avatar-big').innerHTML = '<img src="' + e.target.result + '" style="width: 100%; height: 100%; object-fit: cover;">';
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    });
+
+    function confirmCancellation() {
+        Swal.fire({
+            title: 'Konfirmasi Pembatalan',
+            text: "Sayang sekali Anda ingin berhenti. Akses ke template premium dan fitur Pro lainnya akan dicabut setelah masa aktif berakhir. Anda yakin?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444', // Warna merah danger
+            cancelButtonColor: '#6b7280', // Warna abu-abu
+            confirmButtonText: 'Ya, Berhenti Langganan',
+            cancelButtonText: 'Tetap di Paket Pro',
+            reverseButtons: true, // Tombol cancel di kiri, confirm di kanan
+            focusCancel: true,
+            customClass: {
+                popup: 'rounded-16', // Jika Anda punya class radius
+                confirmButton: 'btn-confirm-swal',
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Tampilkan loading saat proses submit
+                Swal.fire({
+                    title: 'Memproses...',
+                    text: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    }
+                });
+                document.getElementById('formCancelPremium').submit();
+            }
+        })
+    }
+
+    // Fitur Pengecekan Level Kekuatan Kata Sandi
+    const passwordInput = document.getElementById('newPassword');
+    const pwContainer = document.getElementById('pwStrengthContainer');
+    const pwLabel = document.getElementById('pwLabel');
+
+    if (passwordInput) {
+        passwordInput.addEventListener('input', function() {
+            const val = this.value;
+            
+            // Jika input kosong, sembunyikan bar
+            if (val.length === 0) {
+                pwContainer.style.display = 'none';
+                return;
+            }
+            
+            // Tampilkan bar jika ada input
+            pwContainer.style.display = 'block';
+            pwContainer.className = 'pw-strength-container'; // reset class
+            
+            // Logika perhitungan kekuatan password
+            let strength = 0;
+            if (val.length >= 8) strength += 1; // Minimal 8 karakter
+            if (val.match(/[a-z]/) && val.match(/[A-Z]/)) strength += 1; // Huruf besar & kecil
+            if (val.match(/\d/)) strength += 1; // Ada angka
+            if (val.match(/[^a-zA-Z\d]/)) strength += 1; // Ada karakter spesial
+            
+            // Render warna berdasarkan skor
+            if (val.length < 6 || strength <= 1) {
+                pwContainer.classList.add('strength-weak');
+                pwLabel.innerText = 'Lemah';
+            } else if (strength === 2 || strength === 3) {
+                pwContainer.classList.add('strength-medium');
+                pwLabel.innerText = 'Sedang';
+            } else if (strength >= 4) {
+                pwContainer.classList.add('strength-strong');
+                pwLabel.innerText = 'Kuat';
             }
         });
     }

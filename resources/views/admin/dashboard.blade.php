@@ -4,7 +4,6 @@
 
 @push('styles')
 <style>
-    /* Stats Cards */
     .stats-grid {
         display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
         margin-bottom: 40px;
@@ -27,7 +26,6 @@
     .stat-val { font-size: 26px; font-weight: 800; color: var(--text-main); line-height: 1; }
     .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; }
     
-    /* Table */
     .table-card {
         background: var(--bg-card); border-radius: 16px; 
         border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);
@@ -45,15 +43,16 @@
     tr:last-child td { border-bottom: none; }
 
     .status-badge {
-        padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+        padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-block;
     }
     .status-pending { background: rgba(245, 158, 11, 0.15); color: #D97706; }
-    .status-success { background: rgba(76, 175, 80, 0.15); color: var(--primary-color); }
+    .status-approved { background: rgba(76, 175, 80, 0.15); color: var(--primary-color); }
+    .status-rejected { background: rgba(239, 68, 68, 0.15); color: #DC2626; }
 
     .btn-xs {
         padding: 6px 12px; font-size: 12px; border-radius: 6px; 
         border: 1px solid var(--border-color); background: var(--bg-body);
-        color: var(--text-main); cursor: pointer; transition: 0.2s; font-weight: 600;
+        color: var(--text-main); cursor: pointer; transition: 0.2s; font-weight: 600; text-decoration: none;
     }
     .btn-xs:hover { border-color: var(--primary-color); color: var(--primary-color); }
 
@@ -72,7 +71,7 @@
     <div class="stat-card">
         <div class="stat-header">
             <div>
-                <div class="stat-val">Rp 128.5M</div>
+                <div class="stat-val">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</div>
                 <div class="stat-label">Total Pendapatan</div>
             </div>
             <div class="stat-icon icon-income"><i class="fas fa-wallet"></i></div>
@@ -81,7 +80,7 @@
     <div class="stat-card">
         <div class="stat-header">
             <div>
-                <div class="stat-val">1,240</div>
+                <div class="stat-val">{{ number_format($totalPengguna, 0, ',', '.') }}</div>
                 <div class="stat-label">Total Pengguna</div>
             </div>
             <div class="stat-icon icon-user"><i class="fas fa-users"></i></div>
@@ -90,7 +89,7 @@
     <div class="stat-card">
         <div class="stat-header">
             <div>
-                <div class="stat-val">24</div>
+                <div class="stat-val">{{ number_format($pendingVerifikasi, 0, ',', '.') }}</div>
                 <div class="stat-label">Perlu Verifikasi</div>
             </div>
             <div class="stat-icon icon-pending"><i class="fas fa-clock"></i></div>
@@ -99,7 +98,7 @@
     <div class="stat-card">
         <div class="stat-header">
             <div>
-                <div class="stat-val">56</div>
+                <div class="stat-val">{{ number_format($totalTemplate, 0, ',', '.') }}</div>
                 <div class="stat-label">Template Aktif</div>
             </div>
             <div class="stat-icon" style="background: rgba(124, 58, 237, 0.1); color: #7C3AED;"><i class="fas fa-layer-group"></i></div>
@@ -110,40 +109,46 @@
 <div class="table-card">
     <div class="table-header">
         <h3>Pembayaran Terbaru</h3>
-        <a href="#" style="font-size: 13px; color: var(--primary-color); font-weight: 600;">Lihat Semua</a>
+        <a href="{{ route('admin.transactions.index') }}" style="font-size: 13px; color: var(--primary-color); font-weight: 600; text-decoration: none;">Lihat Semua</a>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>Paket</th>
-                <th>Nominal</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <div style="font-weight: 600;">Andi Pratama</div>
-                    <div style="font-size: 12px; color: var(--text-muted);">andi@mail.com</div>
-                </td>
-                <td>Pro Monthly</td>
-                <td style="font-family: monospace; font-weight: 700;">Rp 49.823</td>
-                <td><span class="status-badge status-pending">Pending</span></td>
-                <td><button class="btn-xs">Cek Bukti</button></td>
-            </tr>
-            <tr>
-                <td>
-                    <div style="font-weight: 600;">Siti Aminah</div>
-                    <div style="font-size: 12px; color: var(--text-muted);">siti@mail.com</div>
-                </td>
-                <td>Lifetime</td>
-                <td style="font-family: monospace; font-weight: 700;">Rp 199.102</td>
-                <td><span class="status-badge status-success">Lunas</span></td>
-                <td><button class="btn-xs">Detail</button></td>
-            </tr>
-        </tbody>
-    </table>
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Metode</th>
+                    <th>Nominal</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($recentTransactions as $trx)
+                <tr>
+                    <td>
+                        <div style="font-weight: 600;">{{ $trx->user->name ?? 'User Terhapus' }}</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">{{ $trx->created_at->diffForHumans() }}</div>
+                    </td>
+                    <td>{{ $trx->payment_method }}</td>
+                    <td style="font-weight: 700;">Rp {{ number_format($trx->amount, 0, ',', '.') }}</td>
+                    <td>
+                        <span class="status-badge status-{{ $trx->status }}">
+                            {{ ucfirst($trx->status == 'approved' ? 'Berhasil' : ($trx->status == 'pending' ? 'Menunggu' : 'Ditolak')) }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ route('admin.transactions.show', $trx->id) }}" class="btn-xs">Detail</a>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                        Belum ada data transaksi.
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 @endsection

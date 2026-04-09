@@ -131,7 +131,7 @@
                 <a href="{{  route('admin.dashboard.index')}}" class="nav-link {{   request()->routeIs('admin.dashboard.*') ? 'active' : ''}}"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a>
             </li>
             <li class="nav-item">
-                <a href="{{  route('admin.transaksi.index')}} " class="nav-link {{   request()->routeIs('admin.transaksi.*') ? 'active' : ''}}"><i class="fas fa-receipt"></i> <span>Transaksi</span></a>
+                <a href="{{  route('admin.transactions.index')}} " class="nav-link {{   request()->routeIs('admin.transactions.*') ? 'active' : ''}}"><i class="fas fa-receipt"></i> <span>Transaksi</span></a>
             </li>
             <li class="nav-item">
                 <a href="{{ route('admin.users.index')}}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : ''}}"><i class="fas fa-users"></i> <span>Pengguna</span></a>
@@ -143,16 +143,23 @@
             <li class="nav-item">
                 <a href="{{ route('admin.templates.index')}}" class="nav-link {{ request()->routeIs('admin.templates.*') ? 'active' : ''}}"><i class="fas fa-layer-group"></i> <span>Template CV</span></a>
             </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link"><i class="fas fa-cog"></i> <span>Pengaturan</span></a>
-            </li>
         </ul>
+
+        <div class="menu-label">Setting</div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="{{ route('admin.settings.index')}}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : ''}}"><i class="fas fa-cogs"></i> <span>Pengaturan</span></a>
+            </li>
     </div>
     
     <div class="sidebar-footer">
-        <a href="#" class="nav-link" style="color: #EF4444;">
-            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
-        </a>
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="nav-link" style="color: #EF4444; background: none; border: none; width: 100%; text-align: left; cursor: pointer;">
+                <i class="fas fa-sign-out-alt"></i> 
+                <span>Logout</span>
+            </button>
+        </form>
     </div>
 </aside>
 

@@ -127,7 +127,22 @@
                         @if($template->is_new) <span class="badge-pill badge-new">NEW RELEASE</span> @endif
                         @if($template->type == 'pro') <span class="badge-pill badge-primary">PREMIUM</span> @else <span class="badge-pill" style="background:#f3f4f6; color:#1f2937;">GRATIS</span> @endif
                         <span class="badge-pill badge-rating">
-                            <i class="fas fa-star"></i> {{ $template->rating }} ({{ number_format($template->total_downloads) }} unduhan)
+                            <i class="fas fa-star"></i> {{ number_format($template->average_rating ?? 0, 1) }} 
+                            (
+                            @php
+                                $n = $template->total_downloads ?? 0;
+                                if ($n >= 1000000000) {
+                                    $formatted = round($n / 1000000000, 1) . 'B';
+                                } elseif ($n >= 1000000) {
+                                    $formatted = round($n / 1000000, 1) . 'M';
+                                } elseif ($n >= 1000) {
+                                    $formatted = round($n / 1000, 1) . 'k';
+                                } else {
+                                    $formatted = $n;
+                                }
+                            @endphp
+                            {{ $formatted }} unduhan
+                            )
                         </span>
                     </div>
                     <h1 class="template-title">{{ $template->name }}</h1>
@@ -172,7 +187,7 @@
 
                 <div class="action-area">
                     {{-- <a href="{{ route('test-editor', $template->slug) }}" class="btn-use-template"><span>Gunakan Template Ini</span> <i class="fas fa-arrow-right"></i></a> --}}
-                    <a href="{{ route('form-tempalte', $template->slug)}}" class="btn-use-template"><span>Isi data terlebih dahulu </span> <i class="fas fa-arrow-right"></i></a>
+                    <a href="{{ route('template-editor', $template->slug)}}" class="btn-use-template"><span>Isi data terlebih dahulu </span> <i class="fas fa-arrow-right"></i></a>
                     <div class="guarantee-text"><i class="fas fa-shield-alt"></i> 100% Data Privasi Terjamin</div>
                 </div>
 

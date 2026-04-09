@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ResetPasswordMail;
 
 class User extends Authenticatable
 {
@@ -37,10 +39,11 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'is_premium' => 'boolean',
-            'is_active' => 'boolean',
+            'email_verified_at'  => 'datetime',
+            'password'           => 'hashed',
+            'is_premium'         => 'boolean',
+            'is_active'          => 'boolean',
+            'premium_expires_at' => 'datetime', 
         ];
     }
 
@@ -51,7 +54,25 @@ class User extends Authenticatable
 
     public function hasPremiumAccess() 
     {
+        if ($this->is_premium && $this->premium_expires_at && $this->premium_expires_at->isPast()) {
+            
+            $this->update([
+                'is_premium'         => false,
+                'premium_expires_at' => null 
+            ]);
+
+            return false; 
+        }
+
         return $this->is_premium;
+    }
+
+    public function activatePremium()
+    {
+        $this->update([
+            'is_premium'         => true,
+            'premium_expires_at' => now()->addMonth(), 
+        ]);
     }
 
     public function resumes()
@@ -62,5 +83,27 @@ class User extends Authenticatable
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function scopeSearch($query, $keyword)
+    {
+        return $query->where(function ($q) use ($keyword) {
+            $q->where('name', 'like', "%{$keyword}%")
+            ->orWhere('email', 'like', "%{$keyword}%");
+        });
+    }
+
+    public function avatarUrl(): string
+    {
+        if ($this->avatar) {
+            return asset('storage/' . $this->avatar);
+        }
+
+        return "https://ui-avatars.com/api/?name=" . urlencode($this->name) . "&background=e0f2fe&color=0369a1&size=128";
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\CustomResetPasswordNotification($token));
     }
 }

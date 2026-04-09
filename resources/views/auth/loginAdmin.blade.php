@@ -358,13 +358,17 @@
             <h2 class="form-title">Masuk, Admin.</h2>
             <p class="form-sub">Restricted access — tim internal ResuMate.</p>
 
-            <form action="#" method="POST">
+            <form action="{{ route('admin.login.process') }}" method="POST">
+                @csrf
                 <div class="field">
                     <label>Email</label>
                     <div class="field-inner">
                         <i class="fas fa-envelope field-icon"></i>
-                        <input type="email" name="email" placeholder="nama@resumate.com" required>
+                        <input type="email" name="email" value="{{ old('email') }}" placeholder="nama@resumate.com" required>
                     </div>
+                    @error('email')
+                            <small style="color:#e3342f;">{{ $message }}</small>
+                    @enderror
                 </div>
 
                 <div class="field-row">
@@ -375,6 +379,9 @@
                             <input type="password" name="password" placeholder="••••••••" required>
                         </div>
                     </div>
+                    @error('password')
+                            <small style="color:#e3342f;">{{ $message }}</small>
+                    @enderror
                 </div>
 
                 <div class="field-options">

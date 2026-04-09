@@ -96,30 +96,15 @@
                             
                             <!-- Greeting -->
                             <p style="margin: 0 0 20px; color: #333333; font-size: 16px; line-height: 1.6;">
-                                Halo, <strong>{{ $userName ?? 'Pengguna' }}</strong>
+                                Halo, <strong>{{ $username ?? 'Pengguna' }}</strong>
                             </p>
                             
                             <!-- Message -->
-                            <p style="margin: 0 0 30px; color: #666666; font-size: 15px; line-height: 1.6;">
-                                Kami menerima permintaan untuk mereset password akun ResuMate Anda. 
-                                Klik tombol di bawah ini untuk membuat password baru. Jika Anda tidak meminta ini, abaikan email ini.
-                            </p>
+                                <p style="margin: 0 0 30px; color: #666666; font-size: 15px; line-height: 1.6;">
+                                    Kami menerima permintaan untuk mereset password akun ResuMate Anda. 
+                                    Silakan klik link di bawah ini untuk membuat password baru. Jika Anda tidak merasa meminta reset password, abaikan saja email ini.
+                                </p>
 
-                            <!-- Reset Button -->
-                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 0 0 30px;">
-                                <tr>
-                                    <td style="text-align: center;">
-                                        <a href="{{ $resetUrl ?? '#' }}" style="display: inline-block; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: #ffffff; text-decoration: none; padding: 16px 48px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);">
-                                            Reset Password
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <!-- Fallback URL -->
-                            <p style="margin: 0 0 8px; color: #999999; font-size: 13px; line-height: 1.5; text-align: center;">
-                                Tombol tidak berfungsi? Salin dan tempel link berikut ke browser Anda:
-                            </p>
                             <p style="margin: 0 0 30px; text-align: center;">
                                 <a href="{{ $resetUrl ?? '#' }}" style="color: #4CAF50; font-size: 13px; word-break: break-all; text-decoration: underline;">
                                     {{ $resetUrl ?? 'https://resumate.com/reset-password/token-xxxxxxxxxx' }}
@@ -132,9 +117,6 @@
                                     <td style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 16px 20px; border-radius: 8px;">
                                         <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                                             <tr>
-                                                <td style="padding-right: 12px; vertical-align: top;">
-                                                    <div style="font-size: 20px;">⏰</div>
-                                                </td>
                                                 <td>
                                                     <p style="margin: 0; color: #856404; font-size: 14px; line-height: 1.5;">
                                                         <strong>Penting:</strong> Link ini hanya berlaku selama <strong>60 menit</strong>. 
@@ -152,7 +134,7 @@
 
                             <!-- Security Tips -->
                             <h3 style="margin: 0 0 15px; color: #333333; font-size: 16px; font-weight: 600;">
-                                🔒 Tips Keamanan
+                                Tips Keamanan
                             </h3>
                             
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
@@ -223,32 +205,6 @@
                     <tr>
                         <td style="background-color: #f9f9f9; padding: 30px 40px; border-top: 1px solid #e5e5e5;">
                             
-                            <!-- Social Links -->
-                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0 auto 20px;">
-                                <tr>
-                                    <td style="padding: 0 10px;">
-                                        <a href="#" style="text-decoration: none;">
-                                            <img src="https://via.placeholder.com/32/3b5998/ffffff?text=f" alt="Facebook" width="32" height="32" style="border-radius: 50%; display: block;">
-                                        </a>
-                                    </td>
-                                    <td style="padding: 0 10px;">
-                                        <a href="#" style="text-decoration: none;">
-                                            <img src="https://via.placeholder.com/32/1da1f2/ffffff?text=t" alt="Twitter" width="32" height="32" style="border-radius: 50%; display: block;">
-                                        </a>
-                                    </td>
-                                    <td style="padding: 0 10px;">
-                                        <a href="#" style="text-decoration: none;">
-                                            <img src="https://via.placeholder.com/32/0077b5/ffffff?text=in" alt="LinkedIn" width="32" height="32" style="border-radius: 50%; display: block;">
-                                        </a>
-                                    </td>
-                                    <td style="padding: 0 10px;">
-                                        <a href="#" style="text-decoration: none;">
-                                            <img src="https://via.placeholder.com/32/E4405F/ffffff?text=ig" alt="Instagram" width="32" height="32" style="border-radius: 50%; display: block;">
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
-
                             <!-- Company Info -->
                             <p style="margin: 0 0 10px; color: #999999; font-size: 13px; line-height: 1.6; text-align: center;">
                                 <strong style="color: #666666;">ResuMate</strong><br>
@@ -258,7 +214,7 @@
 
                             <!-- Copyright & Links -->
                             <p style="margin: 0; color: #999999; font-size: 12px; line-height: 1.6; text-align: center;">
-                                © 2024 ResuMate. All rights reserved.<br>
+                                © {{ date('Y') }} ResuMate. All rights reserved.<br>
                                 <a href="#" style="color: #4CAF50; text-decoration: none;">Privacy Policy</a> | 
                                 <a href="#" style="color: #4CAF50; text-decoration: none;">Terms of Service</a> | 
                                 <a href="#" style="color: #4CAF50; text-decoration: none;">Unsubscribe</a>

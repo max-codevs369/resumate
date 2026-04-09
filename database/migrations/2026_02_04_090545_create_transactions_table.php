@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             
-            $table->foreignId('resume_id')->nullable()->constrained('resumes')->nullOnDelete();
-            
             $table->string('transaction_code')->unique();
             $table->integer('amount');
             $table->string('payment_method')->default('manual_transfer');

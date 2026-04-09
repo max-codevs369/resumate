@@ -29,18 +29,21 @@
     .templates-header h2 { font-size: 36px; font-weight: 600; color: var(--text-main); margin-bottom: 12px; }
     .templates-header p { font-size: 16px; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
     .templates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-    .template-card { background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px var(--shadow-color); transition: all 0.3s ease; position: relative; cursor: pointer; border: 1px solid var(--border-color); }
+    .template-card { background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px var(--shadow-color); transition: all 0.3s ease; position: relative; cursor: pointer; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
     .template-card:hover { transform: translateY(-8px); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12); }
-    .template-preview { width: 100%; height: 380px; background: var(--template-preview-bg); position: relative; display: flex; align-items: center; justify-content: center; }
+    
+    /* PERBAIKAN: Tinggi (height) diubah dari 380px menjadi 460px agar lebih portrait */
+    .template-preview { width: 100%; height: 460px; background: var(--template-preview-bg); position: relative; display: flex; align-items: center; justify-content: center; }
     .template-preview::before { content: ''; position: absolute; top: 20px; left: 20px; right: 20px; bottom: 20px; background: var(--bg-card); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    
     .template-preview-text { position: relative; z-index: 1; font-size: 14px; color: var(--text-secondary); font-weight: 500; }
     .template-badge { position: absolute; top: 16px; right: 16px; background: var(--primary-color); color: white; padding: 6px 14px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; z-index: 2; }
     .template-badge.premium { background: linear-gradient(135deg, #FFB74D, #FF9800); }
     .template-badge.new { background: linear-gradient(135deg, #42A5F5, #2196F3); }
-    .template-info { padding: 24px; }
+    .template-info { padding: 24px; flex: 1; display: flex; flex-direction: column; }
     .template-info h3 { font-size: 20px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
-    .template-info p { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.5; }
-    .template-meta { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid var(--border-color); }
+    .template-info p { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.5; flex: 1; }
+    .template-meta { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid var(--border-color); margin-top: auto; }
     .template-stats { display: flex; gap: 16px; font-size: 13px; color: var(--text-secondary); }
     .template-stats i { color: var(--primary-color); }
     .template-action { color: var(--primary-color); font-size: 14px; font-weight: 600; text-decoration: none; }
@@ -88,7 +91,7 @@
                 Template CV standar yang kami sediakan tidak hanya menarik dan terlihat profesional di mata recruiter.
             </p>
             @auth
-                <a href="{{ url('/dashboard') }}" class="btn-primary">Dashboard</a>
+                <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard.index') : route('user.dashboard') }}" class="btn-primary">Dashboard</a>
             @else
                 <a href="{{ route('register') }}" class="btn-primary">Buat CV Sekarang</a>
             @endauth
@@ -103,18 +106,19 @@
     <div class="stats-container">
         <div class="stats-grid">
             <div class="stat-item">
-                <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
-                <h3><span>50</span>K+</h3>
-                <p>CV Dibuat</p>
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <h3><span>{{ $userCount }}</span>+</h3>
+                <p>Pengguna Terdaftar</p>
             </div>
             <div class="stat-item">
                 <div class="stat-icon"><i class="fas fa-layer-group"></i></div>
-                <h3><span>500</span>+</h3>
-                <p>Template Premium</p>
+                <!-- DATA DINAMIS: JUMLAH TEMPLATE -->
+                <h3><span>{{ $templateCount }}</span>+</h3>
+                <p>Template Tersedia</p>
             </div>
             <div class="stat-item">
                 <div class="stat-icon"><i class="fas fa-smile"></i></div>
-                <h3><span>98</span>%</h3>
+                <h3><span>{{ $userSatisfaction }}</span>%</h3>
                 <p>Kepuasan User</p>
             </div>
             <div class="stat-item">
@@ -135,61 +139,63 @@
         </div>
 
         <div class="templates-grid">
-            <div class="template-card">
-                <div class="template-badge">Populer</div>
-                <div class="template-preview">
-                    <span class="template-preview-text">Preview Template</span>
-                </div>
-                <div class="template-info">
-                    <h3>Professional Modern</h3>
-                    <p>Template minimalis dan clean untuk profesional.</p>
-                    <div class="template-meta">
-                        <div class="template-stats">
-                            <span><i class="fas fa-download"></i> 15.2K</span>
-                            <span><i class="fas fa-star"></i> 4.9</span>
-                        </div>
-                        <a href="#" class="template-action">Detail <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="template-card">
-                <div class="template-badge new">Terbaru</div>
-                <div class="template-preview">
-                    <span class="template-preview-text">Preview Template</span>
-                </div>
-                <div class="template-info">
-                    <h3>Creative Bold</h3>
-                    <p>Desain berani untuk industri kreatif.</p>
-                    <div class="template-meta">
-                        <div class="template-stats">
-                            <span><i class="fas fa-download"></i> 8.5K</span>
-                            <span><i class="fas fa-star"></i> 4.8</span>
-                        </div>
-                        <a href="#" class="template-action">Detail <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="template-card">
+    @forelse($popularTemplates as $template)
+    
+    @php
+        $isLocked = $template->type == 'pro' && (!auth()->check() || !auth()->user()->is_premium);
+        
+        $targetUrl = $isLocked ? route('pricing') : route('template-detail', $template->slug ?? $template->id);
+    @endphp
+
+    <div class="template-card" onclick="window.location.href='{{ $targetUrl }}'" style="cursor: pointer;">
+            
+            @if($template->type == 'pro')
                 <div class="template-badge premium">Premium</div>
-                <div class="template-preview">
-                    <span class="template-preview-text">Preview Template</span>
-                </div>
-                <div class="template-info">
-                    <h3>Executive Classic</h3>
-                    <p>Template formal untuk posisi senior.</p>
-                    <div class="template-meta">
-                        <div class="template-stats">
-                            <span><i class="fas fa-download"></i> 12.8K</span>
-                            <span><i class="fas fa-star"></i> 5.0</span>
-                        </div>
-                        <a href="#" class="template-action">Detail <i class="fas fa-arrow-right"></i></a>
+            @else
+                <div class="template-badge new">Gratis</div>
+            @endif
+
+            <div class="template-preview">
+                <img src="{{ asset('storage/' . $template->thumbnail) }}" alt="{{ $template->name }}" style="width: calc(100% - 40px); height: calc(100% - 40px); object-fit: contain; background-color: #ffffff; border-radius: 8px; position: relative; z-index: 1; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+            </div>
+            
+            <div class="template-info">
+                <h3>{{ $template->name }}</h3>
+                <p>{{ Str::limit($template->description, 60) ?: 'Template profesional siap pakai.' }}</p>
+                <div class="template-meta">
+                    <div class="template-stats">
+                        <span><i class="fas fa-tags"></i> {{ $template->category }}</span>
                     </div>
+                    
+                    @if($isLocked)
+                        <a href="{{ $targetUrl }}" class="template-action" style="color: #F59E0B; font-weight: 600;">
+                            Buka PRO <i class="fas fa-crown"></i>
+                        </a>
+                    @else
+                        @if($template->type == 'pro' && auth()->check() && !auth()->user()->is_premium || $template->type == 'pro' && !auth()->check())
+                            <a href="{{ $targetUrl }}" class="template-action" style="color: #F59E0B; font-weight: 600;">
+                                Lihat PRO <i class="fas fa-crown"></i>
+                            </a>
+                        @else
+                            <a href="{{ $targetUrl }}" class="template-action">
+                                Lihat <i class="fas fa-arrow-right"></i>
+                            </a>
+                        @endif
+                    @endif
+                    
                 </div>
             </div>
         </div>
+        @empty
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-secondary);">
+            <i class="fas fa-box-open" style="font-size: 40px; margin-bottom: 15px; opacity: 0.5;"></i>
+            <p>Belum ada template yang dipublish.</p>
+        </div>
+        @endforelse
+    </div>
 
         <div class="view-all-templates">
-            <a href="{{ route('templates')}}" class="btn-outline">Lihat Semua Template <i class="fas fa-arrow-right"></i></a>
+            <a href="{{ route('templates') }}" class="btn-outline">Lihat Semua Template <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 </section>
@@ -225,7 +231,7 @@
         <h2>Siap Membuat CV Profesional?</h2>
         <p>Bergabunglah dengan ribuan profesional yang telah berhasil mendapatkan pekerjaan impian</p>
         @auth
-            <a href="{{ url('/') }}" class="btn-white">Mulai Sekarang →</a>
+            <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard.index') : route('user.dashboard') }}" class="btn-white">Mulai Sekarang →</a>
         @else
             <a href="{{ route('register') }}" class="btn-white">Mulai Sekarang →</a>
         @endauth

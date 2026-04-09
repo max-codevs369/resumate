@@ -568,7 +568,11 @@
                     <p>Masukkan password baru untuk akun Anda. Pastikan password memenuhi persyaratan keamanan.</p>
                 </div>
 
-                <form action="#" method="POST" id="resetForm">
+                <!-- Div tambahan untuk error server -->
+                <div class="error-message" id="serverError" style="text-align: center; margin-bottom: 20px; font-size: 14px;"></div>
+
+                <!-- Action menggunakan route reset password (password.update) -->
+                <form action="{{ route('password.update') }}" method="POST" id="resetForm">
                     @csrf
                     <input type="hidden" name="token" value="{{ $token ?? '' }}">
                     <input type="hidden" name="email" value="{{ $email ?? '' }}">
@@ -833,12 +837,57 @@
         const countdownElement = document.getElementById('countdown');
         let countdownInterval;
 
-        // Form submission
-        document.getElementById('resetForm').addEventListener('submit', function(e) {
+        // Form submission dengan AJAX (Fetch API)
+        document.getElementById('resetForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Show success modal
-            showSuccessModal();
+            const originalBtnText = submitBtn.innerHTML;
+            const serverError = document.getElementById('serverError');
+            
+            // Ubah tombol jadi loading
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+            submitBtn.disabled = true;
+            serverError.classList.remove('active');
+
+            try {
+                const formData = new FormData(this);
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Jika sukses, panggil modal buatan Anda!
+                    showSuccessModal();
+                } else {
+                    // Jika gagal (token expired/validasi error), kembalikan tombol
+                    submitBtn.innerHTML = originalBtnText;
+                    submitBtn.disabled = false;
+                    
+                    // Ambil pesan error dari Laravel
+                    let errorMsg = 'Terjadi kesalahan. Silakan coba lagi.';
+                    if (data.errors) {
+                        const firstErrorKey = Object.keys(data.errors)[0];
+                        errorMsg = data.errors[firstErrorKey][0];
+                    } else if (data.message) {
+                        errorMsg = data.message;
+                    }
+                    
+                    serverError.textContent = errorMsg;
+                    serverError.classList.add('active');
+                }
+            } catch (error) {
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+                serverError.textContent = 'Gagal terhubung ke server.';
+                serverError.classList.add('active');
+            }
         });
 
         function showSuccessModal() {
@@ -869,8 +918,7 @@
         }
 
         function redirectToLogin() {
-            // window.location.href = '{{ route("login") }}';
-            alert('Redirect ke halaman login');
+            window.location.href = '{{ route("login") }}';
         }
 
         // Button event listeners
