@@ -4,7 +4,6 @@
 
 @push('styles')
 <style>
-    /* --- Checkout Layout --- */
     .checkout-section {
         padding: 60px 0 100px;
         background: var(--bg-body);
@@ -21,7 +20,6 @@
         align-items: start;
     }
 
-    /* --- Summary Card (Sticky) --- */
     .summary-card {
         background: var(--bg-card);
         padding: 30px;
@@ -59,7 +57,6 @@
         background: var(--bg-body); border-radius: 8px;
     }
 
-    /* --- Payment Methods Tabs --- */
     .payment-methods {
         background: var(--bg-card); padding: 40px; border-radius: 24px;
         border: 1px solid var(--border-color); box-shadow: 0 4px 20px var(--shadow-sm);
@@ -91,11 +88,9 @@
         color: var(--primary-color); box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
     }
 
-    /* --- Method Content --- */
     .method-content { animation: fadeIn 0.4s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* QRIS Styles */
     .qris-container {
         text-align: center; padding: 30px; border: 1px solid var(--border-color);
         border-radius: 16px; background: var(--bg-body); display: flex; flex-direction: column; align-items: center;
@@ -110,7 +105,6 @@
         opacity: 0.7; font-size: 12px; font-weight: 600; color: var(--text-secondary);
     }
 
-    /* Bank Info Styles */
     .bank-info {
         background: rgba(76, 175, 80, 0.05); padding: 25px; border-radius: 16px;
         border: 1px solid var(--border-color); text-align: center;
@@ -122,7 +116,6 @@
     }
     .account-name { font-size: 14px; font-weight: 600; color: var(--text-main); }
 
-    /* --- Upload & Button --- */
     .upload-section { margin-top: 40px; padding-top: 40px; border-top: 1px dashed var(--border-color); }
     .upload-zone {
         border: 2px dashed var(--border-color); padding: 30px; border-radius: 16px;
@@ -144,13 +137,21 @@
         box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
     }
 
-    /* Error Text */
     .text-error { color: #dc2626; font-size: 12px; margin-top: 6px; display: block; text-align: center; }
 
     @media (max-width: 992px) {
         .checkout-container { grid-template-columns: 1fr; max-width: 600px; gap: 30px; }
         .summary-card { position: relative; top: 0; order: -1; }
     }
+
+    .btn-download-qr {
+        display: inline-flex; align-items: center; gap: 8px;
+        margin: 10px 0; padding: 8px 16px;
+        background: rgba(16, 185, 129, 0.1); color: var(--primary-color);
+        border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 700;
+        transition: all 0.3s;
+    }
+    .btn-download-qr:hover { background: var(--primary-color); color: white; }
 </style>
 @endpush
 
@@ -220,6 +221,9 @@
                                 @endif
                             </div>
                             <p style="font-size: 14px; font-weight: 600; color: var(--text-main);">Scan QRIS untuk Membayar</p>
+                            <a href="{{ isset($settings['qris_image']) ? asset('storage/' . $settings['qris_image']) : 'https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg' }}" download="QRIS_Pembayaran.png" class="btn-download-qr">
+                                <i class="fas fa-download"></i> Unduh Kode QR
+                            </a>
                             <div class="qris-logos">
                                 <span>GOPAY</span> • <span>OVO</span> • <span>DANA</span> • <span>SHOPEEPAY</span>
                             </div>
@@ -259,11 +263,9 @@
 
         document.getElementById('method-' + sectionId).style.display = 'block';
         
-        // Update input hidden form
         document.getElementById('payment_method_input').value = methodName;
     }
 
-    // Fungsi untuk menampilkan nama file yang dipilih
     const fileInput = document.getElementById('fileInput');
     const uploadText = document.getElementById('uploadText');
 
@@ -273,7 +275,6 @@
         }
     });
 
-    // Loading state saat tombol submit ditekan
     document.getElementById('checkoutForm').addEventListener('submit', function() {
         const btn = document.getElementById('submitBtn');
         btn.disabled = true;

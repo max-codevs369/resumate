@@ -14,7 +14,6 @@
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #fafafa; color: #1f2937; overflow: hidden; }
         .editor-layout { display: flex; height: 100vh; background: #fafafa; }
         
-        /* SIDEBAR CSS */
         .sidebar { width: 380px; background: white; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; overflow: hidden; z-index: 10; }
         .sidebar-top { padding: 24px 20px 20px; border-bottom: 1px solid #f3f4f6; background: white; }
         .back-link { display: inline-flex; align-items: center; gap: 8px; color: #6b7280; text-decoration: none; font-size: 14px; margin-bottom: 20px; font-weight: 500; transition: color 0.2s; }
@@ -49,7 +48,6 @@
         .add-btn { width: 100%; padding: 10px; background: white; border: 1.5px dashed #d1d5db; border-radius: 8px; font-size: 13px; font-weight: 600; color: #16a34a; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; margin-top: 12px; margin-bottom: 24px; }
         .add-btn:hover { background: #f0fdf4; border-color: #16a34a; }
         
-        /* PREVIEW AREA CSS */
         .preview-area { flex: 1; background: #e5e5e5; display: flex; flex-direction: column; overflow: hidden; }
         .preview-header { background: white; border-bottom: 1px solid #e5e7eb; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; z-index: 5; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .preview-actions { display: flex; gap: 10px; }
@@ -61,8 +59,6 @@
         .zoom-btn { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid #e5e7eb; border-radius: 6px; color: #4b5563; cursor: pointer; }
         .zoom-value { font-size: 13px; font-weight: 600; color: #374151; min-width: 44px; text-align: center; }
         
-        /* CANVAS KERTAS A4 CSS (TELAH DIPERBAIKI) */
-        /* Tambahkan align-items: flex-start agar flexbox tidak menahan tinggi elemen anak */
         .preview-canvas { flex: 1; overflow: auto; padding: 40px; display: flex; justify-content: center; align-items: flex-start; }
         .preview-canvas::-webkit-scrollbar { width: 8px; height: 8px; }
         .preview-canvas::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 4px; }
@@ -70,7 +66,7 @@
         .cv-sheet { 
             width: 210mm; 
             min-height: 297mm; 
-            height: max-content; /* <--- Kunci perbaikan 1: Tinggi dipaksa menyesuaikan isi */
+            height: max-content; 
             background: #ffffff; 
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); 
             position: relative;
@@ -81,12 +77,11 @@
 
         #main-drop {
             min-height: 297mm; 
-            height: max-content; /* <--- Kunci perbaikan 2: Area konten juga menyesuaikan isi */
+            height: max-content; 
             padding: 20mm; 
             position: relative;
         }
 
-        /* Notifikasi */
         .notify { position: fixed; bottom: 24px; right: 24px; display: flex; align-items: center; gap: 12px; padding: 14px 20px; background: white; border-left: 4px solid #16a34a; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); transform: translateY(120px); opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1000; }
         .notify.show { transform: translateY(0); opacity: 1; }
         .notify i { font-size: 18px; color: #16a34a; }
@@ -107,10 +102,10 @@
         }
 
         .btn-back:hover {
-            background: #10b981; /* Warna hijau Anda */
+            background: #10b981;
             color: white;
             border-color: #10b981;
-            transform: translateX(-3px); /* Efek sedikit bergeser ke kiri */
+            transform: translateX(-3px);
         }
     </style>
 </head>
@@ -118,7 +113,6 @@
 
 <div class="editor-layout">
     
-    <!-- SIDEBAR FORM -->
     <div class="sidebar">
         <div class="sidebar-top">
             <a href="{{ route('user.dashboard') }}" class="back-link"><i class="fas fa-arrow-left"></i> Keluar</a>
@@ -146,7 +140,6 @@
         </div>
     </div>
 
-    <!-- PREVIEW AREA -->
     <div class="preview-area">
         <div class="preview-header">
             <div class="zoom-tools">
@@ -177,9 +170,6 @@
 </div>
 
 <script>
-    // =========================================================
-    // 1. DATA PARSING (Super Aman)
-    // =========================================================
     let rawSchema = {!! json_encode($resume->layout_schema ?? $resume->template->layout_schema ?? []) !!};
     let rawGlobal = {!! json_encode($resume->global_settings ?? $resume->template->global_settings ?? []) !!};
     const cvTemplateId = "{{ $resume->cv_template_id ?? $resume->template->id }}";
@@ -195,9 +185,6 @@
         document.getElementById('cv-paper').style.fontFamily = globalSettings.fontFamily;
     }
 
-    // =========================================================
-    // 2. HELPER FUNCTIONS
-    // =========================================================
     function esc(str) { return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
     function safeText(val) { return String(val || '').replace(/\n/g, '<br>'); }
     function parseItems(itemsData) {
@@ -216,9 +203,6 @@
         return null;
     }
 
-    // =========================================================
-    // 3. CANVAS RENDERER (100% Identik dengan Editor Admin)
-    // =========================================================
     function renderCanvas() {
         const container = document.getElementById('main-drop');
         container.innerHTML = '';
@@ -362,9 +346,6 @@
         }
     }
 
-    // =========================================================
-    // 4. SIDEBAR DYNAMIC FORMS 
-    // =========================================================
     window.updateProp = function(blockId, key, value) {
         const block = findBlock(blockId, schema);
         if(block) { block.props[key] = value; renderCanvas(); }
@@ -453,7 +434,6 @@
         const itemInput = (idx, label, key, val) => `<div class="field"><label class="label">${label}</label><input type="text" class="input" value="${esc(val)}" oninput="updateItemProp('${id}', ${idx}, '${key}', this.value)"></div>`;
         const itemTextarea = (idx, label, key, val) => `<div class="field"><label class="label">${label}</label><textarea class="textarea" oninput="updateItemProp('${id}', ${idx}, '${key}', this.value)">${esc(val)}</textarea></div>`;
 
-        // Abaikan spacer/divider agar tidak menuh-menuhin sidebar user
         if(block.type === 'spacer' || block.type === 'divider' || block.type === 'section_title') return;
 
         html += `<div class="section-label">${p.heading || block.type.toUpperCase()}</div>`;
@@ -475,7 +455,6 @@
             html += input('LinkedIn', 'linkedin', p.linkedin) + input('GitHub', 'github', p.github) + input('Twitter', 'twitter', p.twitter) + input('Instagram', 'instagram', p.instagram);
         }
         else {
-            // Semua Elemen Bertipe Array (Experience, Education, dll)
             const labelMap = { experience: 'Pengalaman', volunteer: 'Sukarelawan', project: 'Proyek', education: 'Pendidikan', certification: 'Sertifikasi', award: 'Penghargaan', publication: 'Publikasi', portfolio: 'Portfolio', organization: 'Organisasi', references: 'Referensi', skills: 'Keahlian', languages: 'Bahasa' };
             if(!labelMap[block.type]) return;
 
@@ -504,11 +483,6 @@
         section.innerHTML += html;
     }
 
-    // =========================================================
-    // 5. INTERACTIVITY & AJAX
-    // =========================================================
-    
-    // Tab System
     const tabs = document.querySelectorAll('.tab');
     const sections = document.querySelectorAll('.section');
     tabs.forEach(tab => {
@@ -520,7 +494,6 @@
         });
     });
 
-    // Zoom System
     let zoomLevel = 100;
     window.zoomIn = () => { if(zoomLevel < 150) { zoomLevel += 10; applyZoom(); } }
     window.zoomOut = () => { if(zoomLevel > 50) { zoomLevel -= 10; applyZoom(); } }
@@ -529,7 +502,6 @@
         document.getElementById('cv-paper').style.transform = `scale(${zoomLevel/100})`;
     }
 
-    // AJAX Save Function
     window.saveData = function(statusType) {
         const btnId = statusType === 'completed' ? 'btnDone' : 'btnDraft';
         const btn = document.getElementById(btnId);
@@ -563,49 +535,37 @@
         });
     }
 
-    // =========================================================
-    // 6. FITUR DOWNLOAD PDF (html2pdf.js)
-    // =========================================================
     window.downloadPDF = function() {
-        // 1. Ambil elemen kertas yang ingin dijadikan PDF
         const element = document.getElementById('cv-paper');
         
-        // 2. Ambil nama file dari input (jika kosong, pakai 'My_Resume.pdf')
         const titleInput = document.getElementById('documentTitle');
         const fileName = (titleInput && titleInput.value.trim() !== '') ? titleInput.value.trim() : 'My_Resume';
         
-        // PENTING: Jika user sedang melakukan Zoom Out/In, kita harus reset skalanya
-        // agar hasil jepretan PDF tidak terpotong atau mengecil.
         const originalTransform = element.style.transform;
         element.style.transform = 'scale(1)';
 
-        // 3. Konfigurasi html2pdf
         const opt = {
-            margin:       0, // Margin diset 0 karena padding sudah diatur dari dalam CSS #main-drop
+            margin:       0,
             filename:     `${fileName}.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 }, // Kualitas gambar maksimal
+            image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { 
-                scale: 2, // Scale 2 agar teks dan gambar tajam (tidak pecah/blur)
-                useCORS: true, // Mengizinkan load gambar/foto profil dari storage URL
+                scale: 2, 
+                useCORS: true, 
                 allowTaint: true
             },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
-        // 4. Ubah status tombol agar user tahu sistem sedang memproses
         const btn = document.querySelector('button[onclick="downloadPDF()"]');
         const originalText = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: #dc2626;"></i> Memproses...';
         btn.disabled = true;
 
-        // 5. Eksekusi pembuatan PDF
         html2pdf().set(opt).from(element).save().then(() => {
-            // Kembalikan UI ke semula
             element.style.transform = originalTransform; 
             btn.innerHTML = originalText;
             btn.disabled = false;
 
-            // --- LOGIKA UPDATE DATABASE ---
             if(resumeId) {
                 fetch(`/resume/${resumeId}/increment-download`, {
                     method: 'POST',
@@ -623,7 +583,6 @@
         });
     }
 
-    // Init Call
     document.addEventListener('DOMContentLoaded', () => {
         renderCanvas();
         buildSidebarForms();
