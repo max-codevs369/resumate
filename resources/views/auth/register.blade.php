@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-        /* --- 1. DEFINISI VARIABEL TEMA --- */
         :root {
             --primary-color: #4CAF50;
             --primary-hover: #45a049;
@@ -23,7 +22,6 @@
             --input-bg: #FAFAFA;
             --shadow-color: rgba(0, 0, 0, 0.1);
             
-            /* Warna Password Meter */
             --pwd-weak: #e74c3c;
             --pwd-medium: #f39c12;
             --pwd-strong: #2ecc71;
@@ -41,11 +39,9 @@
             --pwd-bg: #444444;
         }
 
-        /* --- 2. BASE STYLES --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); line-height: 1.5; transition: background 0.3s, color 0.3s; }
 
-        /* --- 3. LAYOUT --- */
         .register-page {
             min-height: 100vh; display: flex; align-items: center; justify-content: center;
             padding: 40px 20px; position: relative;
@@ -59,7 +55,6 @@
             border: 1px solid var(--border-color);
         }
 
-        /* --- LEFT SIDE: FORM --- */
         .register-form-container { padding: 60px 50px; display: flex; flex-direction: column; justify-content: center; }
         .register-header { margin-bottom: 40px; }
         .register-header h1 { font-size: 32px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; }
@@ -78,7 +73,6 @@
             box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
         }
 
-        /* Password Meter Styles */
         .password-meter { margin-top: 8px; display: none; }
         .meter-bars { display: flex; gap: 5px; height: 6px; margin-bottom: 6px; }
         .meter-bar { flex: 1; background: var(--pwd-bg); border-radius: 3px; transition: background 0.3s; }
@@ -91,7 +85,6 @@
         }
         .btn-register:hover { background: var(--primary-hover); transform: translateY(-2px); }
 
-        /* --- RIGHT SIDE: BRANDING --- */
         .register-branding {
             background: linear-gradient(135deg, var(--primary-color) 0%, #2E7D32 100%);
             padding: 60px 50px; display: flex; flex-direction: column; justify-content: center; 
@@ -103,20 +96,31 @@
             .register-branding { display: none; }
             .register-form-container { padding: 50px 30px; }
         }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper .form-input {
+            padding-right: 40px; 
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary-color);
+        }
     </style>
 </head>
 <body>
-
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
-        })();
-    </script>
 
     <div class="register-page">
         <div class="register-container">
@@ -148,12 +152,15 @@
                         @error('email')<small style="color:#e3342f;">{{ $message }}</small>@enderror
                     </div>
 
-                    <div class="form-row">
+                   <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">Password</label>
-                            <input type="password" name="password" id="password" class="form-input" placeholder="Min. 8 karakter" required>
                             
-                            <!-- Area Level Kesulitan Password -->
+                            <div class="input-wrapper">
+                                <input type="password" name="password" id="password" class="form-input" placeholder="Min. 8 karakter" required>
+                                <i class="fas fa-eye toggle-password" data-target="password"></i>
+                            </div>
+                            
                             <div class="password-meter" id="passwordMeter">
                                 <div class="meter-bars">
                                     <div class="meter-bar" id="bar-1"></div>
@@ -171,7 +178,11 @@
 
                         <div class="form-group">
                             <label class="form-label">Ulangi Password</label>
-                            <input type="password" name="password_confirmation" class="form-input" placeholder="Ketik ulang" required>
+                            
+                            <div class="input-wrapper">
+                                <input type="password" name="password_confirmation" id="password_confirmation" class="form-input" placeholder="Ketik ulang" required>
+                                <i class="fas fa-eye toggle-password" data-target="password_confirmation"></i>
+                            </div>
                         </div>
                     </div>
 
@@ -196,7 +207,6 @@
         </div>
     </div>
 
-    <!-- Script Level Kesulitan Password -->
     <script>
         document.getElementById('password').addEventListener('input', function(e) {
             const password = e.target.value;
@@ -209,7 +219,6 @@
             ];
             const strengthText = document.getElementById('strengthText');
 
-            // Tampilkan meter jika ada ketikan
             if(password.length > 0) {
                 meter.style.display = 'block';
             } else {
@@ -217,19 +226,14 @@
                 return;
             }
 
-            // Hitung skor (0-4)
             let score = 0;
-            if (password.length >= 8) score++; // Minimal 8 karakter
-            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++; // Huruf besar & kecil
-            if (/\d/.test(password)) score++; // Ada angka
-            if (/[^a-zA-Z\d]/.test(password)) score++; // Ada simbol
+            if (password.length >= 8) score++; 
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+            if (/[^a-zA-Z\d]/.test(password)) score++; 
 
-            // Reset warna bar
             bars.forEach(bar => bar.style.background = 'var(--pwd-bg)');
 
-            // Atur warna dan teks berdasarkan skor
             if (score === 1 || score === 2) {
-                // Lemah (Merah)
                 bars[0].style.background = 'var(--pwd-weak)';
                 if(score === 2) bars[1].style.background = 'var(--pwd-weak)';
                 strengthText.textContent = 'Kekuatan: Lemah';
@@ -245,6 +249,23 @@
                 strengthText.textContent = 'Kekuatan: Sangat Kuat';
                 strengthText.style.color = 'var(--pwd-strong)';
             }
+        });
+
+        document.querySelectorAll('.toggle-password').forEach(function(icon) {
+            icon.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    this.classList.remove('fa-eye');
+                    this.classList.add('fa-eye-slash'); 
+                } else {
+                    input.type = 'password';
+                    this.classList.remove('fa-eye-slash');
+                    this.classList.add('fa-eye'); 
+                }
+            });
         });
     </script>
 </body>

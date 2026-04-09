@@ -4,7 +4,6 @@
 
 @push('styles')
 <style>
-    /* --- Stats Row --- */
     .stats-grid {
         display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 20px; margin-bottom: 32px;
@@ -20,7 +19,6 @@
     .stat-info h4 { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; font-weight: 500; }
     .stat-info div { font-size: 20px; font-weight: 800; color: var(--text-main); }
 
-    /* --- Page Header --- */
     .page-header {
         display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px;
         flex-wrap: wrap; gap: 16px;
@@ -28,7 +26,6 @@
     .header-title h1 { font-size: 28px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; letter-spacing: -0.5px; }
     .header-title p { color: var(--text-secondary); font-size: 14px; }
 
-    /* --- Alert Messages --- */
     .alert {
         display: flex; align-items: center; gap: 10px;
         padding: 14px 20px; border-radius: 12px; margin-bottom: 20px;
@@ -37,7 +34,6 @@
     .alert-success { background: rgba(34, 197, 94, 0.1); color: #16a34a; border: 1px solid rgba(34, 197, 94, 0.3); }
     .alert-error   { background: rgba(239, 68, 68, 0.1);  color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.3); }
 
-    /* --- Filter Tabs --- */
     .filter-tabs {
         display: flex; gap: 25px; border-bottom: 1px solid var(--border-color); margin-bottom: 24px;
         overflow-x: auto; scrollbar-width: none;
@@ -58,7 +54,6 @@
     }
     .tab-item.active .badge-count { background: rgba(76, 175, 80, 0.1); color: var(--primary-color); border-color: var(--primary-color); }
 
-    /* --- Filter Bar --- */
     .filter-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
     .search-group { flex: 1; position: relative; min-width: 250px; }
     .search-group i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
@@ -68,7 +63,6 @@
         color: var(--text-main); outline: none; font-size: 14px;
     }
 
-    /* --- Table --- */
     .table-card {
         background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border-color);
         overflow: hidden;
@@ -83,7 +77,6 @@
     .transaction-table tr:last-child td { border-bottom: none; }
     .transaction-table tr:hover { background: rgba(var(--primary-rgb), 0.02); }
 
-    /* --- Status Badges --- */
     .status-badge {
         display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
         border-radius: 20px; font-size: 12px; font-weight: 600;
@@ -93,7 +86,6 @@
     .status-rejected { background: rgba(239, 68, 68, 0.1);  color: #dc2626; }
     .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
-    /* --- Action Buttons --- */
     .actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
     .btn-icon {
         width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border-color);
@@ -107,7 +99,6 @@
 
     .pagination-wrapper { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
 
-    /* --- Modal Shared --- */
     .trx-modal {
         display: none; position: fixed; inset: 0; z-index: 9999;
         align-items: center; justify-content: center;
@@ -131,7 +122,6 @@
 
 @section('content')
 
-{{-- Alert Messages --}}
 @if(session('success'))
     <div class="alert alert-success"><i class="fas fa-check-circle"></i> {{ session('success') }}</div>
 @endif
@@ -139,7 +129,6 @@
     <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> {{ session('error') }}</div>
 @endif
 
-{{-- Stats Row --}}
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-icon" style="background:rgba(59,130,246,0.1); color:#3b82f6;">
@@ -177,7 +166,6 @@
     </div>
 </div>
 
-{{-- Filter Tabs --}}
 <div class="filter-tabs">
     @foreach(['all' => 'Semua', 'pending' => 'Menunggu', 'approved' => 'Berhasil', 'rejected' => 'Ditolak'] as $key => $label)
         <a href="{{ route('admin.transactions.index', array_merge(request()->query(), ['filter' => $key])) }}"
@@ -187,7 +175,6 @@
     @endforeach
 </div>
 
-{{-- Filter Bar --}}
 <form method="GET" action="{{ route('admin.transactions.index') }}" class="filter-bar">
     <input type="hidden" name="filter" value="{{ $filter }}">
     <div class="search-group">
@@ -215,7 +202,6 @@
     @endif
 </form>
 
-{{-- Table --}}
 <div class="table-card">
     <div style="overflow-x:auto;">
         <table class="transaction-table">
@@ -282,7 +268,6 @@
                                     </button>
                                 </form>
 
-                                {{-- Reject --}}
                                 <button type="button"
                                         class="btn-icon btn-reject-icon reject-btn"
                                         data-id="{{ $trx->id }}"
@@ -335,9 +320,6 @@
 </div>
 
 
-{{-- ══════════════════════════════════════════
-     MODAL: APPROVE
-══════════════════════════════════════════ --}}
 <div id="approveModal" class="trx-modal">
     <div class="modal-backdrop" data-close="approveModal"></div>
     <div class="modal-box" style="max-width:420px; text-align:center;">
@@ -366,9 +348,6 @@
 </div>
 
 
-{{-- ══════════════════════════════════════════
-     MODAL: REJECT
-══════════════════════════════════════════ --}}
 <div id="rejectModal" class="trx-modal">
     <div class="modal-backdrop" data-close="rejectModal"></div>
     <div class="modal-box" style="max-width:460px;">
@@ -411,9 +390,6 @@
 </div>
 
 
-{{-- ══════════════════════════════════════════
-     MODAL: DELETE
-══════════════════════════════════════════ --}}
 <div id="deleteModal" class="trx-modal">
     <div class="modal-backdrop" data-close="deleteModal"></div>
     <div class="modal-box" style="max-width:420px; text-align:center;">
@@ -446,18 +422,13 @@
 
 @push('scripts')
 <script>
-// ══════════════════════════════════════════
-// Utility: buka / tutup modal
-// ══════════════════════════════════════════
 function openModal(id)  { document.getElementById(id).classList.add('open');    }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-// Tutup modal via data-close attribute (backdrop & tombol Batal)
 document.querySelectorAll('[data-close]').forEach(el => {
     el.addEventListener('click', () => closeModal(el.dataset.close));
 });
 
-// Tutup semua modal saat tekan Escape
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
         ['approveModal', 'rejectModal', 'deleteModal'].forEach(closeModal);
@@ -465,9 +436,6 @@ document.addEventListener('keydown', e => {
 });
 
 
-// ══════════════════════════════════════════
-// APPROVE MODAL
-// ══════════════════════════════════════════
 let pendingApproveForm = null;
 
 document.querySelectorAll('.approve-btn').forEach(btn => {
@@ -487,9 +455,6 @@ document.getElementById('approveSubmitBtn').addEventListener('click', () => {
 });
 
 
-// ══════════════════════════════════════════
-// REJECT MODAL
-// ══════════════════════════════════════════
 let pendingRejectId = null;
 const rejectReason  = document.getElementById('rejectReason');
 const rejectError   = document.getElementById('rejectError');
@@ -539,9 +504,6 @@ document.getElementById('rejectSubmitBtn').addEventListener('click', () => {
 });
 
 
-// ══════════════════════════════════════════
-// DELETE MODAL
-// ══════════════════════════════════════════
 let pendingDeleteForm = null;
 
 document.querySelectorAll('.delete-btn').forEach(btn => {

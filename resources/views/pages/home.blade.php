@@ -3,14 +3,12 @@
 @push('styles')
 <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
 <style>
-    /* Hero Section */
     .hero-section { background: var(--bg-body); padding: 80px 0 100px; }
     .hero-container { max-width: 1200px; margin: 0 auto; padding: 0 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
     .hero-text h1 { font-size: 40px; font-weight: 600; line-height: 1.3; color: var(--text-main); margin-bottom: 20px; }
     .hero-text h1 .green-text { color: var(--primary-color); }
     .hero-text p { font-size: 16px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 30px; }
 
-    /* Stats Section */
     .stats-section { background: var(--bg-card); padding: 80px 0; position: relative; border-bottom: 1px solid var(--border-color); }
     .stats-container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
@@ -21,7 +19,6 @@
     .stat-item h3 span { color: var(--primary-color); }
     .stat-item p { font-size: 15px; color: var(--text-secondary); font-weight: 500; }
 
-    /* Popular Templates Section */
     .popular-templates-section { background: var(--bg-card); padding: 100px 0; }
     .templates-container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
     .templates-header { text-align: center; margin-bottom: 60px; }
@@ -32,7 +29,6 @@
     .template-card { background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px var(--shadow-color); transition: all 0.3s ease; position: relative; cursor: pointer; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
     .template-card:hover { transform: translateY(-8px); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12); }
     
-    /* PERBAIKAN: Tinggi (height) diubah dari 380px menjadi 460px agar lebih portrait */
     .template-preview { width: 100%; height: 460px; background: var(--template-preview-bg); position: relative; display: flex; align-items: center; justify-content: center; }
     .template-preview::before { content: ''; position: absolute; top: 20px; left: 20px; right: 20px; bottom: 20px; background: var(--bg-card); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
     
@@ -49,7 +45,6 @@
     .template-action { color: var(--primary-color); font-size: 14px; font-weight: 600; text-decoration: none; }
     .view-all-templates { text-align: center; margin-top: 48px; }
 
-    /* Features Section */
     .features-section { background: var(--bg-body); padding: 80px 0; }
     .features-container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
     .section-header h2 { color: var(--text-main); }
@@ -60,14 +55,11 @@
     .feature-icon { width: 80px; height: 80px; background: var(--feature-icon-bg); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 36px; color: var(--primary-color); }
     .feature-card h3 { font-size: 20px; font-weight: 600; color: var(--text-main); margin-bottom: 12px; }
     .feature-card p { font-size: 15px; line-height: 1.6; color: var(--text-secondary); }
-
-    /* CTA Section */
     .cta-section { background: var(--primary-color); padding: 80px 0; text-align: center; color: white; }
     .cta-container { max-width: 800px; margin: 0 auto; padding: 0 40px; }
     .cta-section h2 { font-size: 40px; font-weight: 600; margin-bottom: 16px; color: white; }
     .cta-section p { font-size: 18px; margin-bottom: 30px; opacity: 0.95; color: white; }
 
-    /* Responsive */
     @media (max-width: 968px) {
         .hero-container { grid-template-columns: 1fr; gap: 40px; text-align: center; }
         .hero-text { order: 1; }

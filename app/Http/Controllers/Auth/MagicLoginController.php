@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\{User, LoginToken};
+use App\Models\{User, LoginToken, Resume};
 use App\Notifications\MagicLinkNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,11 +47,32 @@ class MagicLoginController extends Controller
             return redirect()->route('login')->with('error', 'Link login tidak valid atau sudah kadaluwarsa.');
         }
 
-        Auth::login($loginToken->user);
+        $user = $loginToken->user;
+        
+        Auth::login($user);
 
         $loginToken->delete();
 
         $request->session()->regenerate();
+
+        if (session()->has('guest_resume_id')) {
+            $guestResumeId = session('guest_resume_id');
+            
+            $resume = Resume::where('id', $guestResumeId)->whereNull('user_id')->first();
+            
+            if ($resume) {
+                $resume->user_id = $user->id;
+                $resume->save();
+            }
+
+            session()->forget('guest_resume_id');
+
+            return redirect()->route('user.dashboard')->with('success', 'Login berhasil! CV Anda telah disimpan ke akun ini.');
+        }
+
+        if ($user->role === 'admin') {
+            return redirect()->intended(route('admin.dashboard.index'));
+        }
 
         return redirect()->intended(route('user.dashboard'));
     }

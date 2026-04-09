@@ -29,7 +29,6 @@
         justify-content: center;
     }
 
-    /* Dipersempit karena hanya 1 card */
     .pricing-container { width: 100%; max-width: 450px; }
 
     .pricing-card.popular {

@@ -1,5 +1,4 @@
 <style>
-    /* --- 1. CONFIG & RESET --- */
     :root {
         --sidebar-width: 260px;
         --header-height: 70px;
@@ -7,7 +6,6 @@
         --z-sidebar: 50;
     }
 
-    /* --- 2. SIDEBAR (BASE) --- */
     .sidebar {
         width: var(--sidebar-width);
         background: var(--bg-sidebar);
@@ -18,16 +16,13 @@
         z-index: var(--z-sidebar);
         border-right: 1px solid var(--border-color);
         
-        /* Flexbox untuk Layout Atas-Bawah (Logo - Menu - Logout) */
         display: flex;
         flex-direction: column;
         
-        /* Default Desktop: Selalu terlihat & Transisi Halus */
         transform: translateX(0);
         transition: transform 0.3s ease-in-out;
     }
 
-    /* --- 3. BRAND / HEADER --- */
     .brand {
         display: flex; 
         align-items: center; 
@@ -42,18 +37,16 @@
     .brand-content { display: flex; align-items: center; gap: 12px; }
     .brand i { color: var(--primary-color); font-size: 24px; }
 
-    /* Tombol Close (Hanya muncul di Mobile lewat CSS Media Query) */
     .sidebar-close {
         display: none; 
         cursor: pointer;
         font-size: 20px;
         color: #94A3B8;
         transition: 0.2s;
-        padding: 5px; /* Memperbesar area klik */
+        padding: 5px;
     }
     .sidebar-close:hover { color: #EF4444; }
 
-    /* --- 4. SCROLLABLE MENU --- */
     .nav-scrollable {
         flex: 1;
         overflow-y: auto;
@@ -63,7 +56,6 @@
     .nav-scrollable::-webkit-scrollbar { width: 4px; }
     .nav-scrollable::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
-    /* --- 5. MENU ITEMS --- */
     .menu-label {
         font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
         color: var(--text-sidebar); margin-bottom: 10px; padding-left: 12px; font-weight: 700;
@@ -86,7 +78,6 @@
     .nav-link.active { border-left: 3px solid var(--primary-color); }
     .nav-link.active i { color: var(--primary-color); }
 
-    /* --- 6. FOOTER --- */
     .sidebar-footer {
         margin-top: 20px;
         padding-top: 20px;
@@ -94,23 +85,17 @@
         flex-shrink: 0;
     }
 
-  
-
-    /* --- 8. MOBILE RESPONSIVE --- */
     @media (max-width: 768px) {
-        /* Sembunyikan sidebar ke kiri layar */
         .sidebar {
             transform: translateX(-100%);
             box-shadow: none;
         }
 
-        /* Munculkan sidebar (Slide In) */
         .sidebar.open {
             transform: translateX(0);
             box-shadow: 10px 0 30px rgba(0,0,0,0.5);
         }
 
-        /* Tampilkan tombol close */
         .sidebar-close { display: block; }
     }
 </style>

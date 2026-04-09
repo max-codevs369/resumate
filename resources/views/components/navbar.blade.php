@@ -1,7 +1,5 @@
-{{-- Navigation Bar Component --}}
 <nav>
     <div class="nav-container">
-        {{-- Logo --}}
         <a href="{{ url('/') }}" class="logo">
             <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6 6C6 3.79086 7.79086 2 10 2H20L28 10V28C28 30.2091 26.2091 32 24 32H10C7.79086 32 6 30.2091 6 28V6Z" fill="var(--primary-color)"/>
@@ -13,9 +11,7 @@
             <span>{{ config('app.name', 'ResuMate') }}</span>
         </a>
 
-        {{-- Right Section --}}
         <div class="nav-right">
-            {{-- Main Navigation Menu --}}
             <ul class="nav-menu" id="navMenu">
                 <li>
                     <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">
@@ -65,14 +61,12 @@
                 @endauth
             </ul>
 
-            {{-- User Profile Dropdown (for logged-in users) --}}
             @auth
             <div class="nav-profile" id="navProfile">
                 <button class="nav-avatar-btn" id="profileToggle" aria-label="User menu" title="{{ auth()->user()->name }}">
                     @if(auth()->user()->avatar)
                         <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}">
                     @else
-                        {{-- Use initials if no image --}}
                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                     @endif
                 </button>

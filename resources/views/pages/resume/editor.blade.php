@@ -8,7 +8,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&family=Merriweather:wght@400;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #fafafa; color: #1f2937; overflow: hidden; }
@@ -107,6 +107,38 @@
             border-color: #10b981;
             transform: translateX(-3px);
         }
+
+        .swal-custom-popup {
+            border-radius: 24px !important;
+            padding: 10px !important;
+        }
+
+        .swal-btn-confirm {
+            padding: 14px 28px !important;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            border-radius: 14px !important;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .swal-btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4) !important;
+        }
+
+        .swal-btn-cancel {
+            background-color: #f3f4f6 !important;
+            color: #4b5563 !important;
+            font-weight: 600 !important;
+            padding: 14px 24px !important;
+            border-radius: 14px !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .swal-btn-cancel:hover {
+            background-color: #e5e7eb !important;
+        }
     </style>
 </head>
 <body>
@@ -168,7 +200,9 @@
     <i class="fas fa-check-circle"></i>
     <span id="notifyMsg">Tersimpan!</span>
 </div>
-
+<script>
+    const isAuthenticated = {{ Auth::check() ? 'true' : 'false' }};
+</script>
 <script>
     let rawSchema = {!! json_encode($resume->layout_schema ?? $resume->template->layout_schema ?? []) !!};
     let rawGlobal = {!! json_encode($resume->global_settings ?? $resume->template->global_settings ?? []) !!};
@@ -535,7 +569,97 @@
         });
     }
 
-    window.downloadPDF = function() {
+    window.downloadPDF = async function() {
+        const isAuthenticated = {{ Auth::check() ? 'true' : 'false' }};
+
+        if (!isAuthenticated) {
+            const resumeData = {
+                cv_template_id: cvTemplateId, 
+                layout_schema: schema, 
+                global_settings: globalSettings, 
+                status: 'draft',
+                title: document.getElementById('documentTitle') ? document.getElementById('documentTitle').value : 'Untitled Resume',
+                resume_id: typeof resumeId !== 'undefined' ? resumeId : null
+            };
+
+            const btn = document.querySelector('button[onclick="downloadPDF()"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch("{{ route('resume.save') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(resumeData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+
+                    Swal.fire({
+                        html: `
+                            <div style="text-align: center; padding: 10px 10px 0;">
+                                <div style="background: #ecfdf5; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                                    <i class="fas fa-lock" style="font-size: 36px; color: #10b981;"></i>
+                                </div>
+                                
+                                <h3 style="font-size: 24px; font-weight: 800; color: #111827; margin-bottom: 12px; letter-spacing: -0.5px;">
+                                    Desain CV Anda Sudah Siap! 
+                                </h3>
+                                
+                                <p style="font-size: 15px; color: #4b5563; line-height: 1.6; margin-bottom: 24px;">
+                                    Kerja bagus! Data CV Anda telah kami simpan dengan aman.
+                                </p>
+                                
+                                <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 16px; font-size: 14px; color: #6b7280; text-align: left; display: flex; align-items: flex-start; gap: 14px;">
+                                    <div style="margin-top: 2px;">
+                                        <i class="fas fa-info-circle" style="font-size: 20px; color: #3b82f6;"></i>
+                                    </div>
+                                    <div style="line-height: 1.5;">
+                                        Silakan <b>Masuk</b> atau <b>Buat Akun</b> gratis sekarang untuk menyimpan permanen dan mengunduh versi PDF berkualitas tinggi.
+                                    </div>
+                                </div>
+                            </div>
+                        `,
+                        width: 480,
+                        showCloseButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Akses Akun Sekarang <i class="fas fa-arrow-right" style="margin-left: 6px;"></i>',
+                        cancelButtonText: 'Kembali Edit',
+                        confirmButtonColor: '#10b981', 
+                        backdrop: `rgba(17, 24, 39, 0.7)`, 
+                        allowOutsideClick: false,
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            confirmButton: 'swal-btn-confirm',
+                            cancelButton: 'swal-btn-cancel'
+                        }
+                    }).then((res) => {
+                        if (res.isConfirmed) {
+                            Swal.showLoading(); 
+                            window.location.href = "{{ route('login') }}";
+                        }
+                    });
+                } else {
+                    Swal.fire('Error', 'Gagal menyimpan data sementara.', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                Swal.fire('Error', 'Terjadi kesalahan sistem.', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+
+            return; 
+        }
+
         const element = document.getElementById('cv-paper');
         
         const titleInput = document.getElementById('documentTitle');
@@ -566,7 +690,7 @@
             btn.innerHTML = originalText;
             btn.disabled = false;
 
-            if(resumeId) {
+            if(typeof resumeId !== 'undefined' && resumeId) {
                 fetch(`/resume/${resumeId}/increment-download`, {
                     method: 'POST',
                     headers: {
@@ -579,7 +703,11 @@
                 .catch(err => console.error("Gagal update statistik:", err));
             }
 
-            showNotify('PDF berhasil diunduh!');
+            if (typeof showNotify === 'function') {
+                showNotify('PDF berhasil diunduh!');
+            } else {
+                Swal.fire('Sukses', 'PDF berhasil diunduh!', 'success');
+            }
         });
     }
 

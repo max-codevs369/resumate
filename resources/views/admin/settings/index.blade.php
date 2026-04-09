@@ -4,7 +4,6 @@
 
 @push('styles')
 <style>
-    /* Tambahkan margin otomatis dan padding agar tidak menempel di tepi layar */
     .form-wrapper { max-width: 800px; margin: 0 auto; width: 100%; padding: 0 16px; }
 
     .page-header { margin-bottom: 28px; }
@@ -39,7 +38,6 @@
     }
     .form-control:focus { border-color: var(--primary-color); background: var(--bg-card); box-shadow: 0 0 0 3px rgba(76,175,80,0.1); }
 
-    /* QRIS Preview Style */
     .qris-upload-wrapper { display: flex; align-items: center; gap: 20px; }
     .qris-preview {
         width: 120px; height: 120px; border-radius: 12px; flex-shrink: 0;
@@ -68,10 +66,9 @@
     }
     .btn-submit:hover { background: var(--primary-hover); transform: translateY(-2px); }
 
-    /* ===== OPTIMASI MOBILE (RESPONSIVE) ===== */
     @media (max-width: 640px) {
         .page-header h1 { font-size: 20px; } 
-        .form-card { padding: 20px 16px; } /* Mengurangi padding di layar kecil */
+        .form-card { padding: 20px 16px; } 
         .form-grid { grid-template-columns: 1fr; gap: 16px; }
         
         .qris-upload-wrapper { 
@@ -82,7 +79,7 @@
         .avatar-actions { align-items: center; }
         
         .form-actions { justify-content: stretch; }
-        .btn-submit { width: 100%; justify-content: center; } /* Tombol penuh di layar HP */
+        .btn-submit { width: 100%; justify-content: center; } 
     }
 </style>
 @endpush
@@ -104,7 +101,6 @@
         @csrf
         @method('PUT')
 
-        {{-- Seksi Pricing --}}
         <div class="form-section">
             <div class="form-section-title">Halaman Pricing</div>
             <div class="form-grid">
@@ -123,7 +119,6 @@
             </div>
         </div>
 
-        {{-- Seksi Pembayaran --}}
         <div class="form-section">
             <div class="form-section-title">Informasi Rekening & QRIS</div>
             <div class="form-grid">

@@ -72,7 +72,6 @@
     }
     .btn-upload:hover { background: var(--primary-color); color: white; }
 
-    /* Info Banner */
     .info-banner {
         display: flex; align-items: center; gap: 12px; padding: 16px; 
         background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); 
@@ -81,7 +80,6 @@
     }
     .info-banner i { font-size: 20px; color: #3B82F6; }
 
-    /* Toggle */
     .toggles-wrap { display: flex; flex-direction: column; gap: 12px; }
     .toggle-group {
         display: flex; align-items: center; justify-content: space-between;
@@ -108,7 +106,6 @@
     .toggle-switch input:checked + .toggle-slider { background: var(--primary-color); }
     .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
 
-    /* Actions */
     .form-actions {
         display: flex; gap: 12px; margin-top: 10px;
         padding-top: 24px; border-top: 1px solid var(--border-color);
@@ -150,7 +147,6 @@
         <p>Memperbarui informasi profil dan keanggotaan untuk <strong>{{ $user->name }}</strong>.</p>
     </div>
 
-    {{-- Banner Info Reset Password --}}
     <div class="info-banner">
         <i class="fas fa-shield-alt"></i>
         <div>
@@ -158,7 +154,6 @@
         </div>
     </div>
 
-    {{-- Global Error Alert --}}
     @if ($errors->any())
         <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #DC2626; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
             <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 8px;">
@@ -176,7 +171,6 @@
         @csrf
         @method('PUT')
 
-        {{-- Informasi Dasar --}}
         <div class="form-section">
             <div class="form-section-title">Informasi Dasar</div>
             <div class="form-grid">
@@ -240,7 +234,6 @@
             </div>
         </div>
 
-        {{-- Konfigurasi Akun --}}
         <div class="form-section">
             <div class="form-section-title">Konfigurasi Hak Akses</div>
             <div class="toggles-wrap">

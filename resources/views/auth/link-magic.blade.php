@@ -45,23 +45,18 @@
 </head>
 
 <body style="margin: 0; padding: 0; background-color: #f7f7f7;">
-    <!-- Preview Text -->
     <div style="display: none; max-height: 0px; overflow: hidden;">
         Gunakan link ini untuk masuk ke akun ResuMate Anda secara instan tanpa password.
     </div>
 
-    <!-- Email Container -->
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 0; padding: 0; background-color: #f7f7f7;">
         <tr>
             <td style="padding: 40px 20px;">
                 
-                <!-- Main Email Container -->
                 <table role="presentation" class="email-container" cellspacing="0" cellpadding="0" border="0" align="center" width="600" style="margin: auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
                     
-                    <!-- Header -->
                     <tr>
                         <td style="background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); padding: 40px 40px 30px; text-align: center;">
-                            <!-- Icon Magic/Bolt -->
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
                                 <tr>
                                     <td style="background-color: #ffffff; width: 70px; height: 70px; border-radius: 16px; text-align: center; vertical-align: middle; box-shadow: 0 6px 20px rgba(0,0,0,0.15);">
@@ -71,12 +66,11 @@
                             </table>
                             
                             <h1 style="margin: 25px 0 0; padding: 0; color: #ffffff; font-size: 28px; font-weight: 700; line-height: 1.3;">
-                                Login Instan Anda
+                                Akses Aman Akun Anda
                             </h1>
                         </td>
                     </tr>
 
-                    <!-- Main Content -->
                     <tr>
                         <td class="mobile-padding" style="padding: 40px 40px 30px;">
                             
@@ -85,8 +79,7 @@
                             </p>
                             
                             <p style="margin: 0 0 30px; color: #666666; font-size: 15px; line-height: 1.6;">
-                                Kami menerima permintaan untuk masuk ke akun ResuMate Anda menggunakan <strong>Magic Link</strong>. 
-                                Anda tidak perlu memasukkan password, cukup klik link di bawah ini untuk langsung masuk ke Dashboard.
+                                Kami menerima permintaan untuk mengakses akun ResuMate Anda. Silakan klik tombol di bawah ini untuk memverifikasi email Anda dan langsung mengakses Dashboard.
                             </p>
 
                             <p style="margin: 0 0 30px; text-align: center;">
@@ -95,7 +88,6 @@
                                 </a>
                             </p>
 
-                            <!-- Expiry Warning -->
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 0 0 30px;">
                                 <tr>
                                     <td style="background-color: #e8f5e9; border-left: 4px solid #4CAF50; padding: 16px 20px; border-radius: 8px;">
@@ -109,7 +101,6 @@
 
                             <div style="border-top: 1px solid #e5e5e5; margin: 30px 0;"></div>
 
-                            <!-- Why Magic Link? -->
                             <p style="margin: 0; color: #666666; font-size: 14px; line-height: 1.6; text-align: center;">
                                 Tidak merasa meminta link ini? Jangan khawatir, akun Anda tetap aman. Cukup abaikan email ini dan jangan berikan link di atas kepada siapapun.
                             </p>
@@ -117,7 +108,6 @@
                         </td>
                     </tr>
 
-                    <!-- Footer -->
                     <tr>
                         <td style="background-color: #f9f9f9; padding: 30px 40px; border-top: 1px solid #e5e5e5;">
                             <p style="margin: 0 0 10px; color: #999999; font-size: 13px; line-height: 1.6; text-align: center;">

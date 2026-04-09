@@ -9,7 +9,6 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* --- LIGHT MODE (DEFAULT) --- */
   :root {
     --ink: #111827;         
     --ink2: #4b5563;        
@@ -18,9 +17,8 @@
     --bg: #f9fafb;          
     --panel: #ffffff;       
     --canvas-bg: #e5e5e5;   
-    --item-card-bg: #f8fafc; /* Latar item default */
+    --item-card-bg: #f8fafc; 
     
-    /* TEMA HIJAU PROFESIONAL */
     --accent: #16a34a; 
     --accent-soft: #f0fdf4;
     --accent-hover: #15803d;
@@ -29,7 +27,6 @@
     --block-active: rgba(22, 163, 74, 0.1);
   }
 
-  /* --- DARK MODE --- */
   body.dark-mode {
     --ink: #f9fafb;
     --ink2: #d1d5db;
@@ -38,7 +35,7 @@
     --bg: #111827;
     --panel: #1f2937;
     --canvas-bg: #030712;
-    --item-card-bg: #111827; /* Latar item saat dark mode */
+    --item-card-bg: #111827; 
     
     --accent: #22c55e;
     --accent-soft: rgba(34, 197, 94, 0.1);
@@ -58,7 +55,6 @@
     transition: background 0.3s, color 0.3s;
   }
 
-  /* ── TOPBAR ─────────────────────────────── */
   .topbar {
     height: 56px; background: var(--panel); border-bottom: 1px solid var(--line);
     display: flex; align-items: center; justify-content: space-between;
@@ -93,10 +89,8 @@
   .btn-danger { background: var(--danger); color: #ffffff; }
   .btn-danger:hover { filter: brightness(0.9); }
 
-  /* ── MAIN LAYOUT (FLEX UNTUK SIDEBAR TOGGLE) ── */
   .app-body { display: flex; flex: 1; overflow: hidden; }
 
-  /* ── LEFT PANEL ──────────────────────────── */
   .panel-left { 
     background: var(--panel); border-right: 1px solid var(--line); 
     width: 280px; overflow-y: auto; display: flex; flex-direction: column; flex-shrink: 0;
@@ -120,12 +114,10 @@
   .tool-card i { font-size: 16px; color: var(--ink); opacity: 0.8; }
   .tool-card.full-width { grid-column: 1 / -1; flex-direction: row; justify-content: flex-start; gap: 12px; padding: 10px 14px; }
 
-  /* ── CANVAS AREA ─────────────────────────── */
   .canvas-area { flex: 1; overflow: auto; padding: 40px 30px; background: var(--canvas-bg); display: flex; justify-content: center; align-items: flex-start; transition: background 0.3s; }
   .canvas-area::-webkit-scrollbar { width: 8px; height: 8px; }
   .canvas-area::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 4px; }
 
-  /* PAPER SELALU PUTIH (AGAR TEKS HITAM TETAP BACA) */
   .paper {
     background: #ffffff; width: 210mm; min-height: 297mm;
     box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); position: relative; overflow: visible;
@@ -139,7 +131,6 @@
   .drop-zone-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
   .drop-zone:empty .drop-zone-hint, .paper-dropzone:empty .drop-zone-hint { opacity: 1; }
 
-  /* ── CV BLOCKS ────────────────────────────── */
   .cv-block { position: relative; cursor: pointer; transition: background 0.15s; }
   .cv-block:hover { background: rgba(0,0,0,0.03); }
   .cv-block.selected { background: rgba(0,0,0,0.05); outline: 2px solid #000; outline-offset: -1px; z-index: 5; }
@@ -161,7 +152,6 @@
 
   .cv-el { padding: 0; }
 
-  /* ── RIGHT PANEL ────────────────────────────── */
   .panel-right { width: 300px; flex-shrink: 0; background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; display: flex; flex-direction: column; transition: 0.3s; }
   .panel-right::-webkit-scrollbar { width: 4px; }
   .panel-right::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
@@ -181,7 +171,6 @@
   .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .prop-divider { border: none; border-top: 1px solid var(--line); margin: 16px 0; }
 
-  /* ── MODAL CSS ───────────────────────────── */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); z-index: 9999; }
   .modal-content { background: var(--panel); border-radius: 8px; padding: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; border: 1px solid var(--line); position: relative; }
 
@@ -374,11 +363,6 @@
             </select>
           </div>
         </div>
-        
-        <div class="form-row">
-          <label class="form-label">Harga (Rp)</label>
-          <input type="number" name="price" id="metaPrice" class="form-input" value="0" readonly>
-        </div>
 
         <div class="form-row">
           <label class="form-label">Deskripsi Singkat</label>
@@ -430,9 +414,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 
 <script>
-// ============================================================
-//  HELPERS (ANTI CRASH DATA)
-// ============================================================
 function parseItems(itemsData) {
     let items = [];
     try { items = typeof itemsData === 'string' ? JSON.parse(itemsData) : itemsData; } catch(e) {}
@@ -447,9 +428,6 @@ function esc(str) {
     return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); 
 }
 
-// ============================================================
-//  FITUR AUTO CAPTURE THUMBNAIL (SCREENSHOT)
-// ============================================================
 function captureThumbnail() {
     const paper = document.getElementById('cv-paper');
     const btn = document.getElementById('btnCapture');
@@ -509,9 +487,6 @@ function previewManualUpload(input) {
     }
 }
 
-// ============================================================
-//  UI INTERACTIONS & MODALS
-// ============================================================
 function toggleTheme() {
   document.body.classList.toggle('dark-mode');
   const isDark = document.body.classList.contains('dark-mode');
@@ -603,9 +578,6 @@ function promptClearCanvas() {
   });
 }
 
-// ============================================================
-//  HISTORY (UNDO/REDO) ENGINE
-// ============================================================
 let historyStack = [];
 let historyIdx = -1;
 let isHistoryAction = false;
@@ -646,9 +618,6 @@ document.addEventListener('keydown', function(e) {
   if (e.ctrlKey && e.key === 'y') { e.preventDefault(); redo(); }
 });
 
-// ============================================================
-//  STATE & DEFAULTS
-// ============================================================
 let schema = [];         
 let selectedId = null;   
 let dragType = null;     
@@ -687,9 +656,6 @@ const DEFAULTS = {
   section_title: { props: { text: 'JUDUL SEKSI KUSTOM', fontSize: '12', color: '#000000', showLine: true, lineColor: '#000000', lineThickness: '1.5', align: 'left', marginTop: '0', marginBottom: '8' } }
 };
 
-// ============================================================
-//  RENDER ENGINE
-// ============================================================
 function renderAll() {
   const container = document.getElementById('main-drop');
   container.innerHTML = '';
@@ -861,7 +827,6 @@ function renderElementHTML(block) {
     case 'divider': return wrap(`<hr style="border:none; border-top:${p.thickness||1}px solid ${p.color||'#000000'}; margin:0;">`);
     case 'spacer': return wrap(`<div style="height:${p.height||20}px;"></div>`);
     
-    // RENDER ELEMEN TEKS BEBAS & JUDUL SEKSI
     case 'text_block': {
       const fw = (p.bold===true||p.bold==='true') ? 'bold' : 'normal';
       const fi = (p.italic===true||p.italic==='true') ? 'italic' : 'normal';
@@ -876,9 +841,6 @@ function renderElementHTML(block) {
   }
 }
 
-// ============================================================
-//  FUNGSI PELENGKAP DRAG & DROP
-// ============================================================
 function onDragOver(e, el) {
   e.preventDefault(); 
   e.stopPropagation();
@@ -944,9 +906,6 @@ function getDropIndex(e, container, arr) {
   return (arr||schema).length;
 }
 
-// ============================================================
-//  BLOCK UTILITIES
-// ============================================================
 function findBlock(id, arr) {
   for (const b of arr) { if (b.id === id) return b; if (b.isLayout) { if (b.layoutType === 'col1') { const f = findBlock(id, b.children||[]); if(f) return f; } else { for (const col of b.columns||[]) { const f = findBlock(id, col); if(f) return f; } } } } return null;
 }
@@ -970,9 +929,6 @@ function moveBlock(id, dir, e) { if (e) e.stopPropagation(); const arr = findPar
 
 document.getElementById('canvas-area').addEventListener('click', e => { if (e.target.closest('.cv-block')) return; selectedId = null; renderAll(); hideProps(); });
 
-// ============================================================
-//  PROPERTY PANEL
-// ============================================================
 function hideProps() { document.getElementById('prop-empty').style.display = 'flex'; document.getElementById('prop-content').style.display = 'none'; }
 function showProps(id) {
   const block = findBlock(id, schema); if (!block) return hideProps();
@@ -1140,23 +1096,17 @@ function buildPropFields(block) {
   body.innerHTML = html;
 }
 
-// ============================================================
-//  FUNGSI UPLOAD FOTO 
-// ============================================================
 function uploadPhoto(id, input) {
   if (input.files && input.files[0]) {
     const reader = new FileReader();
     reader.onload = function(e) {
-      setPropUi(id, 'imageUrl', e.target.result); // Render live
-      saveState(); // Simpan ke history
+      setPropUi(id, 'imageUrl', e.target.result); 
+      saveState(); 
     };
     reader.readAsDataURL(input.files[0]);
   }
 }
 
-// ============================================================
-//  LIST BUILDERS
-// ============================================================
 function buildListProps(id, p, type) {
   const lm = {
     experience: {h:'Judul Bagian', b:'+ Tambah Pengalaman'}, volunteer: {h:'Judul Bagian', b:'+ Tambah Sukarelawan'},
@@ -1197,7 +1147,6 @@ function buildItemFields(type, blockId, idx, it) {
     case 'education': return inp('degree','Gelar',it.degree) + inp('school','Universitas',it.school) + inp('period','Periode',it.period) + inp('gpa','IPK',it.gpa||'');
     case 'certification': return inp('name','Nama Sertifikat',it.name) + inp('issuer','Penerbit',it.issuer) + inp('year','Tahun',it.year);
     
-    // Perbaikan Bug Mapping Property Project & Penambahan Link
     case 'project': return inp('name','Nama Proyek',it.name) + inp('link','Link/URL (Opsional)',it.link) + inp('tech','Teknologi',it.tech) + inp('period','Tahun',it.period) + ta('desc','Deskripsi Singkat',it.desc||'');
     
     case 'award': return inp('name','Penghargaan',it.name) + inp('org','Penyelenggara',it.org) + inp('year','Tahun',it.year);

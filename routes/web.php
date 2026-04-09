@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{HomeController, CheckoutController, ProfileController};
 use App\Http\Controllers\Admin\{DashboardController, CvTemplateController, UserController, TransactionController, SettingController};
 use App\Http\Controllers\User\{TemplateController, DashboardUserController};
-use App\Http\Controllers\Auth\{RegisterController, LoginController, LoginAdminController, LogoutController, ForgotPasswordController, MagicLoginController};
+use App\Http\Controllers\Auth\{RegisterController, LoginController, LogoutController, MagicLoginController};
 
 Route::controller(HomeController::class)->group(function() {
     Route::get('/', 'home')->name('home');
@@ -34,11 +34,6 @@ Route::controller(MagicLoginController::class)->group(function() {
     });
 });
 
-Route::controller(ForgotPasswordController::class)->group(function() {
-    Route::get('/reset-password/{token}', 'showResetForm')->name('password.reset');
-    Route::post('/reset-password', 'resetPassword')->name('password.update');
-});
-
 Route::middleware('guest')->group(function () {
 
     Route::controller(RegisterController::class)->group(function() {
@@ -48,25 +43,12 @@ Route::middleware('guest')->group(function () {
     
     Route::controller(LoginController::class)->group(function() {
         Route::get('login', 'show')->name('login');
-        Route::post('login', 'login')->name('login.process');
     });
 
     Route::controller(MagicLoginController::class)->group(function() {
         Route::prefix('login')->name('login.')->group(function() {
             Route::post('magic', 'sendLoginLink')->name('magic');
         });
-    });
-
-    Route::get('admin/login', function () { return abort(404); });
-
-    Route::controller(LoginAdminController::class)->group(function() {
-        Route::get('admin/login/$2y$12$Lv1Iu3KAhelYAxCHivrY3e7FiyTD0L.qEomatiC89E8picvbaWOlG', 'show')->name('admin.login');
-        Route::post('admin/login', 'loginAdmin')->name('admin.login.process');
-    });
-
-    Route::controller(ForgotPasswordController::class)->group(function() {
-        Route::get('/forgot-password', 'showForgotForm')->name('password.request');
-        Route::post('/forgot-password', 'sendResetLink')->name('password.send-reset-link');
     });
 });
 
@@ -127,7 +109,6 @@ Route::middleware('auth')->group(function() {
         });
     });
 });
-
 
 Route::get('/kode-otp', function() { return view('auth.otp'); })->name('otp');
 Route::get('/email-otp', function() { return view('auth.emailotp'); })->name('emailotp');

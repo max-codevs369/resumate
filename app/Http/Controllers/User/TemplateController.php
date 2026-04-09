@@ -103,9 +103,16 @@ class TemplateController extends Controller
         if ($request->filled('resume_id')) {
             $resume = Resume::findOrFail($request->resume_id);
             
-            if (Auth::check() && $resume->user_id !== Auth::id()) {
-                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            if (Auth::check()) {
+                if ($resume->user_id !== Auth::id()) {
+                    return abort(403);
+                }
+            } else {
+                if (session('guest_resume_id') != $resume->id) {
+                    return abort(403);
+                }
             }
+
         } else {
             $resume = new Resume();
             $resume->cv_template_id = $request->cv_template_id;
@@ -117,6 +124,10 @@ class TemplateController extends Controller
         $resume->global_settings = $request->global_settings ?? [];
         $resume->status = $request->status;
         $resume->save();
+
+        if (!Auth::check()) {
+            session(['guest_resume_id' => $resume->id]);
+        }
 
         return response()->json([
             'success'   => true,

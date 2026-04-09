@@ -4,7 +4,6 @@
 
 @push('styles')
 <style>
-    /* --- Layout --- */
     .detail-container {
         display: grid;
         grid-template-columns: 1fr 380px;
@@ -12,7 +11,6 @@
         align-items: start;
     }
 
-    /* --- Cards --- */
     .main-card {
         background: var(--bg-card);
         border-radius: 24px;
@@ -37,7 +35,6 @@
         gap: 8px;
     }
 
-    /* --- Bukti Transfer --- */
     .payment-proof-wrapper {
         background: var(--bg-body);
         border-radius: 16px;
@@ -55,7 +52,6 @@
         box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
 
-    /* --- Sidebar --- */
     .sidebar-card {
         background: var(--bg-card);
         border-radius: 24px;
@@ -80,7 +76,6 @@
         margin-top: 12px;
     }
 
-    /* --- Info List --- */
     .info-list { list-style: none; padding: 0; margin: 0; }
     .info-item {
         display: flex;
@@ -95,7 +90,6 @@
     .info-label { color: var(--text-secondary); flex-shrink: 0; }
     .info-value { font-weight: 600; color: var(--text-main); text-align: right; }
 
-    /* --- Status Badges --- */
     .status-badge {
         display: inline-flex;
         align-items: center;
@@ -109,7 +103,6 @@
     .status-pending  { background: rgba(245,158,11,0.1); color: #d97706; }
     .status-rejected { background: rgba(239,68,68,0.1);  color: #dc2626; }
 
-    /* --- Action Buttons --- */
     .btn-approve {
         width: 100%;
         background: var(--primary-color);
@@ -146,7 +139,6 @@
     }
     .btn-reject-full:hover { background: #fff1f2; border-color: #e11d48; }
 
-    /* --- Modal Shared --- */
     .trx-modal {
         display: none;
         position: fixed;
@@ -178,7 +170,6 @@
         to   { transform: scale(1)    translateY(0);   opacity: 1; }
     }
 
-    /* --- Reason Options --- */
     .reason-option {
         display: flex;
         align-items: center;
@@ -196,7 +187,6 @@
     .reason-option.selected { border-color: #e11d48; background: #fff1f2; color: #e11d48; }
     .reason-option input[type="radio"] { accent-color: #e11d48; flex-shrink: 0; }
 
-    /* --- Lightbox --- */
     #lightbox {
         display: none;
         position: fixed;
@@ -214,7 +204,6 @@
         box-shadow: 0 0 80px rgba(0,0,0,0.5);
     }
 
-    /* --- Alert --- */
     .alert {
         display: flex; align-items: center; gap: 10px;
         padding: 14px 20px; border-radius: 12px; margin-bottom: 24px;
@@ -232,7 +221,6 @@
 
 @section('content')
 
-{{-- Alert Messages --}}
 @if(session('success'))
     <div class="alert alert-success"><i class="fas fa-check-circle"></i> {{ session('success') }}</div>
 @endif
@@ -240,7 +228,6 @@
     <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> {{ session('error') }}</div>
 @endif
 
-{{-- Page Header --}}
 <div style="margin-bottom:32px; display:flex; align-items:center; gap:16px;">
     <a href="{{ route('admin.transactions.index') }}"
        style="width:40px; height:40px; display:flex; align-items:center; justify-content:center;
@@ -262,10 +249,8 @@
 
 <div class="detail-container">
 
-    {{-- ══ MAIN COLUMN ══ --}}
     <div class="main-card">
 
-        {{-- Bukti Pembayaran --}}
         <div class="card-section">
             <div class="section-title"><i class="fas fa-image"></i> Bukti Pembayaran</div>
             @php
@@ -288,7 +273,6 @@
             </div>
         </div>
 
-        {{-- Informasi Pembeli --}}
         <div class="card-section">
             <div class="section-title"><i class="fas fa-user-circle"></i> Informasi Pembeli</div>
             <div class="info-list">
@@ -315,7 +299,6 @@
             </div>
         </div>
 
-        {{-- Catatan Admin --}}
         @if($transaction->admin_note)
         <div class="card-section" style="background:rgba(var(--primary-rgb),0.02);">
             <div class="section-title"><i class="fas fa-comment-alt"></i> Catatan Admin</div>
@@ -333,10 +316,8 @@
 
     </div>
 
-    {{-- ══ SIDEBAR ══ --}}
     <div class="sidebar-card">
 
-        {{-- Status & Nominal --}}
         <div class="status-box">
             <span class="status-badge status-{{ $transaction->status }}">
                 <span style="width:6px; height:6px; border-radius:50%; background:currentColor;"></span>
@@ -348,7 +329,6 @@
             </p>
         </div>
 
-        {{-- Info Detail --}}
         <div class="info-list"
              style="background:var(--bg-body); padding:20px; border-radius:16px;
                     border:1px solid var(--border-color); margin-bottom:24px;">
@@ -376,7 +356,6 @@
             @endif
         </div>
 
-        {{-- Action Buttons (hanya jika pending) --}}
         @if($transaction->status === 'pending')
         <div>
             <button type="button" class="btn-approve" id="openApproveModalBtn">
@@ -401,9 +380,6 @@
 </div>
 
 
-{{-- ══════════════════════════════════════════
-     MODAL: APPROVE
-══════════════════════════════════════════ --}}
 <div id="approveModal" class="trx-modal">
     <div class="modal-backdrop" data-close="approveModal"></div>
     <div class="modal-box" style="max-width:420px; text-align:center;">
@@ -438,9 +414,6 @@
 </div>
 
 
-{{-- ══════════════════════════════════════════
-     MODAL: REJECT
-══════════════════════════════════════════ --}}
 <div id="rejectModal" class="trx-modal">
     <div class="modal-backdrop" data-close="rejectModal"></div>
     <div class="modal-box" style="max-width:500px;">
@@ -473,7 +446,6 @@
                 Pilih alasan penolakan agar pengguna tahu langkah selanjutnya.
             </p>
 
-            {{-- Preset Reasons --}}
             <div class="reason-option" onclick="selectReason('r1')">
                 <input type="radio" name="admin_note" id="r1"
                        value="Bukti transfer tidak terbaca / buram" required>
@@ -495,7 +467,6 @@
                 <label for="r4" style="cursor:pointer;">Bukti transfer terindikasi dipalsukan</label>
             </div>
 
-            {{-- Custom Reason --}}
             <div style="margin-top:6px;">
                 <label style="font-size:13px; color:var(--text-secondary); display:block; margin-bottom:6px;">
                     Atau tulis alasan lain:
@@ -528,9 +499,6 @@
 </div>
 
 
-{{-- ══════════════════════════════════════════
-     LIGHTBOX
-══════════════════════════════════════════ --}}
 <div id="lightbox">
     <img id="lightboxImg" src="" alt="Bukti Pembayaran">
 </div>
@@ -540,9 +508,6 @@
 
 @push('scripts')
 <script>
-// ══════════════════════════════════════════
-// Utility: Modal open/close
-// ══════════════════════════════════════════
 function openModal(id)  { document.getElementById(id).classList.add('open');    }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
@@ -555,9 +520,6 @@ document.addEventListener('keydown', e => {
 });
 
 
-// ══════════════════════════════════════════
-// APPROVE MODAL
-// ══════════════════════════════════════════
 document.getElementById('openApproveModalBtn')?.addEventListener('click', () => openModal('approveModal'));
 
 document.querySelector('#approveModal form')?.addEventListener('submit', function () {
@@ -567,9 +529,6 @@ document.querySelector('#approveModal form')?.addEventListener('submit', functio
 });
 
 
-// ══════════════════════════════════════════
-// REJECT MODAL
-// ══════════════════════════════════════════
 document.getElementById('openRejectModalBtn')?.addEventListener('click', () => {
     // Reset state
     document.querySelectorAll('.reason-option').forEach(o => o.classList.remove('selected'));
@@ -584,11 +543,9 @@ function selectReason(id) {
     const radio = document.getElementById(id);
     radio.checked = true;
     radio.closest('.reason-option').classList.add('selected');
-    // Kosongkan custom textarea jika memilih preset
     document.getElementById('customReasonInput').value = '';
 }
 
-// Jika user mulai ketik di textarea, uncheck semua radio
 document.getElementById('customReasonInput').addEventListener('input', function () {
     if (this.value.trim()) {
         document.querySelectorAll('input[name="admin_note"]').forEach(r => r.checked = false);
@@ -602,13 +559,11 @@ document.getElementById('rejectSubmitBtn').addEventListener('click', () => {
     const customReason  = document.getElementById('customReasonInput').value.trim();
     const errorEl       = document.getElementById('rejectFormError');
 
-    // Validasi: harus ada salah satu
     if (!selectedRadio && !customReason) {
         errorEl.style.display = 'block';
         return;
     }
 
-    // Jika custom diisi, inject ke form sebagai admin_note
     if (!selectedRadio && customReason) {
         const hidden = document.createElement('input');
         hidden.type  = 'hidden';
@@ -625,9 +580,6 @@ document.getElementById('rejectSubmitBtn').addEventListener('click', () => {
 });
 
 
-// ══════════════════════════════════════════
-// LIGHTBOX
-// ══════════════════════════════════════════
 function openLightbox(src) {
     document.getElementById('lightboxImg').src = src;
     document.getElementById('lightbox').style.display = 'flex';

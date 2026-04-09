@@ -10,14 +10,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-        /* --- THEME VARIABLES --- */
         :root {
-            /* Light Mode (Default) */
             --primary-color: #4CAF50;
             --primary-hover: #45a049;
             --bg-body: #F8FAFC;
             --bg-card: #FFFFFF;
-            --bg-sidebar: #1E293B; /* Sidebar tetap gelap di light mode agar kontras */
+            --bg-sidebar: #1E293B; 
             --text-main: #334155;
             --text-muted: #64748B;
             --text-sidebar: #94A3B8;
@@ -28,11 +26,10 @@
             --header-height: 70px;
         }
 
-        /* Dark Mode Override */
         [data-theme="dark"] {
             --bg-body: #0F172A;
             --bg-card: #1E293B;
-            --bg-sidebar: #020617; /* Lebih gelap */
+            --bg-sidebar: #020617;
             --text-main: #F1F5F9;
             --text-muted: #94A3B8;
             --text-sidebar: #64748B;
@@ -41,13 +38,11 @@
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
         }
 
-        /* --- GLOBAL RESET --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); transition: background 0.3s, color 0.3s; }
         a { text-decoration: none; }
         ul { list-style: none; }
 
-        /* --- LAYOUT STRUCTURE --- */
         .admin-wrapper { display: flex; min-height: 100vh; }
         
         .main-content-wrapper {
@@ -62,10 +57,9 @@
 
         .content-body {
             padding: 30px;
-            flex: 1; /* Agar footer terdorong ke bawah */
+            flex: 1;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .main-content-wrapper { margin-left: 0; width: 100%; }
         }
@@ -102,7 +96,6 @@
             document.documentElement.setAttribute('data-theme', target);
             localStorage.setItem('admin_theme', target);
             
-            // Ubah icon
             const icon = document.getElementById('theme-icon');
             if(target === 'dark') {
                 icon.classList.remove('fa-moon');

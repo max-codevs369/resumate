@@ -1,10 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Profil Saya - ' . config('app.name'))
+@section('title', 'Profil Saya')
 
 @section('content')
 <style>
-    /* Variabel Warna & UI Modern */
     :root {
         --primary-color: #10b981;
         --primary-hover: #059669;
@@ -471,7 +470,6 @@
         $user = auth()->user();
     @endphp
 
-    <!-- Profile Header -->
     <div class="profile-header">
         <div class="avatar-wrap">
             <div class="avatar-big" style="overflow: hidden;">
@@ -481,7 +479,6 @@
                     {{ strtoupper(substr($user->name, 0, 1)) }}
                 @endif
             </div>
-            <!-- Ikon pen untuk memicu klik pada input file di form bawah -->
             <div class="avatar-edit" onclick="document.getElementById('avatarInput').click()" title="Ubah Foto Profil">
                 <i class="fas fa-camera"></i>
             </div>
@@ -501,15 +498,11 @@
         </div>
     </div>
 
-    <!-- Main Grid -->
     <div class="content-grid">
-        <!-- Kiri: Daftar CV + Pengaturan -->
         <div>
-            <!-- Pengaturan Akun -->
             <div class="settings-section">
                 <div class="section-label"><i class="fas fa-cog"></i> Pengaturan Akun</div>
 
-                <!-- Pesan Sukses -->
                 @if(session('success'))
                     <div class="alert alert-success">
                         <i class="fas fa-check-circle fa-lg"></i>
@@ -517,7 +510,6 @@
                     </div>
                 @endif
 
-                <!-- Pesan Error -->
                 @if($errors->any())
                     <div class="alert alert-danger">
                         <i class="fas fa-exclamation-circle fa-lg"></i>
@@ -525,13 +517,11 @@
                     </div>
                 @endif
 
-                <!-- Form Profil Dihubungkan ke Route update -->
                 <form action="{{ route('user.profile.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     
                     <div class="settings-block">
-                        <!-- Input file tersembunyi yang dihubungkan dengan ikon di avatar -->
                         <input type="file" name="avatar" id="avatarInput" accept="image/*" style="display: none;">
 
                         <div class="settings-row">
@@ -553,7 +543,6 @@
                                 <label class="s-title">Kata Sandi Baru</label>
                                 <input type="password" id="newPassword" name="password" placeholder="Biarkan kosong jika tidak ingin mengubah kata sandi" class="form-control">
                                 
-                                <!-- Container Level Kekuatan Password -->
                                 <div class="pw-strength-container" id="pwStrengthContainer">
                                     <div class="pw-bars">
                                         <div class="pw-bar" id="bar-1"></div>
@@ -577,7 +566,6 @@
                     </div>
                 </form>
 
-                <!-- Zona Berbahaya / Logout -->
                 <div class="settings-block" style="margin-top: 24px; border-color: var(--danger-pale);">
                     <div class="settings-row">
                         <div class="settings-row-left">
@@ -595,9 +583,7 @@
             </div>
         </div>
 
-        <!-- Kanan: Sidebar -->
         <div class="sidebar">
-            <!-- Info Akun -->
             <div class="side-card">
                 <div class="side-card-title"><i class="fas fa-info-circle" style="color: var(--primary-color);"></i> Informasi Akun</div>
                 
@@ -629,7 +615,6 @@
                 @endif
             </div>
 
-            <!-- Ajakan Berlangganan (Hanya tampil jika user bukan premium) -->
             @if(!$user->is_premium)
                 <div class="side-card" style="padding: 0; border: none; background: transparent; box-shadow: none;">
                     <div class="upgrade-box">
@@ -647,7 +632,6 @@
 
 @push('scripts')
 <script>
-    // Fitur Dark Mode Toggle bawaan sistem Anda
     const darkModeToggle = document.getElementById('darkModeToggle');
     if (darkModeToggle) {
         const currentTheme = localStorage.getItem('theme') || 'light';
@@ -658,7 +642,6 @@
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             
-            // Update navbar theme icon
             const themeIcon = document.querySelector('.theme-toggle-btn i');
             if (themeIcon) {
                 if (newTheme === 'dark') {
@@ -672,7 +655,6 @@
         });
     }
 
-    // Tampilkan preview gambar ketika foto profil baru dipilih
     document.getElementById('avatarInput').addEventListener('change', function(event) {
         if(event.target.files && event.target.files[0]) {
             let reader = new FileReader();
@@ -689,19 +671,18 @@
             text: "Sayang sekali Anda ingin berhenti. Akses ke template premium dan fitur Pro lainnya akan dicabut setelah masa aktif berakhir. Anda yakin?",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#ef4444', // Warna merah danger
-            cancelButtonColor: '#6b7280', // Warna abu-abu
+            confirmButtonColor: '#ef4444', 
+            cancelButtonColor: '#6b7280', 
             confirmButtonText: 'Ya, Berhenti Langganan',
             cancelButtonText: 'Tetap di Paket Pro',
-            reverseButtons: true, // Tombol cancel di kiri, confirm di kanan
+            reverseButtons: true,
             focusCancel: true,
             customClass: {
-                popup: 'rounded-16', // Jika Anda punya class radius
+                popup: 'rounded-16', 
                 confirmButton: 'btn-confirm-swal',
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                // Tampilkan loading saat proses submit
                 Swal.fire({
                     title: 'Memproses...',
                     text: 'Mohon tunggu sebentar',
@@ -715,7 +696,6 @@
         })
     }
 
-    // Fitur Pengecekan Level Kekuatan Kata Sandi
     const passwordInput = document.getElementById('newPassword');
     const pwContainer = document.getElementById('pwStrengthContainer');
     const pwLabel = document.getElementById('pwLabel');
@@ -724,24 +704,20 @@
         passwordInput.addEventListener('input', function() {
             const val = this.value;
             
-            // Jika input kosong, sembunyikan bar
             if (val.length === 0) {
                 pwContainer.style.display = 'none';
                 return;
             }
             
-            // Tampilkan bar jika ada input
             pwContainer.style.display = 'block';
-            pwContainer.className = 'pw-strength-container'; // reset class
+            pwContainer.className = 'pw-strength-container'; 
             
-            // Logika perhitungan kekuatan password
             let strength = 0;
-            if (val.length >= 8) strength += 1; // Minimal 8 karakter
-            if (val.match(/[a-z]/) && val.match(/[A-Z]/)) strength += 1; // Huruf besar & kecil
-            if (val.match(/\d/)) strength += 1; // Ada angka
-            if (val.match(/[^a-zA-Z\d]/)) strength += 1; // Ada karakter spesial
+            if (val.length >= 8) strength += 1; 
+            if (val.match(/[a-z]/) && val.match(/[A-Z]/)) strength += 1; 
+            if (val.match(/\d/)) strength += 1; 
+            if (val.match(/[^a-zA-Z\d]/)) strength += 1; 
             
-            // Render warna berdasarkan skor
             if (val.length < 6 || strength <= 1) {
                 pwContainer.classList.add('strength-weak');
                 pwLabel.innerText = 'Lemah';

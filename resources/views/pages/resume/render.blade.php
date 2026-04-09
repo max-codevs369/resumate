@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ $resume->title ?? 'Resume' }}</title>
-    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&family=Merriweather:wght@400;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- html2pdf -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
@@ -17,7 +15,6 @@
             min-height: 100vh; font-family: 'Inter', sans-serif;
         }
         
-        /* Loading Screen */
         #loader { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #ffffff; display: flex; flex-direction: column; 
@@ -30,7 +27,6 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Kertas A4 */
         .cv-sheet { 
             width: 210mm; 
             min-height: 297mm; 
@@ -55,7 +51,6 @@
         <div style="font-size: 13px; color: #6b7280; margin-top: 8px;">Mohon tunggu sebentar.</div>
     </div>
 
-    <!-- Pembungkus luar agar html2pdf bisa menangkap elemen dengan benar -->
     <div>
         <div class="cv-sheet" id="cv-paper">
             <div id="main-drop"></div>
@@ -63,9 +58,6 @@
     </div>
 
     <script>
-        // ==========================================
-        // 1. AMBIL DATA DARI DATABASE
-        // ==========================================
         let rawSchema = {!! json_encode($resume->layout_schema ?? $resume->template->layout_schema ?? []) !!};
         let rawGlobal = {!! json_encode($resume->global_settings ?? $resume->template->global_settings ?? []) !!};
         
@@ -79,9 +71,6 @@
             document.getElementById('cv-paper').style.fontFamily = globalSettings.fontFamily;
         }
 
-        // ==========================================
-        // 2. FUNGSI HELPER
-        // ==========================================
         function esc(str) { return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
         function safeText(val) { return String(val || '').replace(/\n/g, '<br>'); }
         function parseItems(itemsData) {
@@ -90,9 +79,6 @@
             return Array.isArray(items) ? items : [];
         }
 
-        // ==========================================
-        // 3. FUNGSI RENDER (Membuat HTML dari JSON)
-        // ==========================================
         function renderCanvas() {
             const container = document.getElementById('main-drop');
             container.innerHTML = '';
@@ -236,14 +222,9 @@
             }
         }
 
-        // ==========================================
-        // 4. EKSEKUSI PEMBUATAN PDF SETELAH LOAD
-        // ==========================================
         window.onload = function() {
-            // Bangun DOM berdasarkan schema JSON
             renderCanvas();
             
-            // Jeda 1 detik agar semua font & gambar berhasil dimuat browser sebelum difoto
             setTimeout(() => {
                 const element = document.getElementById('cv-paper');
                 
@@ -255,10 +236,8 @@
                     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
 
-                // Proses Export ke PDF
                 html2pdf().set(opt).from(element).save().then(() => {
                     
-                    // Setelah sukses terunduh, rekam di database
                     fetch(`{{ route('resume.increment-download', $resume->id) }}`, {
                         method: 'POST',
                         headers: {
@@ -266,7 +245,6 @@
                             'Accept': 'application/json'
                         }
                     }).then(() => {
-                        // Tampilkan pesan berhasil dan tutup tab otomatis
                         document.getElementById('loader').innerHTML = `
                             <div style="text-align:center;">
                                 <i class="fas fa-check-circle" style="color:#10b981; font-size:48px; margin-bottom:16px;"></i>

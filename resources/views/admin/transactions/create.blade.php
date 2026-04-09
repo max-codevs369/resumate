@@ -73,17 +73,14 @@
     </div>
 </div>
 
-<!-- Tambahkan enctype multipart/form-data untuk upload file -->
 <form action="{{ route('admin.transactions.store') }}" method="POST" id="mainForm" enctype="multipart/form-data">
     @csrf
     <div class="form-container">
-        {{-- SISI KIRI: INPUT DATA --}}
         <div class="card">
             <div class="card-header"><h3><i class="fas fa-file-invoice"></i> Informasi Pembayaran</h3></div>
             <div class="card-body">
                 <div class="form-grid">
                     
-                    {{-- Pencarian User (Ganti Select menjadi Input Text) --}}
                     <div class="form-group full-width">
                         <label class="form-label">Email Pengguna Terdaftar</label>
                         <input type="email" name="user_search" class="form-input" 
@@ -93,7 +90,6 @@
                         @enderror
                     </div>
 
-                    {{-- Nominal --}}
                     <div class="form-group">
                         <label class="form-label">Nominal (IDR)</label>
                         <input type="number" name="amount" class="form-input" placeholder="Contoh: 50000" value="{{ old('amount') }}" required min="1">
@@ -102,7 +98,6 @@
                         @enderror
                     </div>
 
-                    {{-- Metode Pembayaran --}}
                     <div class="form-group">
                         <label class="form-label">Metode Pembayaran</label>
                         <select name="payment_method" id="payment_selector" class="form-input" required>
@@ -124,7 +119,6 @@
             </div>
         </div>
 
-        {{-- SISI KANAN: RINGKASAN & ACTION --}}
         <div class="card" style="position: sticky; top: 20px;">
             <div class="card-header"><h3>Ringkasan</h3></div>
             <div class="card-body">
@@ -164,7 +158,6 @@
     const customInput = document.getElementById('custom_payment_input');
     const mainForm = document.getElementById('mainForm');
 
-    // Logika menampilkan input manual untuk metode pembayaran
     paymentSelector.addEventListener('change', function() {
         if (this.value === 'OTHER') {
             customWrapper.style.display = 'block';
@@ -180,7 +173,6 @@
         }
     });
 
-    // Loading saat submit
     mainForm.addEventListener('submit', function() {
         const btn = document.getElementById('submitBtn');
         btn.disabled = true;

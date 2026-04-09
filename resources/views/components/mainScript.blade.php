@@ -48,14 +48,12 @@
             profile.classList.toggle('open');
         });
 
-        // Tutup dropdown saat klik di luar
         document.addEventListener('click', function (e) {
             if (!profile.contains(e.target)) {
                 profile.classList.remove('open');
             }
         });
 
-        // Tutup juga saat tekan Escape
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') profile.classList.remove('open');
         });

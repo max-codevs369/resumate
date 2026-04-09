@@ -46,7 +46,6 @@
     .form-control:focus { border-color: var(--primary-color); background: var(--bg-card); box-shadow: 0 0 0 3px rgba(76,175,80,0.1); }
     .form-control.is-invalid { border-color: #EF4444; background: rgba(239, 68, 68, 0.02); }
     
-    /* MODIFIKASI: Styling list error agar rapi */
     .invalid-feedback-list {
         margin: 4px 0 0 0; padding-left: 16px; 
         font-size: 12px; color: #EF4444; font-weight: 500;
@@ -55,7 +54,6 @@
     
     .form-hint { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
 
-    /* Password Field */
     .password-wrapper { position: relative; }
     .btn-toggle-password {
         position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
@@ -64,13 +62,11 @@
     }
     .btn-toggle-password:hover { color: var(--text-main); }
 
-    /* Password Meter */
     .password-meter { margin-top: 8px; display: none; }
     .meter-bars { display: flex; gap: 4px; height: 4px; margin-bottom: 6px; }
     .meter-bar { flex: 1; background: var(--border-color); border-radius: 2px; transition: 0.3s; }
     .meter-text { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
 
-    /* Avatar */
     .avatar-upload { display: flex; align-items: center; gap: 20px; }
     .avatar-preview {
         width: 72px; height: 72px; border-radius: 16px; flex-shrink: 0;
@@ -98,7 +94,6 @@
     }
     .btn-remove-avatar:hover { background: #EF4444; color: white; }
 
-    /* Toggle */
     .toggles-wrap { display: flex; flex-direction: column; gap: 12px; }
     .toggle-group {
         display: flex; align-items: center; justify-content: space-between;
@@ -125,7 +120,6 @@
     .toggle-switch input:checked + .toggle-slider { background: var(--primary-color); }
     .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
 
-    /* Actions */
     .form-actions {
         display: flex; gap: 12px; margin-top: 10px;
         padding-top: 24px; border-top: 1px solid var(--border-color);
@@ -167,7 +161,6 @@
         <p>Daftarkan akun pengguna reguler baru ke dalam sistem aplikasi.</p>
     </div>
 
-    {{-- MODIFIKASI: Menambahkan tampilan global error (Opsional tapi sangat membantu) --}}
     @if ($errors->any())
         <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #DC2626; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
             <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 8px;">
@@ -184,7 +177,6 @@
     <form action="{{ route('admin.users.store') }}" method="POST" enctype="multipart/form-data" class="form-card">
         @csrf
 
-        {{-- Informasi Dasar --}}
         <div class="form-section">
             <div class="form-section-title">Informasi Dasar</div>
             <div class="form-grid">
@@ -210,7 +202,6 @@
                         </div>
                     </div>
                     
-                    {{-- MODIFIKASI: Error list untuk Avatar --}}
                     @if($errors->has('avatar'))
                         <ul class="invalid-feedback-list">
                             @foreach($errors->get('avatar') as $error)
@@ -226,7 +217,6 @@
                            class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}"
                            placeholder="Contoh: Budi Santoso" value="{{ old('name') }}">
                     
-                    {{-- MODIFIKASI: Error list untuk Nama --}}
                     @if($errors->has('name'))
                         <ul class="invalid-feedback-list">
                             @foreach($errors->get('name') as $error)
@@ -242,7 +232,6 @@
                            class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
                            placeholder="nama@email.com" value="{{ old('email') }}">
                            
-                    {{-- MODIFIKASI: Error list untuk Email --}}
                     @if($errors->has('email'))
                         <ul class="invalid-feedback-list">
                             @foreach($errors->get('email') as $error)
@@ -255,7 +244,6 @@
             </div>
         </div>
 
-        {{-- Keamanan --}}
         <div class="form-section">
             <div class="form-section-title">Keamanan Akun</div>
             <div class="form-grid">
@@ -280,7 +268,6 @@
                         <span class="meter-text" id="strengthText">Kekuatan: Lemah</span>
                     </div>
 
-                    {{-- MODIFIKASI: Error list untuk Password (PENTING untuk menampilkan banyak error sekaligus) --}}
                     @if($errors->has('password'))
                         <ul class="invalid-feedback-list">
                             @foreach($errors->get('password') as $error)
@@ -303,7 +290,6 @@
             </div>
         </div>
 
-        {{-- Konfigurasi Akun --}}
         <div class="form-section">
             <div class="form-section-title">Konfigurasi Akun</div>
             <div class="toggles-wrap">
@@ -347,7 +333,6 @@
 
 @push('scripts')
 <script>
-    // 1. Preview & Remove Avatar
     const avatarInput = document.getElementById('avatarInput');
     const avatarImg = document.getElementById('avatarImg');
     const avatarIcon = document.getElementById('avatarIcon');
@@ -375,7 +360,6 @@
         btnRemoveAvatar.style.display = 'none';
     }
 
-    // 2. Toggle Show/Hide Password
     function togglePassword(inputId, iconId) {
         const input = document.getElementById(inputId);
         const icon = document.getElementById(iconId);
@@ -391,7 +375,6 @@
         }
     }
 
-    // 3. Password Strength Meter
     document.getElementById('password').addEventListener('input', function(e) {
         const password = e.target.value;
         const meter = document.getElementById('passwordMeter');
@@ -416,7 +399,6 @@
         if (/\d/.test(password)) score++; 
         if (/[^a-zA-Z\d]/.test(password)) score++; 
 
-        // Reset
         bars.forEach(bar => bar.style.background = 'var(--border-color)');
 
         if (score === 1 || score === 2) {

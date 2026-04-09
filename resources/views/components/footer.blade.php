@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 {{  config('app.name') }}. All rights reserved.</p>
+                <p>&copy; {{ date('Y') }} {{  config('app.name') }}. All rights reserved.</p>
             </div>
         </div>
     </footer>

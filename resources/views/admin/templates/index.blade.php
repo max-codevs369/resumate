@@ -372,13 +372,6 @@
             <div class="stats-row">
                 <div title="Unduhan"><i class="fas fa-download" style="font-size:10px;"></i> {{ $item->total_downloads }}</div>
                 <div title="Rating"><i class="fas fa-star" style="color:#f59e0b; font-size:10px;"></i> {{ $item->rating }}</div>
-                <div style="margin-left:auto; font-weight:700; color: var(--text-main);">
-                    @if($item->price > 0)
-                        Rp {{ \App\Helpers\Formatter::currency($item->price) }}
-                    @else
-                        Free
-                    @endif
-                </div>
             </div>
         </div>
 

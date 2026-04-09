@@ -1,9 +1,5 @@
 <style>
-    /* ============================================
-       CSS VARIABLES & THEME SETUP
-    ============================================ */
     :root {
-        /* Light Theme */
         --primary-color: #4CAF50;
         --primary-hover: #45a049;
         --bg-body: #F7F7F7;
@@ -30,7 +26,6 @@
     }
 
     [data-theme="dark"] {
-        /* Dark Theme */
         --primary-color: #4CAF50;
         --primary-hover: #66BB6A;
         --bg-body: #121212;
@@ -53,9 +48,6 @@
         --red-soft: #2a1515;
     }
 
-    /* ============================================
-       GLOBAL RESET
-    ============================================ */
     *, *::before, *::after {
         margin: 0;
         padding: 0;
@@ -76,9 +68,6 @@
         flex: 1;
     }
 
-    /* ============================================
-       NAVIGATION BAR
-    ============================================ */
     nav {
         background: var(--bg-nav);
         padding: 16px 0;
@@ -99,9 +88,6 @@
         align-items: center;
     }
 
-    /* ============================================
-       LOGO
-    ============================================ */
     .logo {
         display: flex;
         align-items: center;
@@ -123,18 +109,12 @@
         flex-shrink: 0;
     }
 
-    /* ============================================
-       NAV RIGHT SECTION
-    ============================================ */
     .nav-right {
         display: flex;
         align-items: center;
         gap: 20px;
     }
 
-    /* ============================================
-       NAV MENU
-    ============================================ */
     .nav-menu {
         display: flex;
         list-style: none;
@@ -170,9 +150,6 @@
         background: var(--primary-color);
     }
 
-    /* ============================================
-       BUTTONS
-    ============================================ */
     .btn-register {
         background: var(--primary-color);
         color: white !important;
@@ -268,9 +245,6 @@
         transform: translateY(-1px);
     }
 
-    /* ============================================
-       THEME TOGGLE BUTTON
-    ============================================ */
     .theme-toggle-btn {
         background: transparent;
         border: 1px solid var(--border-color);
@@ -299,9 +273,6 @@
         transform: rotate(20deg);
     }
 
-    /* ============================================
-       USER PROFILE DROPDOWN
-    ============================================ */
     .nav-profile {
         position: relative;
     }
@@ -336,7 +307,6 @@
         object-fit: cover;
     }
 
-    /* Dropdown Menu */
     .profile-dropdown {
         position: absolute;
         top: calc(100% + 12px);
@@ -450,9 +420,6 @@
         background: #2a1515;
     }
 
-    /* ============================================
-       MOBILE MENU TOGGLE
-    ============================================ */
     .mobile-menu-toggle {
         display: none;
         flex-direction: column;
@@ -483,9 +450,6 @@
         transform: rotate(-45deg) translate(7px, -7px);
     }
 
-    /* ============================================
-       FOOTER
-    ============================================ */
     footer {
         background: #2C2C2C;
         color: white;
@@ -558,9 +522,6 @@
         font-size: 14px;
     }
 
-    /* ============================================
-       BACK TO TOP BUTTON
-    ============================================ */
     #backToTop {
         position: fixed;
         bottom: 30px;
@@ -594,9 +555,6 @@
         transform: translateY(-5px);
     }
 
-    /* ============================================
-       DEMO PAGE CONTENT
-    ============================================ */
     .demo-content {
         max-width: 1200px;
         margin: 60px auto;
@@ -616,9 +574,6 @@
         margin-bottom: 40px;
     }
 
-    /* ============================================
-       RESPONSIVE - TABLET & MOBILE
-    ============================================ */
     @media (max-width: 968px) {
         .nav-container {
             padding: 0 24px;

@@ -4,9 +4,6 @@
 
 @push('styles')
     <style>
-        /* ============================================
-           CSS VARIABLES & THEME SETUP
-        ============================================ */
         :root {
             --primary-color: #10b981;
             --primary-hover: #059669;
@@ -38,9 +35,6 @@
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
         }
 
-        /* ============================================
-           DASHBOARD LAYOUT
-        ============================================ */
         .dashboard-container { max-width: 1400px; margin: 0 auto; padding: 40px 32px; font-family: 'Inter', sans-serif; }
         .dashboard-header { margin-bottom: 40px; }
         .dashboard-title { font-family: 'Sora', sans-serif; font-size: 32px; font-weight: 800; color: var(--text-main); margin-bottom: 8px; }
@@ -117,7 +111,6 @@
             <p class="dashboard-subtitle">Cek perkembangan CV kamu hari ini, yuk!</p>
         </div>
 
-        <!-- STATS GRID -->
         <div class="stats-grid">
             <div class="stat-card blue">
                 <div class="stat-header">
@@ -163,14 +156,11 @@
 
         <div class="main-grid">
             
-            <!-- LEFT COLUMN: RESUMES & DRAFTS -->
             <div class="left-column">
                 
-                <!-- CARD 1: DOKUMEN SELESAI -->
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title"><i class="fas fa-check-circle" style="color: var(--primary-color); margin-right: 8px;"></i> Dokumen Selesai</h2>
-                        <!-- Nanti arahkan ke route yg menampilkan semua resume selesai jika perlu -->
                         <a href="{{ route('user.resumes', ['status' => 'completed'])}}" class="card-action">Lihat Semua →</a>
                     </div>
 
@@ -226,11 +216,9 @@
                     </div>
                 </div>
 
-                <!-- CARD 2: DRAFT TERSIMPAN -->
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title"><i class="fas fa-edit" style="color: var(--accent-orange); margin-right: 8px;"></i> Draft Tersimpan</h2>
-                        <!-- Nanti arahkan ke route yg menampilkan semua draft jika perlu -->
                         <a href="{{ route('user.resumes', ['status' => 'draft'])}}" class="card-action">Lihat Semua →</a>
                     </div>
 
@@ -271,10 +259,8 @@
 
             </div>
 
-            <!-- RIGHT COLUMN: WIDGETS -->
             <div class="right-column">
                 
-                <!-- WIDGET 1: TRANSAKSI TERAKHIR -->
                 <div class="card">
                     <div class="card-header" style="margin-bottom: 16px; padding-bottom: 12px;">
                         <h2 class="card-title">Status Transaksi</h2>
@@ -301,7 +287,6 @@
                     @endif
                 </div>
 
-                <!-- WIDGET 2: TEMPLATE POPULER -->
                 <div class="card">
                     <div class="card-header" style="margin-bottom: 16px; padding-bottom: 12px;">
                         <h2 class="card-title">Template Populer</h2>

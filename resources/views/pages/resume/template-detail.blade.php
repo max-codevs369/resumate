@@ -4,11 +4,9 @@
 
 @push('styles')
     <style>
-        /* --- Layout Container (TETAP SAMA) --- */
         .detail-section { background: var(--bg-body); padding: 60px 0 120px; }
         .detail-container { max-width: 1200px; margin: 0 auto; padding: 0 40px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 80px; align-items: start; }
 
-        /* --- Left Side: Preview Canvas (TETAP SAMA) --- */
         .preview-wrapper { position: sticky; top: 100px; }
         .preview-canvas { background: var(--bg-card); border-radius: 24px; padding: 60px 40px; display: flex; justify-content: center; align-items: flex-start; border: 1px solid var(--border-color); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05); position: relative; overflow: hidden; }
         .preview-canvas::before { content: ''; position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-image: radial-gradient(var(--border-color) 1px, transparent 1px); background-size: 20px 20px; opacity: 0.5; z-index: 0; }
@@ -17,7 +15,6 @@
         .cv-mockup:hover { transform: scale(1.02); }
         .cv-mockup img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
 
-        /* Skeleton UI (TETAP SAMA) */
         .mockup-skeleton { width: 100%; height: 100%; background: #fff; display: flex; flex-direction: column; }
         .sk-header { height: 12%; background: var(--primary-color); width: 100%; }
         .sk-body { padding: 25px; flex: 1; display: flex; gap: 20px; }
@@ -28,7 +25,6 @@
         .zoom-btn { position: absolute; bottom: 25px; right: 25px; width: 45px; height: 45px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #333; font-size: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.2s; z-index: 2; }
         .zoom-btn:hover { transform: scale(1.1); background: white; }
 
-        /* --- Right Side: Info (TETAP SAMA) --- */
         .template-header { margin-bottom: 30px; }
         .tags-wrapper { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
         .badge-pill { font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 30px; letter-spacing: 0.5px; text-transform: uppercase; }
@@ -39,7 +35,6 @@
         .template-title { font-size: 40px; color: var(--text-main); font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
         .template-desc { font-size: 16px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 40px; }
 
-        /* Specs Grid (TETAP SAMA) */
         .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
         .spec-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 20px; border-radius: 16px; display: flex; align-items: flex-start; gap: 15px; transition: all 0.3s; }
         .spec-card:hover { border-color: var(--primary-color); transform: translateY(-3px); }
@@ -47,18 +42,14 @@
         .spec-content h5 { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; font-weight: 500; }
         .spec-content p { font-size: 15px; color: var(--text-main); font-weight: 700; margin: 0; }
 
-        /* Action Area (TETAP SAMA) */
         .action-area { background: var(--bg-card); border: 1px solid var(--border-color); padding: 30px; border-radius: 20px; text-align: center; }
         .btn-use-template { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 18px; background: var(--primary-color); color: white; font-size: 18px; font-weight: 700; border-radius: 12px; text-decoration: none; transition: all 0.3s; box-shadow: 0 10px 25px rgba(76, 175, 80, 0.25); }
         .btn-use-template:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 15px 30px rgba(76, 175, 80, 0.35); }
         .guarantee-text { margin-top: 15px; font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 6px; }
 
-        /* Pro Tip (TETAP SAMA) */
         .pro-tip { margin-top: 30px; padding: 20px; background: var(--bg-body); border-left: 4px solid var(--primary-color); border-radius: 8px; }
         .pro-tip h6 { color: var(--primary-color); font-size: 14px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
         .pro-tip p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin: 0; }
-
-        /* --- LIGHTBOX STYLES (BARU) --- */
         .lightbox {
             display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; 
             overflow: auto; background-color: rgba(0,0,0,0.9); backdrop-filter: blur(5px); animation: fadeIn 0.3s;
@@ -151,10 +142,6 @@
 
                 <div class="specs-grid">
                     <div class="spec-card">
-                        <div class="spec-icon"><i class="fas fa-robot"></i></div>
-                        <div class="spec-content"><h5>ATS Friendly</h5><p>Ya (Text-based)</p></div>
-                    </div>
-                    <div class="spec-card">
                         <div class="spec-icon"><i class="fas fa-layer-group"></i></div>
                         <div class="spec-content">
                             <h5>Kategori</h5>
@@ -163,19 +150,6 @@
                                     $categories = is_array($template->category) ? $template->category : [$template->category];
                                     echo implode(', ', $categories);
                                 @endphp
-                            </p>
-                        </div>
-                    </div>
-                    <div class="spec-card">
-                        <div class="spec-icon"><i class="fas fa-tag"></i></div>
-                        <div class="spec-content">
-                            <h5>Harga</h5>
-                            <p>
-                                @if($template->price > 0)
-                                    Rp {{ \App\Helpers\Formatter::currency($template->price) }}
-                                @else
-                                    Gratis
-                                @endif
                             </p>
                         </div>
                     </div>
@@ -208,36 +182,31 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Elements
             const modal = document.getElementById('lightboxModal');
             const trigger = document.getElementById('triggerZoom');
             const sourceImg = document.getElementById('previewImage');
             const modalImg = document.getElementById('imgFull');
             const closeBtn = document.querySelector('.close-lightbox');
 
-            // Logic Open Modal
             if(trigger && sourceImg) {
                 trigger.addEventListener('click', function() {
                     modal.style.display = "block";
                     modalImg.src = sourceImg.src;
-                    document.body.style.overflow = "hidden"; // Disable scroll
+                    document.body.style.overflow = "hidden"; 
                 });
             }
 
-            // Logic Close Modal
             const closeModal = () => {
                 modal.style.display = "none";
-                document.body.style.overflow = "auto"; // Enable scroll
+                document.body.style.overflow = "auto"; 
             };
 
             closeBtn.addEventListener('click', closeModal);
 
-            // Close on Click Outside
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) closeModal();
             });
 
-            // Close on ESC Key
             document.addEventListener('keydown', function(e) {
                 if (e.key === "Escape") closeModal();
             });

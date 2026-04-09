@@ -4,9 +4,6 @@
 
 @push('styles')
     <style>
-        /* ============================================
-           CSS VARIABLES & THEME SETUP
-        ============================================ */
         :root {
             --primary-color: #10b981;
             --primary-hover: #059669;
@@ -35,7 +32,6 @@
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
         }
 
-        /* LAYOUT & TYPOGRAPHY */
         .page-container { 
             max-width: 1200px; 
             margin: 0 auto; 
@@ -61,7 +57,6 @@
         }
         .page-subtitle { color: var(--text-secondary); font-size: 15px; }
 
-        /* TABS FILTER */
         .tabs-container { 
             display: flex; gap: 12px; margin-bottom: 32px; 
             border-bottom: 1px solid var(--border-color); padding-bottom: 16px; 
@@ -81,7 +76,6 @@
         [data-theme="dark"] .badge-count { background: rgba(255,255,255,0.1); }
         .tab-btn.active .badge-count { background: rgba(255,255,255,0.2); color: white; }
 
-        /* GRID CV CARDS */
         .cv-grid { 
             display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; 
         }
@@ -110,14 +104,12 @@
         
         .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; width: fit-content; margin-top: 4px; }
         
-        /* Tema Terang & Gelap untuk Badge Draft/Done */
         .badge-draft { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
         [data-theme="dark"] .badge-draft { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border-color: rgba(245, 158, 11, 0.3); }
         
         .badge-done { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
         [data-theme="dark"] .badge-done { background: rgba(16, 185, 129, 0.15); color: #86efac; border-color: rgba(16, 185, 129, 0.3); }
 
-        /* BUTTONS */
         .cv-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; }
         .btn { 
             padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 600; 
@@ -131,10 +123,8 @@
         
         .btn-full { grid-column: 1 / -1; }
 
-        /* PAGINATION */
         .pagination-wrap { margin-top: 40px; display: flex; justify-content: center; }
 
-        /* RESPONSIVE */
         @media (max-width: 768px) {
             .page-container { padding: 24px 16px; }
             .page-header { flex-direction: column; align-items: flex-start; gap: 16px; }
@@ -146,12 +136,10 @@
 
 @section('content')
     <div class="page-container">
-        <!-- BACK LINK -->
         <a href="{{ route('user.dashboard') }}" class="back-link">
             <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
         </a>
 
-        <!-- HEADER -->
         <div class="page-header">
             <div>
                 <h1 class="page-title">Dokumen Saya</h1>
@@ -162,7 +150,6 @@
             </a>
         </div>
 
-        <!-- TABS FILTER -->
         <div class="tabs-container">
             <a href="{{ route('user.resumes', ['status' => 'completed']) }}" class="tab-btn {{ $status == 'completed' ? 'active' : 'inactive' }}">
                 <i class="fas fa-check-circle"></i> Dokumen Selesai 
@@ -174,7 +161,6 @@
             </a>
         </div>
 
-        <!-- GRID CONTENT -->
         <div class="cv-grid">
             @forelse($resumes as $cv)
                 <div class="cv-card">
@@ -235,7 +221,6 @@
                     </div>
                 </div>
             @empty
-                <!-- EMPTY STATE -->
                 <div style="grid-column: 1 / -1; text-align: center; padding: 80px 20px; background: var(--bg-card); border-radius: 24px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
                     <div style="width: 80px; height: 80px; background: var(--primary-light); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 20px;">
                         <i class="fas fa-folder-open"></i>
@@ -249,7 +234,6 @@
             @endforelse
         </div>
 
-        <!-- PAGINATION -->
         @if($resumes->hasPages())
             <div class="pagination-wrap">
                 {{ $resumes->appends(['status' => $status])->links() }}
@@ -260,83 +244,78 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.star-rating-container').forEach(container => {
-        const stars = container.querySelectorAll('.rate-star');
-        const resumeId = container.getAttribute('data-resume-id');
-        let currentRating = parseInt(container.getAttribute('data-current-rating')) || 0;
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.star-rating-container').forEach(container => {
+            const stars = container.querySelectorAll('.rate-star');
+            const resumeId = container.getAttribute('data-resume-id');
+            let currentRating = parseInt(container.getAttribute('data-current-rating')) || 0;
 
-        // Fungsi Helper untuk mewarnai bintang
-        function highlightStars(rating) {
-            stars.forEach(s => {
-                const val = parseInt(s.getAttribute('data-val'));
-                if (val <= rating) {
-                    s.classList.remove('far');
-                    s.classList.add('fas');
-                    s.style.color = '#f59e0b'; // Kuning
-                } else {
-                    s.classList.remove('fas');
-                    s.classList.add('far');
-                    s.style.color = '#e5e7eb'; // Abu-abu
-                }
-            });
-        }
-
-        stars.forEach(star => {
-            // 1. Efek Hover (Mouse Masuk)
-            star.addEventListener('mouseover', function() {
-                highlightStars(this.getAttribute('data-val'));
-            });
-
-            // 2. Efek Hover (Mouse Keluar) - Kembalikan ke rating asli
-            star.addEventListener('mouseout', function() {
-                highlightStars(currentRating);
-            });
-
-            // 3. Efek Klik (Simpan)
-            star.addEventListener('click', function() {
-                const val = this.getAttribute('data-val');
-                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-                fetch(`/resume/${resumeId}/rating`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': token,
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ rating: val })
-                })
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.json();
-                })
-                .then(data => {
-                    if(data.success) {
-                        currentRating = val;
-                        container.setAttribute('data-current-rating', val);
-                        highlightStars(val);
-
-                        // Munculkan tulisan feedback
-                        const feedback = container.parentElement.querySelector('.rating-feedback');
-                        const ratingText = container.parentElement.querySelector('.rating-text');
-                        
-                        if(ratingText) ratingText.innerText = 'Nilai yang Anda berikan:';
-                        if(feedback) {
-                            feedback.style.display = 'block';
-                            setTimeout(() => {
-                                feedback.style.display = 'none';
-                            }, 2000);
-                        }
+            function highlightStars(rating) {
+                stars.forEach(s => {
+                    const val = parseInt(s.getAttribute('data-val'));
+                    if (val <= rating) {
+                        s.classList.remove('far');
+                        s.classList.add('fas');
+                        s.style.color = '#f59e0b'; 
+                    } else {
+                        s.classList.remove('fas');
+                        s.classList.add('far');
+                        s.style.color = '#e5e7eb'; 
                     }
-                })
-                .catch(error => {
-                    console.error('Fetch Error:', error);
-                    alert('Gagal menyimpan rating. Pastikan Anda terhubung ke internet.');
+                });
+            }
+
+            stars.forEach(star => {
+                star.addEventListener('mouseover', function() {
+                    highlightStars(this.getAttribute('data-val'));
+                });
+
+                star.addEventListener('mouseout', function() {
+                    highlightStars(currentRating);
+                });
+
+                star.addEventListener('click', function() {
+                    const val = this.getAttribute('data-val');
+                    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                    fetch(`/resume/${resumeId}/rating`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': token,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ rating: val })
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.json();
+                    })
+                    .then(data => {
+                        if(data.success) {
+                            currentRating = val;
+                            container.setAttribute('data-current-rating', val);
+                            highlightStars(val);
+
+                            const feedback = container.parentElement.querySelector('.rating-feedback');
+                            const ratingText = container.parentElement.querySelector('.rating-text');
+                            
+                            if(ratingText) ratingText.innerText = 'Nilai yang Anda berikan:';
+                            if(feedback) {
+                                feedback.style.display = 'block';
+                                setTimeout(() => {
+                                    feedback.style.display = 'none';
+                                }, 2000);
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch Error:', error);
+                        alert('Gagal menyimpan rating. Pastikan Anda terhubung ke internet.');
+                    });
                 });
             });
         });
     });
-});
 </script>
 @endpush

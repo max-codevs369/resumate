@@ -101,9 +101,4 @@ class User extends Authenticatable
 
         return "https://ui-avatars.com/api/?name=" . urlencode($this->name) . "&background=e0f2fe&color=0369a1&size=128";
     }
-
-    public function sendPasswordResetNotification($token)
-    {
-        $this->notify(new \App\Notifications\CustomResetPasswordNotification($token));
-    }
 }

@@ -22,7 +22,6 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); 
     }
 
-    /* User Info Banner */
     .user-info-card { 
         display: flex; align-items: center; gap: 16px; padding: 16px; 
         background: var(--bg-body); border-radius: 12px; 
@@ -36,7 +35,6 @@
     .user-meta strong { font-size: 15px; font-weight: 700; color: var(--text-main); }
     .user-meta span { font-size: 13px; color: var(--text-secondary); }
 
-    /* Warning Banner */
     .warning-banner { 
         display: flex; align-items: flex-start; gap: 12px; padding: 16px; 
         background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); 
@@ -45,7 +43,6 @@
     }
     .warning-banner i { margin-top: 2px; flex-shrink: 0; font-size: 16px; color: #F59E0B; }
 
-    /* Form Styles */
     .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
     label { font-size: 13px; font-weight: 600; color: var(--text-main); }
     .required-mark { color: #EF4444; }
@@ -66,20 +63,17 @@
     }
     .btn-eye:hover { color: var(--text-main); }
 
-    /* Error Messages */
     .invalid-feedback-list {
         margin: 4px 0 0 0; padding-left: 16px; 
         font-size: 12px; color: #EF4444; font-weight: 500;
     }
     .invalid-feedback-list li { margin-bottom: 2px; }
 
-    /* Password Strength Meter (Diseragamkan dengan Create & Edit) */
     .password-meter { margin-top: 4px; display: none; }
     .meter-bars { display: flex; gap: 4px; height: 4px; margin-bottom: 6px; }
     .meter-bar { flex: 1; background: var(--border-color); border-radius: 2px; transition: 0.3s; }
     .meter-text { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
 
-    /* Actions */
     .form-actions { 
         display: flex; gap: 12px; margin-top: 10px; 
         padding-top: 24px; border-top: 1px solid var(--border-color); 
@@ -118,7 +112,6 @@
         <p>Ganti kata sandi untuk pengguna secara paksa jika diperlukan.</p>
     </div>
 
-    {{-- Global Error Alert --}}
     @if ($errors->any())
         <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #DC2626; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
             <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 8px;">
@@ -133,7 +126,6 @@
     @endif
 
     <div class="form-card">
-        {{-- User Info --}}
         <div class="user-info-card">
             <img src="{{ $user->avatarUrl() ?? asset('images/default-avatar.png') }}" alt="{{ $user->name }}" class="user-avatar">
             <div class="user-meta">
@@ -142,7 +134,6 @@
             </div>
         </div>
 
-        {{-- Warning --}}
         <div class="warning-banner">
             <i class="fas fa-exclamation-triangle"></i>
             <div>
@@ -165,7 +156,6 @@
                     </button>
                 </div>
                 
-                {{-- Password Meter --}}
                 <div class="password-meter" id="passwordMeter">
                     <div class="meter-bars">
                         <div class="meter-bar" id="bar-1"></div>
@@ -176,7 +166,6 @@
                     <span class="meter-text" id="strengthText">Kekuatan: Lemah</span>
                 </div>
 
-                {{-- Menampilkan SEMUA error rules password --}}
                 @if($errors->has('password'))
                     <ul class="invalid-feedback-list">
                         @foreach($errors->get('password') as $error)
@@ -211,7 +200,6 @@
 
 @push('scripts')
 <script>
-    // 1. Toggle Show/Hide Password
     function togglePassword(inputId, iconId) {
         const input = document.getElementById(inputId);
         const icon = document.getElementById(iconId);
@@ -227,7 +215,6 @@
         }
     }
 
-    // 2. Password Strength Meter (Sistem 4 Bar)
     document.getElementById('password').addEventListener('input', function(e) {
         const password = e.target.value;
         const meter = document.getElementById('passwordMeter');
@@ -252,7 +239,6 @@
         if (/\d/.test(password)) score++; 
         if (/[^a-zA-Z\d]/.test(password)) score++; 
 
-        // Reset
         bars.forEach(bar => bar.style.background = 'var(--border-color)');
 
         if (score === 1 || score === 2) {

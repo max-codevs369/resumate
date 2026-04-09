@@ -150,7 +150,6 @@
 
 @section('content')
 
-{{-- Alert Messages --}}
 @if(session('success'))
     <div class="alert alert-success"><i class="fas fa-check-circle"></i> {{ session('success') }}</div>
 @endif
@@ -158,7 +157,6 @@
     <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> {{ session('error') }}</div>
 @endif
 
-{{-- Page Header --}}
 <div class="page-header">
     <div class="header-title">
         <h1>Manajemen Pengguna</h1>
@@ -169,7 +167,6 @@
     </a>
 </div>
 
-{{-- Filter Tabs --}}
 <div class="filter-tabs">
     <a href="{{ route('admin.users.index', ['filter' => 'all', 'search' => request('search')]) }}"
        class="tab-item {{ $filter === 'all' ? 'active' : '' }}">
@@ -193,7 +190,6 @@
     </a>
 </div>
 
-{{-- Filter Search Bar --}}
 <form method="GET" action="{{ route('admin.users.index') }}">
     <input type="hidden" name="filter" value="{{ $filter }}">
     <div class="filter-bar">
@@ -214,7 +210,6 @@
     </div>
 </form>
 
-{{-- Table --}}
 <div class="table-card">
     <div class="table-responsive">
         <table class="user-table">
@@ -230,7 +225,6 @@
             <tbody>
                 @forelse($users as $user)
                 <tr>
-                    {{-- Identitas --}}
                     <td>
                         <div class="profile-group">
                             <div class="avatar-circle"
@@ -243,7 +237,6 @@
                         </div>
                     </td>
 
-                    {{-- Status Aktif --}}
                     <td>
                         @if($user->is_active)
                             <span class="status-badge status-active"><span class="dot"></span> Aktif</span>
@@ -252,28 +245,23 @@
                         @endif
                     </td>
 
-                    {{-- Paket --}}
                     <td>
                         <span class="level-tag {{ $user->is_premium ? 'level-pro' : 'level-free' }}">
                             {{ $user->is_premium ? 'PRO' : 'FREE' }}
                         </span>
                     </td>
 
-                    {{-- Tanggal --}}
                     <td style="font-size: 13px; color: var(--text-secondary);">
                         {{ $user->created_at->format('d M Y') }}
                         <div style="font-size: 11px; opacity: 0.7;">{{ $user->created_at->diffForHumans() }}</div>
                     </td>
 
-                    {{-- Aksi --}}
                     <td>
                         <div class="actions">
-                            {{-- Edit --}}
                             <a href="{{ route('admin.users.edit', $user) }}" class="btn-icon" title="Edit Data Pengguna">
                                 <i class="fas fa-pen"></i>
                             </a>
 
-                            {{-- Toggle Active --}}
                             <form action="{{ route('admin.users.toggle-active', $user) }}" method="POST" style="display: inline;">
                                 @csrf @method('PATCH')
                                 <button type="submit" class="btn-icon btn-toggle-active"
@@ -282,7 +270,6 @@
                                 </button>
                             </form>
 
-                            {{-- Toggle Premium --}}
                             <form action="{{ route('admin.users.toggle-premium', $user) }}" method="POST" style="display: inline;">
                                 @csrf @method('PATCH')
                                 <button type="submit" class="btn-icon btn-toggle-pro" 
@@ -291,12 +278,10 @@
                                 </button>
                             </form>
 
-                            {{-- Reset Password --}}
                             <a href="{{ route('admin.users.reset-password.form', $user) }}" class="btn-icon" title="Reset Password Pengguna">
                                 <i class="fas fa-key"></i>
                             </a>
 
-                            {{-- Delete (Tanpa pengecekan auth()->id() karena ini list user reguler) --}}
                             <button type="button" class="btn-icon btn-delete" title="Hapus Pengguna Secara Permanen"
                                     onclick="confirmDelete('{{ route('admin.users.destroy', $user) }}', '{{ $user->name }}')">
                                 <i class="fas fa-trash-alt"></i>
@@ -319,7 +304,6 @@
         </table>
     </div>
 
-    {{-- Pagination --}}
     <div class="pagination-wrapper">
         <div class="page-info">
             Menampilkan data ke <strong>{{ $users->firstItem() ?? 0 }}</strong> - <strong>{{ $users->lastItem() ?? 0 }}</strong>
@@ -331,7 +315,6 @@
     </div>
 </div>
 
-{{-- Modal Confirm Delete --}}
 <div class="modal-overlay" id="deleteModal">
     <div class="modal-box">
         <div class="modal-icon"><i class="fas fa-exclamation-triangle"></i></div>
