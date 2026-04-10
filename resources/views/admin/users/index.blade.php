@@ -278,10 +278,6 @@
                                 </button>
                             </form>
 
-                            <a href="{{ route('admin.users.reset-password.form', $user) }}" class="btn-icon" title="Reset Password Pengguna">
-                                <i class="fas fa-key"></i>
-                            </a>
-
                             <button type="button" class="btn-icon btn-delete" title="Hapus Pengguna Secara Permanen"
                                     onclick="confirmDelete('{{ route('admin.users.destroy', $user) }}', '{{ $user->name }}')">
                                 <i class="fas fa-trash-alt"></i>

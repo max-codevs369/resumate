@@ -308,7 +308,7 @@
     </div>
     <div class="stat-card">
         <div class="stat-icon"><i class="fas fa-star"></i></div>
-        <div class="stat-info"><h4>Rating Avg</h4><div class="val">{{ number_format($templates->avg('rating'), 1) }}</div></div>
+        <div class="stat-info"><h4>Rating Avg</h4><div class="val">{{ number_format($templates->avg('average_rating'), 1) }}</div></div>
     </div>
 </div>
 
@@ -370,8 +370,12 @@
             </div>
             
             <div class="stats-row">
-                <div title="Unduhan"><i class="fas fa-download" style="font-size:10px;"></i> {{ $item->total_downloads }}</div>
-                <div title="Rating"><i class="fas fa-star" style="color:#f59e0b; font-size:10px;"></i> {{ $item->rating }}</div>
+                <div title="Unduhan"><i class="fas fa-download" style="font-size:10px;"></i> {{ number_format($item->total_downloads) }}</div>
+                <div title="Rating (Ulasan)">
+                    <i class="fas fa-star" style="color:#f59e0b; font-size:10px;"></i> 
+                    {{ $item->average_rating > 0 ? number_format($item->average_rating, 1) : '0.0' }} 
+                    <span style="opacity: 0.7; font-size: 10px; margin-left: 2px;">({{ $item->rating_count ?? 0 }})</span>
+                </div>
             </div>
         </div>
 
@@ -428,11 +432,6 @@
 
 @push('scripts')
 <script>
-    // ============================================================
-    // LOGIKA MODAL (SUCCESS & DELETE)
-    // ============================================================
-    
-    // Tampilkan Modal Sukses Jika Ada Session
     @if(session('success'))
         document.getElementById('successMessageText').innerText = "{{ session('success') }}";
         document.getElementById('successModal').classList.add('active');
@@ -442,31 +441,25 @@
         document.getElementById('successModal').classList.remove('active');
     }
 
-    // Logika Konfirmasi Hapus Custom
     let formToDelete = null;
     
     function confirmDelete(event, formElement) {
-        event.preventDefault(); // Hentikan submit langsung
-        formToDelete = formElement; // Simpan form yang menekan tombol hapus
+        event.preventDefault();
+        formToDelete = formElement; 
         document.getElementById('deleteModal').classList.add('active');
     }
 
     function closeDeleteModal() {
         document.getElementById('deleteModal').classList.remove('active');
-        formToDelete = null; // Reset form jika dibatalkan
+        formToDelete = null;
     }
 
-    // Jika pengguna klik "Ya, Hapus" di modal
     document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
         if(formToDelete) {
-            formToDelete.submit(); // Lanjutkan proses submit form
+            formToDelete.submit();
         }
     });
 
-
-    // ============================================================
-    // LOGIKA PENCARIAN & FILTER
-    // ============================================================
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('searchInput');
         const catFilter = document.getElementById('categoryFilter');
@@ -492,7 +485,7 @@
                 if (matchSearch && matchCat && matchStatus) {
                     card.style.display = 'flex';
                     card.style.animation = 'none';
-                    card.offsetHeight; /* trigger reflow */
+                    card.offsetHeight; 
                     card.style.animation = 'fadeIn 0.5s ease-in-out';
                     visibleCount++;
                 } else {

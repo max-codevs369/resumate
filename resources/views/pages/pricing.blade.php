@@ -69,7 +69,6 @@
         transform: translateY(-2px); box-shadow: 0 8px 20px rgba(76, 175, 80, 0.25);
     }
 
-    /* FAQ Section */
     .faq-section { padding: 80px 20px; background: var(--bg-card); border-top: 1px solid var(--border-color); }
     .faq-header { text-align: center; margin-bottom: 50px; }
     .faq-header h2 { font-size: 32px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }

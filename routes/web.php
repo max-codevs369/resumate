@@ -57,28 +57,26 @@ Route::middleware('auth')->group(function() {
     Route::post('logout', [LogoutController::class, 'logout'])->name('logout');
 
    
-    Route::middleware('role:user')->prefix('user')->name('user.')->group(function() {
+    Route::middleware(['role:user', 'check.active'])->prefix('user')->name('user.')->group(function() {
 
         Route::controller(DashboardUserController::class)->group(function() {
             Route::get('dashboard', 'index')->name('dashboard');
             Route::get('my-resumes', 'myResumes')->name('resumes');
             Route::prefix('profile')->name('profile.')->group(function() {
                 Route::get('{id}', 'showProfile')->name('show');
-                Route::get('{id}/edit', 'editProfile')->name('edit');
             });
         });
 
         Route::controller(ProfileController::class)->prefix('profile')->group(function() {
-            Route::get('/', 'index')->name('profile');
             Route::put('update', 'update')->name('profile.update');
             Route::put('cancel-premium', 'cancelPremium')->name('profile.cancel-premium');
         });
 
         Route::controller(CheckoutController::class)->group(function() {
-            Route::get('checkout', 'checkout')->name('checkout');
+            Route::get('checkout-template', 'checkout')->name('checkout');
             Route::post('checkout', 'process')->name('checkout.process');
+            Route::get('checkout-success', 'success')->name('checkout.success');
         });
-        Route::get('/isi-data-template', function () { return view('pages.dashboard.form-template'); })->name('form-template');
     });
 
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function() {
@@ -94,11 +92,10 @@ Route::middleware('auth')->group(function() {
         });
 
         Route::prefix('users')->controller(UserController::class)->name('users.')->group(function () {
-            Route::get('{user}/reset-password', 'resetPasswordForm')->name('reset-password.form');
-            Route::patch('{user}/reset-password', 'resetPassword')->name('reset-password');
             Route::patch('{user}/toggle-active', 'toggleActive')->name('toggle-active');
             Route::patch('{user}/toggle-premium', 'togglePremium')->name('toggle-premium');
         });
+        
         Route::resource('users', UserController::class); 
         
         Route::resource('templates', CvTemplateController::class)->except(['show']);
@@ -109,7 +106,3 @@ Route::middleware('auth')->group(function() {
         });
     });
 });
-
-Route::get('/kode-otp', function() { return view('auth.otp'); })->name('otp');
-Route::get('/email-otp', function() { return view('auth.emailotp'); })->name('emailotp');
-Route::get('/modal-test', function() { return view('auth.success'); })->name('modal-test');

@@ -51,12 +51,6 @@ class DashboardUserController extends Controller
         return view('pages.dashboard.profile', compact('user'));
     }
 
-    public function editProfile($id)
-    {
-        $user = User::findOrFail($id);
-        return view('pages.dashboard.edit-profile', compact('user'));
-    }
-
     public function myResumes(Request $request)
     {
         $user = Auth::user();

@@ -80,8 +80,6 @@ class CvTemplateController extends Controller
             'tags'            => $tagsArray, 
             'layout_schema'   => $layoutArray, 
             'global_settings' => $globalArray, 
-            'total_downloads' => 0,
-            'rating'          => 0
         ]);
 
         return redirect()->route('admin.templates.index')->with('success', 'Template berhasil dibuat dan diterbitkan!');

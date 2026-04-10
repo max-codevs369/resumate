@@ -152,40 +152,6 @@
                         @error('email')<small style="color:#e3342f;">{{ $message }}</small>@enderror
                     </div>
 
-                   <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Password</label>
-                            
-                            <div class="input-wrapper">
-                                <input type="password" name="password" id="password" class="form-input" placeholder="Min. 8 karakter" required>
-                                <i class="fas fa-eye toggle-password" data-target="password"></i>
-                            </div>
-                            
-                            <div class="password-meter" id="passwordMeter">
-                                <div class="meter-bars">
-                                    <div class="meter-bar" id="bar-1"></div>
-                                    <div class="meter-bar" id="bar-2"></div>
-                                    <div class="meter-bar" id="bar-3"></div>
-                                    <div class="meter-bar" id="bar-4"></div>
-                                </div>
-                                <span class="meter-text" id="strengthText">Kekuatan: Lemah</span>
-                            </div>
-
-                            @error('password')
-                                <small style="color:#e3342f; display:block; margin-top:5px;">{{ $message }}</small>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Ulangi Password</label>
-                            
-                            <div class="input-wrapper">
-                                <input type="password" name="password_confirmation" id="password_confirmation" class="form-input" placeholder="Ketik ulang" required>
-                                <i class="fas fa-eye toggle-password" data-target="password_confirmation"></i>
-                            </div>
-                        </div>
-                    </div>
-
                     <button type="submit" class="btn-register">Daftar Sekarang</button>
                 </form>
 
@@ -206,67 +172,5 @@
 
         </div>
     </div>
-
-    <script>
-        document.getElementById('password').addEventListener('input', function(e) {
-            const password = e.target.value;
-            const meter = document.getElementById('passwordMeter');
-            const bars = [
-                document.getElementById('bar-1'),
-                document.getElementById('bar-2'),
-                document.getElementById('bar-3'),
-                document.getElementById('bar-4')
-            ];
-            const strengthText = document.getElementById('strengthText');
-
-            if(password.length > 0) {
-                meter.style.display = 'block';
-            } else {
-                meter.style.display = 'none';
-                return;
-            }
-
-            let score = 0;
-            if (password.length >= 8) score++; 
-            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
-            if (/[^a-zA-Z\d]/.test(password)) score++; 
-
-            bars.forEach(bar => bar.style.background = 'var(--pwd-bg)');
-
-            if (score === 1 || score === 2) {
-                bars[0].style.background = 'var(--pwd-weak)';
-                if(score === 2) bars[1].style.background = 'var(--pwd-weak)';
-                strengthText.textContent = 'Kekuatan: Lemah';
-                strengthText.style.color = 'var(--pwd-weak)';
-            } else if (score === 3) {
-                bars[0].style.background = 'var(--pwd-medium)';
-                bars[1].style.background = 'var(--pwd-medium)';
-                bars[2].style.background = 'var(--pwd-medium)';
-                strengthText.textContent = 'Kekuatan: Sedang';
-                strengthText.style.color = 'var(--pwd-medium)';
-            } else if (score === 4) {
-                bars.forEach(bar => bar.style.background = 'var(--pwd-strong)');
-                strengthText.textContent = 'Kekuatan: Sangat Kuat';
-                strengthText.style.color = 'var(--pwd-strong)';
-            }
-        });
-
-        document.querySelectorAll('.toggle-password').forEach(function(icon) {
-            icon.addEventListener('click', function() {
-                const targetId = this.getAttribute('data-target');
-                const input = document.getElementById(targetId);
-                
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    this.classList.remove('fa-eye');
-                    this.classList.add('fa-eye-slash'); 
-                } else {
-                    input.type = 'password';
-                    this.classList.remove('fa-eye-slash');
-                    this.classList.add('fa-eye'); 
-                }
-            });
-        });
-    </script>
 </body>
 </html>

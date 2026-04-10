@@ -24,6 +24,10 @@ class MagicLoginController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
+        if ($user && !$user->is_active) {
+            return back()->with('error', 'Akun dengan email ini telah dinonaktifkan.');
+        }
+
         if ($user) {
             $token = LoginToken::create([
                 'user_id'    => $user->id,
@@ -48,6 +52,12 @@ class MagicLoginController extends Controller
         }
 
         $user = $loginToken->user;
+
+        if (!$user->is_active) {
+            $loginToken->delete();
+            
+            return redirect()->route('login')->with('error', 'Gagal masuk. Akun Anda telah dinonaktifkan oleh Administrator.');
+        }
         
         Auth::login($user);
 

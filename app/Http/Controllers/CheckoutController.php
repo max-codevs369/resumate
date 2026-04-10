@@ -14,8 +14,12 @@ class CheckoutController extends Controller
         $settings = Setting::pluck('value', 'key');
 
         if (Auth::check()) {
-            if (Auth::user()->is_premium == 1) {
-                abort(404);
+            if (Auth::user()->is_premium == 1 && Auth::user()->role === 'user') {
+                return view('auth.premium');
+            }
+
+            if (Auth::user()->role === 'admin') {
+                return abort(404);
             }
         }
 
@@ -27,9 +31,15 @@ class CheckoutController extends Controller
         return view('pages.pricing', compact('transaction', 'settings'));
     }
     public function checkout()
-    {
-        if (Auth::user()->is_premium == 1) {
-            abort(404);
+    {  
+        if (Auth::check()) {
+            if (Auth::user()->is_premium == 1 && Auth::user()->role === 'user') {
+                return view('auth.premium');
+            }
+
+            if (Auth::user()->role === 'admin') {
+                return abort(404);
+            }
         }
 
         $settings = Setting::pluck('value', 'key');
@@ -71,5 +81,16 @@ class CheckoutController extends Controller
         ]);
 
         return redirect()->route('pricing')->with('success', 'Bukti pembayaran berhasil dikirim! Mohon tunggu admin melakukan verifikasi.');
+    }
+
+    public function success() 
+    {
+        if (Auth::check()) {
+            if (Auth::user()->is_premium == 0 && Auth::user()->role === 'user') {
+                return abort(404);
+            }
+        }
+
+        return view('auth.premium');
     }
 }

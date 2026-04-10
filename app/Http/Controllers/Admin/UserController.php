@@ -7,9 +7,7 @@ use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
@@ -65,7 +63,6 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
-        $data['password'] = Hash::make($data['password']);
         $data['role'] = 'user'; 
 
         if ($request->boolean('is_premium')) {
@@ -108,7 +105,6 @@ class UserController extends Controller
             $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
         }
 
-        unset($data['password']);
 
         $user->update($data);
 
@@ -126,40 +122,6 @@ class UserController extends Controller
         $user->delete();
 
         return back()->with('success', 'Pengguna berhasil dihapus.');
-    }
-
-    public function resetPasswordForm(User $user)
-    {
-        $this->ensureIsUser($user);
-
-        return view('admin.users.reset-password', compact('user'));
-    }
-
-    public function resetPassword(Request $request, User $user)
-    {
-        $this->ensureIsUser($user);
-
-        $request->validate([
-            'password' => [
-                'required', 
-                'confirmed', 
-                Password::min(8)->letters()->mixedCase()->numbers()->symbols()
-            ],
-        ], [
-            'password.required'  => 'Password baru wajib diisi.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.',
-            'password.min'       => 'Password minimal harus 8 karakter.',
-            'password.letters'   => 'Password harus mengandung huruf.',
-            'password.mixed'     => 'Password harus mengandung huruf besar dan kecil.',
-            'password.numbers'   => 'Password harus mengandung angka.',
-            'password.symbols'   => 'Password harus mengandung simbol.',
-        ]);
-
-        $user->update([
-            'password' => Hash::make($request->password),
-        ]);
-
-        return redirect()->route('admin.users.index')->with('success', "Password untuk {$user->name} berhasil direset.");
     }
 
     public function toggleActive(User $user)

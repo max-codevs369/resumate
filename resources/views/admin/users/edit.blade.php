@@ -147,13 +147,6 @@
         <p>Memperbarui informasi profil dan keanggotaan untuk <strong>{{ $user->name }}</strong>.</p>
     </div>
 
-    <div class="info-banner">
-        <i class="fas fa-shield-alt"></i>
-        <div>
-            Perlu mengganti password pengguna ini? Sistem kami memisahkan pengaturan privasi. Silakan gunakan menu <a href="{{ route('admin.users.reset-password.form', $user) }}" style="font-weight: 700; color: #1D4ED8; text-decoration: underline;">Reset Password Khusus</a>.
-        </div>
-    </div>
-
     @if ($errors->any())
         <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #DC2626; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
             <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 8px;">

@@ -26,7 +26,16 @@ class ProfileController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
-            'password' => ['nullable', 'string', 'min:8'],
+        ],[
+            'name.required' => 'Nama wajib diisi.',
+            'name.max' => 'Nama maksimal 255 karakter.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.max' => 'Email maksimal 255 karakter.',
+            'email.unique' => 'Email sudah digunakan oleh pengguna lain.',
+            'avatar.image' => 'File harus berupa gambar.',
+            'avatar.mimes' => 'Format gambar harus jpeg, png, jpg, atau webp.',
+            'avatar.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         $data = [
@@ -34,9 +43,6 @@ class ProfileController extends Controller
             'email' => $request->email,
         ];
 
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        }
 
         if ($request->hasFile('avatar')) {
             if ($user->avatar) {

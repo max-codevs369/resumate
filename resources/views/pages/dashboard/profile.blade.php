@@ -538,26 +538,6 @@
                             </div>
                         </div>
                         
-                        <div class="settings-row">
-                            <div class="settings-row-left">
-                                <label class="s-title">Kata Sandi Baru</label>
-                                <input type="password" id="newPassword" name="password" placeholder="Biarkan kosong jika tidak ingin mengubah kata sandi" class="form-control">
-                                
-                                <div class="pw-strength-container" id="pwStrengthContainer">
-                                    <div class="pw-bars">
-                                        <div class="pw-bar" id="bar-1"></div>
-                                        <div class="pw-bar" id="bar-2"></div>
-                                        <div class="pw-bar" id="bar-3"></div>
-                                    </div>
-                                    <div class="pw-text">
-                                        <span>Kekuatan Kata Sandi</span>
-                                        <span class="pw-label" id="pwLabel">Lemah</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        
                         <div class="settings-row" style="justify-content: flex-end; background: var(--bg-body);">
                             <button type="submit" class="btn-primary">
                                 <i class="fas fa-save"></i> Simpan Perubahan
