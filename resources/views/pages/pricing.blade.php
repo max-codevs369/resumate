@@ -118,6 +118,7 @@
             </div>
             <ul class="card-features">
                 <li><i class="fas fa-check-circle"></i> Akses Semua Template Premium</li>
+                <li><i class="fas fa-check-circle"></i> Prediksi Skor ATS Friendly CV</li>
                 <li><i class="fas fa-check-circle"></i> Ekspor PDF Tanpa Watermark</li>
                 <li><i class="fas fa-check-circle"></i> Simpan Banyak Versi CV</li>
                 <li><i class="fas fa-check-circle"></i> Prioritas Support 24/7</li>

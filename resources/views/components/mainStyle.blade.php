@@ -164,12 +164,6 @@
         gap: 6px;
     }
 
-    .btn-register:hover {
-        background: var(--primary-hover);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-    }
-
     .btn-primary {
         background: var(--primary-color);
         color: white;

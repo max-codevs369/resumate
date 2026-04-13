@@ -28,17 +28,6 @@
             --pwd-bg: #e5e5e5;
         }
 
-        [data-theme="dark"] {
-            --bg-body: #121212;
-            --bg-card: #1E1E1E;
-            --text-main: #E0E0E0;
-            --text-secondary: #A0A0A0;
-            --border-color: #333333;
-            --input-bg: #2C2C2C;
-            --shadow-color: rgba(0, 0, 0, 0.5);
-            --pwd-bg: #444444;
-        }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); line-height: 1.5; transition: background 0.3s, color 0.3s; }
 

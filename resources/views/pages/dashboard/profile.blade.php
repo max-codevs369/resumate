@@ -5,8 +5,8 @@
 @section('content')
 <style>
     :root {
-        --primary-color: #10b981;
-        --primary-hover: #059669;
+        --primary-color: #4CAF50;
+        --primary-hover: #45a049;
         --primary-pale: #ecfdf5;
         --text-main: #111827;
         --text-muted: #6b7280;

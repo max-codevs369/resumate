@@ -50,19 +50,31 @@
                         <div class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
                             <i class="fas fa-check text-xs"></i>
                         </div>
-                        Akses ke semua template Pro & Kreatif
+                        Akses Semua Template Premium
                     </li>
                     <li class="flex items-center gap-3">
                         <div class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
                             <i class="fas fa-check text-xs"></i>
                         </div>
-                        Unduh PDF resolusi tinggi tanpa batas
+                        Prediksi Skor ATS Friendly CV
                     </li>
                     <li class="flex items-center gap-3">
                         <div class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
                             <i class="fas fa-check text-xs"></i>
                         </div>
-                        Bebas dari watermark ResuMate
+                        Ekspor PDF Tanpa Watermark
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <div class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                            <i class="fas fa-check text-xs"></i>
+                        </div>
+                        Simpan Banyak Versi CV
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <div class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                            <i class="fas fa-check text-xs"></i>
+                        </div>
+                        Prioritas Support 24/7
                     </li>
                 </ul>
             </div>

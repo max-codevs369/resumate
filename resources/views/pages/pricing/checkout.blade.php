@@ -140,8 +140,80 @@
     .text-error { color: #dc2626; font-size: 12px; margin-top: 6px; display: block; text-align: center; }
 
     @media (max-width: 992px) {
-        .checkout-container { grid-template-columns: 1fr; max-width: 600px; gap: 30px; }
-        .summary-card { position: relative; top: 0; order: -1; }
+        .checkout-container { 
+            grid-template-columns: 1fr; 
+            max-width: 650px; 
+            gap: 24px; 
+        }
+        .summary-card { 
+            position: relative; 
+            top: 0; 
+            order: -1; 
+        }
+    }
+
+    @media (max-width: 768px) {
+        .checkout-section { 
+            padding: 30px 0 80px; 
+        }
+        
+        .checkout-container {
+            padding: 0 16px;
+        }
+
+        .summary-card { 
+            padding: 20px; 
+        }
+        .payment-methods { 
+            padding: 24px 20px; 
+            border-radius: 20px;
+        }
+
+        .method-tabs { 
+            flex-direction: column; 
+            gap: 10px; 
+            margin-bottom: 24px;
+        }
+        .tab-btn { 
+            padding: 12px; 
+        }
+
+        .account-number { 
+            font-size: 22px; 
+            letter-spacing: 1px;
+        }
+        .total-amount { 
+            font-size: 20px; 
+        }
+        .step-header {
+            font-size: 16px;
+        }
+
+        .qris-image { 
+            width: 160px; 
+            height: 160px; 
+        }
+        .qris-logos { 
+            font-size: 11px; 
+            flex-wrap: wrap; 
+            gap: 10px;
+        }
+
+        .upload-section { 
+            margin-top: 30px; 
+            padding-top: 30px; 
+        }
+        .upload-zone { 
+            padding: 20px 15px; 
+        }
+        .upload-icon {
+            font-size: 28px;
+        }
+        
+        .btn-submit {
+            padding: 16px;
+            font-size: 15px;
+        }
     }
 
     .btn-download-qr {
@@ -221,7 +293,7 @@
                                 @endif
                             </div>
                             <p style="font-size: 14px; font-weight: 600; color: var(--text-main);">Scan QRIS untuk Membayar</p>
-                            <a href="{{ isset($settings['qris_image']) ? asset('storage/' . $settings['qris_image']) : 'https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg' }}" download="QRIS_Pembayaran.png" class="btn-download-qr">
+                            <a href="{{ isset($settings['qris_image']) ? asset('storage/' . $settings['qris_image']) : 'https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg' }}" download="QRIS_Pembayaran" class="btn-download-qr">
                                 <i class="fas fa-download"></i> Unduh Kode QR
                             </a>
                             <div class="qris-logos">

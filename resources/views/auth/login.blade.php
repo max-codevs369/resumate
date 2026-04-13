@@ -23,16 +23,6 @@
             --shadow-color: rgba(0, 0, 0, 0.1);
         }
 
-        [data-theme="dark"] {
-            --bg-body: #121212;       
-            --bg-card: #1E1E1E;       
-            --text-main: #E0E0E0;     
-            --text-secondary: #A0A0A0;
-            --border-color: #333333;
-            --input-bg: #2C2C2C;
-            --shadow-color: rgba(0, 0, 0, 0.5);
-        }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); line-height: 1.5; transition: background 0.3s, color 0.3s; }
 
@@ -169,17 +159,6 @@
     </style>
 </head>
 <body>
-
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
-        })();
-    </script>
 
     <div class="login-page">
         <div class="login-container">

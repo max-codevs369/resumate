@@ -308,7 +308,7 @@
             @if($transaction->verified_at)
             <small style="color:var(--text-secondary); display:block; margin-top:10px;">
                 <i class="fas fa-clock"></i>
-                Diverifikasi pada: {{ $transaction->verified_at->format('d M Y, H:i') }} WIB
+                Diverifikasi pada: {{ $transaction->verified_at->format('d M Y, H:i:s') }} WIB
             </small>
             @endif
         </div>

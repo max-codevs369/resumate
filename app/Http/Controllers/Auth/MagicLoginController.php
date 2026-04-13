@@ -59,7 +59,7 @@ class MagicLoginController extends Controller
             return redirect()->route('login')->with('error', 'Gagal masuk. Akun Anda telah dinonaktifkan oleh Administrator.');
         }
         
-        Auth::login($user);
+        Auth::login($user, true);
 
         $loginToken->delete();
 

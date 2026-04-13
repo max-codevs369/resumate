@@ -47,7 +47,7 @@ class TemplateController extends Controller
         }
 
         if($template->type === 'pro' && (!Auth::check() || $template->type === 'pro' && (Auth::check() && $user->is_premium == 0))) {
-            return abort(404);
+            return redirect()->route('pricing');
         }
 
         return view('pages.resume.template-detail', compact('template'));
@@ -63,7 +63,7 @@ class TemplateController extends Controller
 
         if ($template->type === 'pro') {
             if (!Auth::check() || Auth::user()->is_premium == 0) {
-                return abort(404); 
+                return redirect()->route('pricing'); 
             }
         }
 

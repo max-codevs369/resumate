@@ -139,6 +139,104 @@
         .swal-btn-cancel:hover {
             background-color: #e5e7eb !important;
         }
+
+        @media screen and (max-width: 992px) {
+            body { 
+                overflow: auto; 
+            }
+            
+            .editor-layout { 
+                flex-direction: column; 
+                height: auto; 
+                min-height: 100vh;
+            }
+
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                border-right: none; 
+                border-bottom: 4px solid #e5e7eb;
+                overflow: visible; 
+            }
+            
+            .sidebar-content {
+                overflow-y: visible; 
+                padding: 20px 16px;
+            }
+
+            .field-row {
+                grid-template-columns: 1fr; 
+            }
+
+            .tabs { 
+                flex-wrap: wrap; 
+                gap: 4px;
+            }
+            
+            .tab { 
+                flex: 1 1 calc(50% - 4px);
+                margin-bottom: 2px;
+            }
+
+            .preview-area { 
+                width: 100%; 
+                height: 85vh; 
+                position: relative;
+            }
+
+            .preview-header { 
+                flex-direction: column; 
+                gap: 12px; 
+                padding: 16px;
+            }
+
+            .zoom-tools, .preview-actions { 
+                width: 100%; 
+                justify-content: center; 
+            }
+
+            .preview-actions {
+                flex-wrap: wrap;
+            }
+
+            .action-btn { 
+                flex: 1; 
+                justify-content: center; 
+                font-size: 13px;
+                padding: 10px 12px;
+                white-space: nowrap;
+            }
+
+            .preview-canvas { 
+                padding: 16px; 
+                align-items: flex-start;
+            }
+
+            .notify {
+                left: 50%;
+                right: auto;
+                transform: translate(-50%, 120px);
+                width: 90%;
+                max-width: 400px;
+                justify-content: center;
+            }
+            
+            .notify.show {
+                transform: translate(-50%, -24px);
+            }
+            
+            .icon-btn.delete {
+                width: 34px;
+                height: 34px;
+                top: 8px;
+                right: 8px;
+            }
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -147,7 +245,14 @@
     
     <div class="sidebar">
         <div class="sidebar-top">
-            <a href="{{ route('user.dashboard') }}" class="back-link"><i class="fas fa-arrow-left"></i> Keluar</a>
+            @auth
+                <a href="{{ route('user.dashboard') }}" class="back-link"><i class="fas fa-arrow-left"></i> Keluar</a>
+            @endauth
+
+            @guest
+                <a href="{{ route('templates') }}" class="back-link"><i class="fas fa-arrow-left"></i> Keluar</a>
+            @endguest
+
             <h1 class="sidebar-title">Edit Resume</h1>
             <p class="sidebar-subtitle">Isi data Anda dengan lengkap</p>
 
@@ -182,11 +287,62 @@
                 <div class="preview-actions">
                     <button class="action-btn" onclick="downloadPDF()"><i class="fas fa-file-pdf" style="color: #dc2626;"></i> Unduh PDF</button>
                     @auth
+                        @if(Auth::user()->is_premium)
+                            <button class="action-btn" type="button" onclick="checkAtsScore()" id="btn-check-ats">
+                                <i class="fas fa-chart-line" style="color: #3b82f6;"></i> Skor ATS
+                            </button>
+                        @endif
                         <button class="action-btn" onclick="saveData('draft')" id="btnDraft"><i class="fas fa-save"></i> Simpan Draft</button>
                         <button class="action-btn primary" onclick="saveData('completed')" id="btnDone"><i class="fas fa-check-circle"></i> Selesai</button>
                     @endauth    
                 </div>
         </div>
+
+        @auth
+            @if(Auth::user()->is_premium)
+                <div id="ats-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(17, 24, 39, 0.75); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(4px);">
+                    <div style="background: white; width: 90%; max-width: 480px; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); overflow: hidden; animation: modalPop 0.3s ease-out;">
+                        
+                        <div style="background: #eff6ff; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #bfdbfe;">
+                            <h3 style="font-size: 18px; font-weight: 700; color: #1e3a8a; margin: 0;">
+                                Hasil Analisis ATS
+                            </h3>
+                            <button onclick="document.getElementById('ats-modal').style.display = 'none'" style="background: white; border: none; width: 32px; height: 32px; border-radius: 50%; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        
+                        <div style="padding: 24px;">
+                            <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 24px;">
+                                <div style="position: relative; width: 84px; height: 84px; display: flex; justify-content: center; align-items: center; background: white; border: 5px solid #3b82f6; border-radius: 50%; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);">
+                                    <span id="ats-score-display" style="font-size: 34px; font-weight: 800; color: #2563eb;">0</span>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-size: 15px; font-weight: 700; color: #374151; margin-bottom: 4px;">Skor Kelayakan CV</div>
+                                    <p style="font-size: 13px; color: #6b7280; line-height: 1.5; margin: 0;">Semakin tinggi skor, semakin besar peluang CV Anda lolos seleksi otomatis sistem HRD.</p>
+                                </div>
+                            </div>
+
+                            <div style="font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-clipboard-list text-blue-500"></i> Detail Evaluasi:
+                            </div>
+                            
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; max-height: 200px; overflow-y: auto;">
+                                <ul id="ats-feedback-list" style="font-size: 13px; color: #ef4444; padding-left: 20px; line-height: 1.6; margin: 0;">
+                                    </ul>
+                            </div>
+                        </div>
+                        
+                        <div style="padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; text-align: right;">
+                            <button onclick="document.getElementById('ats-modal').style.display = 'none'" style="background: #3b82f6; color: white; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background 0.2s; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);">
+                                Tutup
+                            </button>
+                        </div>
+                        
+                    </div>
+                </div>
+            @endif
+        @endauth
 
         <div class="preview-canvas">
             <div class="cv-sheet" id="cv-paper">
@@ -714,8 +870,117 @@
     document.addEventListener('DOMContentLoaded', () => {
         renderCanvas();
         buildSidebarForms();
+
+        if (window.innerWidth <= 992) {
+            zoomLevel = 100;
+            applyZoom();
+        }
     });
 
+    window.checkAtsScore = function() {
+        const btn = document.getElementById('btn-check-ats');
+        const resultContainer = document.getElementById('ats-modal');
+        const scoreDisplay = document.getElementById('ats-score-display');
+        const feedbackList = document.getElementById('ats-feedback-list');
+
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: #3b82f6;"></i> Memproses...';
+        btn.disabled = true;
+
+        setTimeout(() => {
+            let score = 0;
+            let feedback = [];
+            
+            let blocks = [];
+            function extractBlocks(arr) {
+                arr.forEach(b => {
+                    if (b.isLayout) {
+                        if (b.layoutType === 'col1') extractBlocks(b.children || []);
+                        else (b.columns || []).forEach(col => extractBlocks(col));
+                    } else {
+                        blocks.push(b);
+                    }
+                });
+            }
+            extractBlocks(schema);
+
+            let hasContact = false, hasSummary = false, hasExperience = false, hasSkills = false;
+
+            blocks.forEach(b => {
+                const p = b.props;
+                if (b.type === 'contact') {
+                    hasContact = true;
+                    if (p.email && p.phone) { score += 15; }
+                    else { feedback.push("Lengkapi Email dan Nomor Telepon di bagian Kontak."); score += 5; }
+                }
+                if (b.type === 'summary') {
+                    hasSummary = true;
+                    if (p.text && p.text.split(' ').length >= 15) { score += 15; }
+                    else { feedback.push("Profil Diri terlalu pendek. Buat minimal 15 kata."); score += 5; }
+                }
+                if (b.type === 'experience') {
+                    hasExperience = true;
+                    let items = parseItems(p.items);
+                    if (items && items.length > 0) { 
+                        score += 40; 
+                        let descText = items.map(i => i.desc).join(' ').toLowerCase();
+                        if(!descText.includes('mengembangkan') && !descText.includes('membuat') && !descText.includes('mengelola')) {
+                            feedback.push("Gunakan kata kerja aktif di deskripsi pengalaman (misal: 'mengelola').");
+                            score -= 5;
+                        }
+                    } else {
+                        feedback.push("Tambahkan riwayat Pengalaman Kerja Anda.");
+                    }
+                }
+                if (b.type === 'skills') {
+                    hasSkills = true;
+                    let items = parseItems(p.items);
+                    if (items && items.length > 0 && items[0].list.split(',').length >= 3) {
+                        score += 30;
+                    } else {
+                        feedback.push("Tambahkan minimal 3 keahlian/skills yang relevan.");
+                        score += 10;
+                    }
+                }
+            });
+
+            if(!hasContact) feedback.push("CV Anda belum memiliki bagian Kontak (Email/Telepon).");
+            if(!hasSummary) feedback.push("Tambahkan Profil Diri (Summary).");
+            if(!hasExperience) feedback.push("Pengalaman kerja sangat penting untuk dinilai oleh ATS.");
+            if(!hasSkills) feedback.push("Jangan lupa tambahkan bagian Keahlian (Skills).");
+
+            let finalScore = Math.min(score, 100);
+            if (finalScore === 0) finalScore = 15;
+
+            resultContainer.style.display = 'flex';
+            
+            let currentScore = 0;
+            let interval = setInterval(() => {
+                if(currentScore >= finalScore) {
+                    clearInterval(interval);
+                    scoreDisplay.innerText = finalScore;
+                } else {
+                    currentScore++;
+                    scoreDisplay.innerText = currentScore;
+                }
+            }, 15);
+
+            feedbackList.innerHTML = '';
+            if(finalScore >= 95) {
+                feedbackList.innerHTML = '<li style="color: #16a34a; font-weight: 600; list-style: none;"><i class="fas fa-check-circle"></i> Sempurna! CV Anda sangat ATS-Friendly.</li>';
+            } else {
+                feedback.forEach(item => {
+                    let li = document.createElement('li');
+                    li.innerText = item;
+                    feedbackList.appendChild(li);
+                });
+            }
+
+            btn.innerHTML = '<i class="fas fa-chart-line" style="color: #3b82f6;"></i> Skor ATS';
+            btn.disabled = false;
+
+        }, 800);
+    }
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </body>
